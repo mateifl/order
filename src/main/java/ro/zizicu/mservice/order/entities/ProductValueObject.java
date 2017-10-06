@@ -4,12 +4,14 @@ public class ProductValueObject {
 	public final Integer id;
 	public final Integer quantity;
 	public final Double discount;
+	public final Double unitPrice;
 	
-	public ProductValueObject(Integer id, Integer quantity, Double discount) {
+	public ProductValueObject(Integer id, Integer quantity, Double discount, Double unitPrice) {
 		super();
 		this.id = id;
 		this.quantity = quantity;
 		this.discount = discount;
+		this.unitPrice = unitPrice;
 	}
 	
 }

@@ -1,5 +1,6 @@
 package ro.zizicu.mservice.order.entities;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -15,14 +16,16 @@ public class OrderDetail {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	@ManyToOne
-	@JoinColumn(name = "orderId")
+	@JoinColumn(name = "orderid")
 	private Order order;
 	@ManyToOne
-	@JoinColumn(name = "productId")
+	@JoinColumn(name = "productid")
 	private Product product;
+	@Column(name="unitprice")
 	private Double unitPrice;
 	private Integer quantity;
 	private Double discount;
+	
 	public Integer getId() {
 		return id;
 	}

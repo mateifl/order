@@ -1,5 +1,6 @@
 package ro.zizicu.mservice.order.entities;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -11,63 +12,52 @@ import javax.persistence.Table;
 @Table(name = "products")
 public class Product {
 	@Id 
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-//	@TableGenerator(name="tab")
+	@Column(name="productid")
 	private Integer productId;
+	@Column(name = "productname")
 	private String productName;
+	@Column(name = "quantityperunit")
 	private String quantityPerUnit;
+	@Column(name = "unitprice")
 	private Double unitPrice;
+	@Column(name = "unitsinstock")
 	private Integer unitsInStock;
+	@Column(name = "unitsonorder")
 	private Integer unitsOnOrder;
+	@Column(name = "reorderlevel")
 	private Integer reorderLevel;
 	private String discontinued;
 		
 	public Integer getProductId() {
 		return productId;
 	}
-	public void setProductId(Integer productId) {
-		this.productId = productId;
-	}
+
 	public String getProductName() {
 		return productName;
 	}
-	public void setProductName(String productName) {
-		this.productName = productName;
-	}
+
 	public String getQuantityPerUnit() {
 		return quantityPerUnit;
 	}
-	public void setQuantityPerUnit(String quantityPerUnit) {
-		this.quantityPerUnit = quantityPerUnit;
-	}
+
 	public Double getUnitPrice() {
 		return unitPrice;
 	}
-	public void setUnitPrice(Double unitPrice) {
-		this.unitPrice = unitPrice;
-	}
+
 	public Integer getUnitsInStock() {
 		return unitsInStock;
 	}
-	public void setUnitsInStock(Integer unitsInStock) {
-		this.unitsInStock = unitsInStock;
-	}
+
 	public Integer getUnitsOnOrder() {
 		return unitsOnOrder;
 	}
-	public void setUnitsOnOrder(Integer unitsInOrder) {
-		this.unitsOnOrder = unitsInOrder;
-	}
+
 	public Integer getReorderLevel() {
 		return reorderLevel;
 	}
-	public void setReorderLevel(Integer reorderLevel) {
-		this.reorderLevel = reorderLevel;
-	}
+
 	public String getDiscontinued() {
 		return discontinued;
 	}
-	public void setDiscontinued(String discontinued) {
-		this.discontinued = discontinued;
-	}
+
 }

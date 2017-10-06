@@ -1,12 +1,12 @@
-package ro.zizicu.testboot;
+package ro.zizicu.mservice.order;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class TestbootApplication {
+public class OrderApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(TestbootApplication.class, args);
+		SpringApplication.run(OrderApplication.class, args);
 	}
 }
