@@ -4,12 +4,11 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>ro.zizicu</groupId>
-	<artifactId>testboot</artifactId>
+	<artifactId>order</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
-	<name>testboot</name>
-	<description>Demo project for Spring Boot</description>
+	<name>order service</name>
 
 	<parent>
 		<groupId>org.springframework.boot</groupId>
@@ -77,4 +76,5 @@
 	</build>
 
 
+	<description>Order </description>
 </project>

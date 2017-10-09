@@ -8,6 +8,7 @@ import javax.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import ro.zizicu.mservice.order.data.CustomerRepository;
 import ro.zizicu.mservice.order.data.EmployeeRepository;
@@ -21,7 +22,7 @@ import ro.zizicu.mservice.order.entities.ProductValueObject;
 import ro.zizicu.mservice.order.entities.Shipper;
 import ro.zizicu.mservice.order.services.OrderService;
 
-
+@Service
 public class OrderServiceImpl implements OrderService {
 
 	private static Logger logger = LoggerFactory.getLogger(OrderServiceImpl.class);
