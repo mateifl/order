@@ -16,7 +16,6 @@ public class CustomerServiceImpl
 
 	@Override
 	public List<Customer> findWithCriteria() {
-//		getRepository().f
 		return null;
 	}
 	

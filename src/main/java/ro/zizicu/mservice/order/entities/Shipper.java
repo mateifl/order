@@ -1,20 +1,27 @@
 package ro.zizicu.mservice.order.entities;
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
 @Table(name = "shippers")
-public class Shipper {
+public class Shipper implements IdentityOwner<Integer> {
 	@Id
-	private Integer shipperId;
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name="shipperid")
+	private Integer id;
+	@Column(name="companyname")
 	private String companyName;
 	private String phone;
-	public Integer getShipperId() {
-		return shipperId;
+	
+	public Integer getId() {
+		return id;
 	}
 	public void setShipperId(Integer shipperId) {
-		this.shipperId = shipperId;
+		this.id = shipperId;
 	}
 	public String getCompanyName() {
 		return companyName;

@@ -7,11 +7,11 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "customers")
-public class Customer {
+public class Customer implements IdentityOwner<String>{
 	
 	@Id
 	@Column(name="customerid")
-	private String customerId;
+	private String id;
 	@Column(name="companyname")
 	private String companyName;
 	@Column(name="contactname")
@@ -27,11 +27,11 @@ public class Customer {
 	private String phone;
 	private String fax;
 
-	public String getCustomerId() {
-		return customerId;
+	public String getId() {
+		return id;
 	}
-	public void setCustomerId(String customerId) {
-		this.customerId = customerId;
+	public void setId(String id) {
+		this.id = id;
 	}
 	public String getCompanyName() {
 		return companyName;
@@ -95,7 +95,7 @@ public class Customer {
 	}
 	@Override
 	public String toString() {
-		return "Customer [customerId=" + customerId + ", companyName=" + companyName + ", contactName=" + contactName
+		return "Customer [customerId=" + id + ", companyName=" + companyName + ", contactName=" + contactName
 				+ ", contactTitle=" + contactTitle + ", address=" + address + ", city=" + city + ", region=" + region
 				+ ", postalCode=" + postalCode + ", country=" + country + ", phone=" + phone + ", fax=" + fax + "]";
 	}

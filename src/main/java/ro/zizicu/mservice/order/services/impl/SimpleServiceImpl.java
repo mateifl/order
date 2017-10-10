@@ -7,10 +7,14 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.CrudRepository;
 
-public class SimpleServiceImpl<Repository extends CrudRepository<Entity, ID>, Entity, ID extends Serializable> {
+public class SimpleServiceImpl<Repository extends CrudRepository<Entity, ID>, 
+							   Entity, 
+							   ID extends Serializable> 
+{
 	@Autowired
 	private Repository repository;
 	
+	/** Do I need this? */
 	protected Repository getRepository() {
 		return repository;
 	}

@@ -9,6 +9,6 @@ import ro.zizicu.mservice.order.entities.Customer;
 /** */
 public interface CustomerRepository extends CrudRepository<Customer, String> {
 		
-	List<Customer> findWithCriteria(String name, String country, String city);
+//	List<Customer> findWithCriteria(String name, String country, String city);
 
 }

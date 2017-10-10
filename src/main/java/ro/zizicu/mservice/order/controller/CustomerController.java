@@ -19,36 +19,37 @@ import ro.zizicu.mservice.order.services.CustomerService;
 @RestController
 public class CustomerController {
 
-	@Autowired
 	private CustomerService customerService; 
+	private BasicOperationsController<CustomerService, Customer, String> basicController;
+
+	@Autowired
+	public CustomerController(CustomerService customerService) {
+		this.customerService = customerService;
+		basicController = 
+			new BasicOperationsController<CustomerService, Customer, String>(customerService);
+	}
 	
 	@RequestMapping(value = "/customers/", method=RequestMethod.GET)
 	public ResponseEntity<?> loadCustomers() {
-		List<Customer> customers = customerService.loadAll();
-		return new ResponseEntity<>(customers, HttpStatus.OK);
+		return basicController.loadAll();
 	}
 	
 	@RequestMapping(value = "/customers/{id}", method=RequestMethod.GET)
 	public ResponseEntity<?> load(@PathVariable String id) {
-		Customer customer = customerService.load(id);
-		if(customer == null) 
-			throw new ResourceNotFoundException("Customer not found, id: " + id);
-		return new ResponseEntity<>(customer, HttpStatus.OK);
+		return basicController.load(id);
 	}
 	
 	@RequestMapping(value = "/customers/{id}", method=RequestMethod.POST)
 	public ResponseEntity<?> create(@RequestBody Customer customer) {
-		customerService.save(customer);
-		return new ResponseEntity<>(customer, HttpStatus.OK);
+		return basicController.save(customer);
 	}
 	
 	@RequestMapping(value = "/customers/{id}", method=RequestMethod.PUT)
 	public ResponseEntity<?> update(@RequestBody Customer customer) {
-		if(customer.getCustomerId() == null) {
+		if(customer.getId() == null) {
 			
 		}
-		customerService.save(customer);
-		return new ResponseEntity<>(customer, HttpStatus.OK);
+		return basicController.save(customer);
 	}
 	
 	public void delete(Customer customer) {
