@@ -8,4 +8,5 @@ public interface CrudService<Entity, ID extends Serializable> {
 	List<Entity> loadAll();
 	void save(Entity entity);
 	void delete(Entity entity);
+	void delete(ID id);
 }

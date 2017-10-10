@@ -39,4 +39,8 @@ public class SimpleServiceImpl<Repository extends CrudRepository<Entity, ID>,
 	public Entity load(ID id) {
 		return repository.findOne(id);
 	}
+
+	public void delete(ID id) {
+		repository.delete(id);
+	}
 }

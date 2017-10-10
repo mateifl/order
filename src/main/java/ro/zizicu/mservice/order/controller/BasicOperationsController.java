@@ -45,5 +45,9 @@ class BasicOperationsController<Service extends CrudService<Entity, ID>, Entity 
 		return new ResponseEntity<>(null, responseHeaders, HttpStatus.OK);
 	}
 	
+	public ResponseEntity<?> delete(ID id) {
+		service.delete(id);
+		return new ResponseEntity<>(null, HttpStatus.OK);
+	}
 }
 
