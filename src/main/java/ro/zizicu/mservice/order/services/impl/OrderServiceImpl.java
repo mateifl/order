@@ -23,7 +23,7 @@ import ro.zizicu.mservice.order.entities.Shipper;
 import ro.zizicu.mservice.order.services.OrderService;
 
 @Service
-public class OrderServiceImpl implements OrderService {
+public class OrderServiceImpl extends SimpleServiceImpl<OrderRepository, Order, Integer> implements OrderService {
 
 	private static Logger logger = LoggerFactory.getLogger(OrderServiceImpl.class);
 	@Autowired
@@ -79,12 +79,6 @@ public class OrderServiceImpl implements OrderService {
 	public void deleteOrder(Order order) {
 		// TODO Auto-generated method stub
 
-	}
-
-	@Override
-	public Order loadOrder(Integer id) {
-		Order order = orderRepository.findOne(id);
-		return order;
 	}
 
 	@Override

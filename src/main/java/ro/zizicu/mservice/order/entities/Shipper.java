@@ -20,7 +20,7 @@ public class Shipper implements IdentityOwner<Integer> {
 	public Integer getId() {
 		return id;
 	}
-	public void setShipperId(Integer shipperId) {
+	public void setId(Integer shipperId) {
 		this.id = shipperId;
 	}
 	public String getCompanyName() {

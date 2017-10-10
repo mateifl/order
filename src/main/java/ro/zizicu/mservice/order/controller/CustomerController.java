@@ -1,9 +1,7 @@
 package ro.zizicu.mservice.order.controller;
 
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -11,7 +9,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import ro.zizicu.mservice.order.controller.exceptions.ResourceNotFoundException;
 import ro.zizicu.mservice.order.entities.Customer;
 import ro.zizicu.mservice.order.services.CustomerService;
 
@@ -26,7 +23,7 @@ public class CustomerController {
 	public CustomerController(CustomerService customerService) {
 		this.customerService = customerService;
 		basicController = 
-			new BasicOperationsController<CustomerService, Customer, String>(customerService);
+			new BasicOperationsController<CustomerService, Customer, String>(this.customerService);
 	}
 	
 	@RequestMapping(value = "/customers/", method=RequestMethod.GET)
@@ -39,7 +36,7 @@ public class CustomerController {
 		return basicController.load(id);
 	}
 	
-	@RequestMapping(value = "/customers/{id}", method=RequestMethod.POST)
+	@RequestMapping(value = "/customers/", method=RequestMethod.POST)
 	public ResponseEntity<?> create(@RequestBody Customer customer) {
 		return basicController.save(customer);
 	}
@@ -52,7 +49,8 @@ public class CustomerController {
 		return basicController.save(customer);
 	}
 	
-	public void delete(Customer customer) {
+	@RequestMapping(value = "/customers/{id}", method=RequestMethod.DELETE)
+	public void delete(@PathVariable String id) {
 		
 	}
 }

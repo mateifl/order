@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -14,12 +15,15 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import org.apache.coyote.http11.filters.IdentityOutputFilter;
+
 @Entity
 @Table(name = "orders")
-public class Order {
+public class Order implements IdentityOwner<Integer> {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name="orderid")
 	private Integer orderId;
 	private Date orderDate;
 	private Date requiredDate;
@@ -43,10 +47,10 @@ public class Order {
 	@OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
 	private List<OrderDetail> orderDetails;
 	
-	public Integer getOrderId() {
+	public Integer getId() {
 		return orderId;
 	}
-	public void setOrderId(Integer orderId) {
+	public void setId(Integer orderId) {
 		this.orderId = orderId;
 	}
 	public Date getOrderDate() {

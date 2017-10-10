@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import ro.zizicu.mservice.order.entities.Customer;
 import ro.zizicu.mservice.order.entities.Order;
 import ro.zizicu.mservice.order.entities.ProductValueObject;
 import ro.zizicu.mservice.order.services.OrderService;
@@ -17,16 +18,30 @@ import ro.zizicu.mservice.order.services.OrderService;
 @RequestMapping(value = "orders")
 public class OrderController {
 
-	@Autowired
 	private OrderService orderService;
+	private BasicOperationsController<OrderService, Order, Integer> basicController;	
 	
-	@RequestMapping(value = "/order/{id}", method=RequestMethod.GET)
+	@Autowired
+	public OrderController(OrderService orderService) {
+		this.orderService = orderService;
+		basicController = new BasicOperationsController<OrderService, Order, Integer>(this.orderService);
+	}
+	
+	
+	@RequestMapping(value = "/{id}", method=RequestMethod.GET)
 	public Order getOrder(@PathVariable Integer id) {
-		Order order = orderService.loadOrder(id);
+		Order order = orderService.load(id);
 		return order;
 	}
 	
-	@RequestMapping(value = "/order/create", method=RequestMethod.POST)
+	@RequestMapping(value = "/{id}", method=RequestMethod.GET)
+	public Order updateOrder(@PathVariable Integer id) {
+		Order order = orderService.load(id);
+		return order;
+	}
+	
+	
+	@RequestMapping(value = "/{id}", method=RequestMethod.POST)
 	public void createOrder(@RequestBody OrderCreateWrapper orderCreateWrapper) {
 		Order order = orderCreateWrapper.getOrder();
 		List<ProductValueObject> products = orderCreateWrapper.getProductIds();
