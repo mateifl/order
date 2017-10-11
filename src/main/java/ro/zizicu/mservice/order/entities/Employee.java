@@ -4,36 +4,48 @@ import java.util.Date;
 
 import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 
 @Entity
 @Table(name = "employees")
-public class Employee {
+public class Employee implements IdentityOwner<Integer> {
 	@Id
-	private Integer employeeId; 
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name="employeeid")
+	private Integer id; 
+	@Column(name="birthdate")
 	private Date birthDate;
+	@Column(name="firstname")
 	private String firstName;
+	@Column(name="lastname")
 	private String lastName;
+	@Column(name="hiredate")
 	private Date hireDate;
 	private String title;
+	@Column(name="titleofcourtesy")
 	private String titleOfCourtesy;
 	private String address;
 	private String city;
 	private String region;
+	@Column(name="postalcode")
 	private String postalCode;
 	private String country;
+	@Column(name="homephone")
 	private String homePhone;
 	private String extension;
 	private String photo;
 	private String notes;
 	@ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="reportsto")
+	@JsonIgnore
 	private Employee reportsTo;
 	
-	public Integer getEmployeeId() {
-		return employeeId;
+	public Integer getId() {
+		return id;
 	}
 	public void setEmployeeId(Integer employeeId) {
-		this.employeeId = employeeId;
+		this.id = employeeId;
 	}
 	public String getTitle() {
 		return title;

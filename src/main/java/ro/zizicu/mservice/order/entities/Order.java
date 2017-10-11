@@ -5,7 +5,9 @@ import java.util.Date;
 import java.util.List;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -14,39 +16,53 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name = "orders")
-public class Order {
+public class Order implements IdentityOwner<Integer> {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name="orderid")
 	private Integer orderId;
+	@Column(name="orderdate")
 	private Date orderDate;
+	@Column(name="requireddate")
 	private Date requiredDate;
+	@Column(name="shippeddate")
 	private Date shippedDate;
+	@Column(name="freight")
 	private Double freight;
+	@Column(name="shipname")
 	private String shipName;
+	@Column(name="shipaddress")
 	private String shipAddress;
+	@Column(name="shipcity")
 	private String shipCity;
+	@Column(name="shipregion")
 	private String shipRegion;
+	@Column(name="shippostalcode")
 	private String shipPostalCode;
+	@Column(name="shipcountry")
 	private String shipCountry;
 	@ManyToOne
-	@JoinColumn(name = "employeeId")
+	@JoinColumn(name = "employeeid")
 	private Employee employee;
 	@ManyToOne
-	@JoinColumn(name = "customerId")
+	@JoinColumn(name = "customerid")
 	private Customer customer;
 	@ManyToOne
-	@JoinColumn(name = "shipVia")
+	@JoinColumn(name = "shipvia")
 	private Shipper shipper;
-	@OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
+//	@JsonIgnore
+	@OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch=FetchType.LAZY)
 	private List<OrderDetail> orderDetails;
 	
-	public Integer getOrderId() {
+	public Integer getId() {
 		return orderId;
 	}
-	public void setOrderId(Integer orderId) {
+	public void setId(Integer orderId) {
 		this.orderId = orderId;
 	}
 	public Date getOrderDate() {
@@ -67,7 +83,6 @@ public class Order {
 	public void setShippedDate(Date shippedDate) {
 		this.shippedDate = shippedDate;
 	}
-
 	public Double getFreight() {
 		return freight;
 	}

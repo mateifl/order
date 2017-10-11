@@ -19,7 +19,7 @@ public class TestJSONSerialization {
 	public static void main(String[] args) {
 		try {
 			Order order = new Order();
-			order.setOrderId(1);
+			order.setId(1);
 			order.setShipAddress("test address");
 			order.setShipCountry("Romania");
 			order.setShipName("test ship name");
@@ -46,5 +46,4 @@ public class TestJSONSerialization {
 			e.printStackTrace();
 		}
 	}
-	
 }
