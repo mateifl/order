@@ -3,6 +3,7 @@ package ro.zizicu.mservice.order.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,16 +30,15 @@ public class OrderController {
 	
 	
 	@RequestMapping(value = "/{id}", method=RequestMethod.GET)
-	public Order getOrder(@PathVariable Integer id) {
-		Order order = orderService.load(id);
-		return order;
+	public ResponseEntity<?> getOrder(@PathVariable Integer id) {
+		return basicController.load(id);
 	}
 	
-	@RequestMapping(value = "/{id}", method=RequestMethod.GET)
-	public Order updateOrder(@PathVariable Integer id) {
-		Order order = orderService.load(id);
-		return order;
-	}
+//	@RequestMapping(value = "/{id}", method=RequestMethod.GET)
+//	public Order updateOrder(@PathVariable Integer id) {
+//		Order order = orderService.load(id);
+//		return order;
+//	}
 	
 	
 	@RequestMapping(value = "/{id}", method=RequestMethod.POST)
@@ -47,7 +47,14 @@ public class OrderController {
 		List<ProductValueObject> products = orderCreateWrapper.getProductIds();
 		Integer employeeId = orderCreateWrapper.getEmployeeId();
 		String customerCode = orderCreateWrapper.getCustomerCode();
-		orderService.createOrder(order, products, employeeId, customerCode);
+		Integer shipperId = orderCreateWrapper.getShipperId();
+		orderService.createOrder(order, products, employeeId, customerCode, shipperId);
+	}
+	
+	@RequestMapping(value = "/{id}", method=RequestMethod.DELETE)
+	public void deleteOrder(@PathVariable Integer id) {
+		orderService.delete(id);
+		
 	}
 }
 
@@ -57,7 +64,16 @@ class OrderCreateWrapper {
 	private List<ProductValueObject> productIds; 
 	private String customerCode; 
 	private Integer employeeId; 
+	private Integer shipperId;
 	
+	public Integer getShipperId() {
+		return shipperId;
+	}
+
+	public void setShipperId(Integer shipperId) {
+		this.shipperId = shipperId;
+	}
+
 	public Order getOrder() {
 		return order;
 	}

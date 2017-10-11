@@ -12,16 +12,16 @@ public class Customer implements IdentityOwner<String>{
 	@Id
 	@Column(name="customerid")
 	private String id;
-	@Column(name="companyname")
+	@Column(name="companyname", nullable=false)
 	private String companyName;
-	@Column(name="contactname")
+	@Column(name="contactname", nullable=false)
 	private String contactName;
-	@Column(name="contacttitle")
+	@Column(name="contacttitle", nullable=false)
 	private String contactTitle;
 	private String address;
 	private String city;
 	private String region;
-	@Column(name="postalcode")
+	@Column(name="postalcode", nullable=false)
 	private String postalCode;
 	private String country;
 	private String phone;

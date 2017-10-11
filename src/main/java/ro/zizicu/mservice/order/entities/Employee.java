@@ -4,6 +4,8 @@ import java.util.Date;
 
 import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 
 @Entity
 @Table(name = "employees")
@@ -36,6 +38,7 @@ public class Employee implements IdentityOwner<Integer> {
 	private String notes;
 	@ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="reportsto")
+	@JsonIgnore
 	private Employee reportsTo;
 	
 	public Integer getId() {
