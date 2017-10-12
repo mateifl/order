@@ -49,15 +49,16 @@ public class OrderServiceImpl extends SimpleServiceImpl<OrderRepository, Order, 
 		if(logger.isInfoEnabled()) logger.info("create order");
 		
 		List<OrderDetail> orderDetails = new ArrayList<>();
+		if(logger.isDebugEnabled()) logger.debug("number of order details: " + productIds.size());
 		for(ProductValueObject pvo : productIds)
 		{
-			Product p = productRepository.findOne(pvo.id);
+			Product p = productRepository.findOne(pvo.getId());
 			OrderDetail orderDetail = new OrderDetail();
 			orderDetail.setProduct(p);
 			orderDetail.setOrder(order);
-			orderDetail.setQuantity(pvo.quantity);
-			orderDetail.setUnitPrice(pvo.unitPrice);
-			orderDetail.setDiscount(pvo.discount);
+			orderDetail.setQuantity(pvo.getQuantity());
+			orderDetail.setUnitPrice(pvo.getUnitPrice());
+			orderDetail.setDiscount(pvo.getDiscount());
 			orderDetails.add(orderDetail);
 		}
 		
@@ -80,13 +81,13 @@ public class OrderServiceImpl extends SimpleServiceImpl<OrderRepository, Order, 
 		List<OrderDetail> orderDetails = new ArrayList<>();
 		for(ProductValueObject pvo : productIds)
 		{
-			Product p = productRepository.findOne(pvo.id);
+			Product p = productRepository.findOne(pvo.getId());
 			OrderDetail orderDetail = new OrderDetail();
 			orderDetail.setProduct(p);
 			orderDetail.setOrder(order);
-			orderDetail.setQuantity(pvo.quantity);
-			orderDetail.setUnitPrice(pvo.unitPrice);
-			orderDetail.setDiscount(pvo.discount);
+			orderDetail.setQuantity(pvo.getQuantity());
+			orderDetail.setUnitPrice(pvo.getUnitPrice());
+			orderDetail.setDiscount(pvo.getDiscount());
 			orderDetails.add(orderDetail);
 		}
 		order.setOrderDetails(orderDetails);

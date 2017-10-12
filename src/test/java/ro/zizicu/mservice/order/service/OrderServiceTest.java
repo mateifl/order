@@ -40,9 +40,9 @@ public class OrderServiceTest {
 		order.setShipPostalCode("12212212");
 		order.setShipRegion("test region");
 		List<ProductValueObject> products = new ArrayList<>();
-		products.add(new ProductValueObject(1, 12, 0.5, 10.));
-		products.add(new ProductValueObject(2, 14, 1.5, 11.));
-		products.add(new ProductValueObject(3, 16, 2.5, 12.));
+//		products.add(new ProductValueObject(1, 12, 0.5, 10.));
+//		products.add(new ProductValueObject(2, 14, 1.5, 11.));
+//		products.add(new ProductValueObject(3, 16, 2.5, 12.));
 		orderService.createOrder(order, products, 1, "ANTON", 1);
 	}
 	

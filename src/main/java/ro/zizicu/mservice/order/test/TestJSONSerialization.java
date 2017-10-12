@@ -2,6 +2,8 @@ package ro.zizicu.mservice.order.test;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -35,7 +37,17 @@ public class TestJSONSerialization {
 			s.setCompanyName("test shipper");
 			order.setShipper(s);
 			OrderDetail od = new OrderDetail();
+			od.setDiscount(100.);
+			od.setQuantity(12);
 			od.setProduct(new Product());
+			OrderDetail od1 = new OrderDetail();
+			od1.setDiscount(101.);
+			od1.setQuantity(13);
+			od.setProduct(new Product());
+			List<OrderDetail> ods = new ArrayList<>();
+			ods.add(od);
+			ods.add(od1);
+			order.setOrderDetails(ods);
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.writeValue(new PrintWriter(System.out), order);
 		} catch (JsonGenerationException e) {

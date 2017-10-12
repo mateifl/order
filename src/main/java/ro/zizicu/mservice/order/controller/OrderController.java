@@ -2,6 +2,8 @@ package ro.zizicu.mservice.order.controller;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,6 +21,7 @@ import ro.zizicu.mservice.order.services.OrderService;
 @RequestMapping(value = "orders")
 public class OrderController {
 
+	private static Logger logger = LoggerFactory.getLogger(OrderController.class);
 	private OrderService orderService;
 	private BasicOperationsController<OrderService, Order, Integer> basicController;	
 	
@@ -41,8 +44,13 @@ public class OrderController {
 //	}
 	
 	
-	@RequestMapping(value = "/{id}", method=RequestMethod.POST)
+	@RequestMapping(value = "/", method=RequestMethod.POST)
 	public void createOrder(@RequestBody OrderCreateWrapper orderCreateWrapper) {
+		if(logger.isInfoEnabled()) { 
+			logger.info("Creating order for customer: "	+ orderCreateWrapper.getCustomerCode());
+			logger.info("shipper: "	+ orderCreateWrapper.getShipperId());
+			
+		}
 		Order order = orderCreateWrapper.getOrder();
 		List<ProductValueObject> products = orderCreateWrapper.getProductIds();
 		Integer employeeId = orderCreateWrapper.getEmployeeId();
