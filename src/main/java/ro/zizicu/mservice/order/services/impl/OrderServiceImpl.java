@@ -3,7 +3,7 @@ package ro.zizicu.mservice.order.services.impl;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,11 +41,12 @@ public class OrderServiceImpl extends SimpleServiceImpl<OrderRepository, Order, 
 	private ShipperRepository shipperRepository;
 	
 	@Override
-	public void createOrder(Order order, 
-						    List<ProductValueObject> productIds, 
-						    Integer employeeId, 
-						    String customerCode,
-							 Integer shipperId) {
+	@Transactional
+	public void saveOrder(Order order, 
+						  List<ProductValueObject> productIds, 
+						  Integer employeeId, 
+						  String customerCode,
+						  Integer shipperId) {
 		if(logger.isInfoEnabled()) logger.info("create order");
 		
 		List<OrderDetail> orderDetails = new ArrayList<>();
@@ -63,37 +64,43 @@ public class OrderServiceImpl extends SimpleServiceImpl<OrderRepository, Order, 
 		}
 		
 		order.setOrderDetails(orderDetails);
-		Customer customer = customerRepository.findOne(customerCode);
-		order.setCustomer(customer);
-		Employee employee = employeeRepository.findOne(employeeId);
-		order.setEmployee(employee);
-		Shipper shipper = shipperRepository.findOne(shipperId);
-		order.setShipper(shipper);
+		if(customerCode != null && !customerCode.isEmpty()) {
+			Customer customer = customerRepository.findOne(customerCode);
+			order.setCustomer(customer);
+		}
+		if(employeeId != null) {
+			Employee employee = employeeRepository.findOne(employeeId);
+			order.setEmployee(employee);
+		}
+		if(shipperId != null) {
+			Shipper shipper = shipperRepository.findOne(shipperId);
+			order.setShipper(shipper);
+		}
 		orderRepository.save(order);
 		if(logger.isInfoEnabled()) logger.info("order created");
 		
 	}
 
-	@Override
-	@Transactional
-	public void updateOrder(Order order, List<ProductValueObject> productIds) {
-		if(logger.isInfoEnabled()) logger.info("update order");
-		List<OrderDetail> orderDetails = new ArrayList<>();
-		for(ProductValueObject pvo : productIds)
-		{
-			Product p = productRepository.findOne(pvo.getId());
-			OrderDetail orderDetail = new OrderDetail();
-			orderDetail.setProduct(p);
-			orderDetail.setOrder(order);
-			orderDetail.setQuantity(pvo.getQuantity());
-			orderDetail.setUnitPrice(pvo.getUnitPrice());
-			orderDetail.setDiscount(pvo.getDiscount());
-			orderDetails.add(orderDetail);
-		}
-		order.setOrderDetails(orderDetails);
-		orderRepository.save(order);
-		if(logger.isInfoEnabled()) logger.info("order updated");
-	}
+//	@Override
+//	@Transactional
+//	public void updateOrder(Order order, List<ProductValueObject> productIds) {
+//		if(logger.isInfoEnabled()) logger.info("update order");
+//		List<OrderDetail> orderDetails = new ArrayList<>();
+//		for(ProductValueObject pvo : productIds)
+//		{
+//			Product p = productRepository.findOne(pvo.getId());
+//			OrderDetail orderDetail = new OrderDetail();
+//			orderDetail.setProduct(p);
+//			orderDetail.setOrder(order);
+//			orderDetail.setQuantity(pvo.getQuantity());
+//			orderDetail.setUnitPrice(pvo.getUnitPrice());
+//			orderDetail.setDiscount(pvo.getDiscount());
+//			orderDetails.add(orderDetail);
+//		}
+//		order.setOrderDetails(orderDetails);
+//		orderRepository.save(order);
+//		if(logger.isInfoEnabled()) logger.info("order updated");
+//	}
 
 	@Override
 	@Transactional

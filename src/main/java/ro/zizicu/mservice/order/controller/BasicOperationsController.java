@@ -35,19 +35,23 @@ class BasicOperationsController<Service extends CrudService<Entity, ID>, Entity 
 	
 	public ResponseEntity<?> save(Entity entity) {
 		service.save(entity);
-		HttpHeaders responseHeaders = new HttpHeaders();
-		URI newPollUri = ServletUriComponentsBuilder
-						.fromCurrentRequest()
-						.path("/{id}")
-						.buildAndExpand(entity.getId())
-						.toUri();
-		responseHeaders.setLocation(newPollUri);
-		return new ResponseEntity<>(null, responseHeaders, HttpStatus.OK);
+		return createResponseEntity(entity.getId());
 	}
 	
 	public ResponseEntity<?> delete(ID id) {
 		service.delete(id);
 		return new ResponseEntity<>(null, HttpStatus.OK);
+	}
+	
+	static <S> ResponseEntity<?> createResponseEntity(S id) {
+		HttpHeaders responseHeaders = new HttpHeaders();
+		URI newPollUri = ServletUriComponentsBuilder
+						.fromCurrentRequest()
+						.path("/{id}")
+						.buildAndExpand(id)
+						.toUri();
+		responseHeaders.setLocation(newPollUri);
+		return new ResponseEntity<>(null, responseHeaders, HttpStatus.OK);
 	}
 }
 

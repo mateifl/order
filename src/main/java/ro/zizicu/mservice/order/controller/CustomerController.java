@@ -14,6 +14,7 @@ import ro.zizicu.mservice.order.services.CustomerService;
 
 
 @RestController
+@RequestMapping(value = "customers")
 public class CustomerController {
 
 	private CustomerService customerService; 
@@ -26,22 +27,22 @@ public class CustomerController {
 			new BasicOperationsController<CustomerService, Customer, String>(this.customerService);
 	}
 	
-	@RequestMapping(value = "/customers/", method=RequestMethod.GET)
+	@RequestMapping(value = "/", method=RequestMethod.GET)
 	public ResponseEntity<?> loadCustomers() {
 		return basicController.loadAll();
 	}
 	
-	@RequestMapping(value = "/customers/{id}", method=RequestMethod.GET)
+	@RequestMapping(value = "/{id}", method=RequestMethod.GET)
 	public ResponseEntity<?> load(@PathVariable String id) {
 		return basicController.load(id);
 	}
 	
-	@RequestMapping(value = "/customers/", method=RequestMethod.POST)
+	@RequestMapping(value = "/", method=RequestMethod.POST)
 	public ResponseEntity<?> create(@RequestBody Customer customer) {
 		return basicController.save(customer);
 	}
 	
-	@RequestMapping(value = "/customers/{id}", method=RequestMethod.PUT)
+	@RequestMapping(value = "/", method=RequestMethod.PUT)
 	public ResponseEntity<?> update(@RequestBody Customer customer) {
 		if(customer.getId() == null) {
 			
@@ -49,7 +50,7 @@ public class CustomerController {
 		return basicController.save(customer);
 	}
 	
-	@RequestMapping(value = "/customers/{id}", method=RequestMethod.DELETE)
+	@RequestMapping(value = "/", method=RequestMethod.DELETE)
 	public void delete(@PathVariable String id) {
 		basicController.delete(id);
 	}

@@ -1,16 +1,20 @@
 package ro.zizicu.mservice.order.controller;
 
+import java.net.URI;
 import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import ro.zizicu.mservice.order.entities.Customer;
 import ro.zizicu.mservice.order.entities.Order;
@@ -45,7 +49,7 @@ public class OrderController {
 	
 	
 	@RequestMapping(value = "/", method=RequestMethod.POST)
-	public void createOrder(@RequestBody OrderCreateWrapper orderCreateWrapper) {
+	public ResponseEntity<?> createOrder(@RequestBody OrderCreateWrapper orderCreateWrapper) {
 		if(logger.isInfoEnabled()) { 
 			logger.info("Creating order for customer: "	+ orderCreateWrapper.getCustomerCode());
 			logger.info("shipper: "	+ orderCreateWrapper.getShipperId());
@@ -56,7 +60,18 @@ public class OrderController {
 		Integer employeeId = orderCreateWrapper.getEmployeeId();
 		String customerCode = orderCreateWrapper.getCustomerCode();
 		Integer shipperId = orderCreateWrapper.getShipperId();
-		orderService.createOrder(order, products, employeeId, customerCode, shipperId);
+		orderService.saveOrder(order, products, employeeId, customerCode, shipperId);
+		return BasicOperationsController.createResponseEntity(order.getId());
+	}
+	
+	@RequestMapping(value = "/", method=RequestMethod.PUT)
+	public ResponseEntity<?> updateOrder(@RequestBody OrderCreateWrapper orderCreateWrapper) {
+		Order order = orderCreateWrapper.getOrder();
+		if(logger.isInfoEnabled()) 
+			logger.info("Update order with id: " + order.getId());
+		List<ProductValueObject> products = orderCreateWrapper.getProductIds();
+		orderService.saveOrder(order, products, null, null, null);
+		return BasicOperationsController.createResponseEntity(order.getId());
 	}
 	
 	@RequestMapping(value = "/{id}", method=RequestMethod.DELETE)

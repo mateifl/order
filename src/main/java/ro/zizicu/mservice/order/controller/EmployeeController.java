@@ -10,6 +10,7 @@ import ro.zizicu.mservice.order.entities.Employee;
 import ro.zizicu.mservice.order.services.EmployeeService;
 
 @RestController
+@RequestMapping(value = "orders")
 public class EmployeeController {
 
 	private EmployeeService employeeService; 
@@ -22,8 +23,14 @@ public class EmployeeController {
 			new BasicOperationsController<EmployeeService, Employee, Integer>(this.employeeService);
 	}
 	
-	@RequestMapping(value = "/employees/", method=RequestMethod.GET)
+	@RequestMapping(value = "/", method=RequestMethod.GET)
 	public ResponseEntity<?> loadEmployees() {
 		return basicController.loadAll();
 	}
+
+	@RequestMapping(value = "/{id}", method=RequestMethod.GET)
+	public ResponseEntity<?> loadEmployee(Integer id) {
+		return basicController.load(id);
+	}
+	
 }

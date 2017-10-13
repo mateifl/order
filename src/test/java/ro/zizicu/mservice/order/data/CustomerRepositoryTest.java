@@ -2,6 +2,8 @@ package ro.zizicu.mservice.order.data;
 
 import static org.junit.Assert.assertTrue;
 
+import java.util.List;
+
 import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -43,6 +45,15 @@ public class CustomerRepositoryTest {
 		repository.save(c);
 		assertTrue(c != null);
 		repository.delete("ANAZZ");
+	}
+	
+	@Test
+	public void testFind() {
+		
+		List<Customer> customers = repository.find("ANATR", null, null, null);
+		assertTrue(customers.size() == 1);
+		customers = repository.find(null, null, null, "Germany");
+		assertTrue(customers.size() == 11);
 	}
 	
 //	@After 
