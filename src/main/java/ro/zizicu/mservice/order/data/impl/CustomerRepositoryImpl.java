@@ -9,7 +9,7 @@ import javax.persistence.Query;
 import ro.zizicu.mservice.order.data.CustomerFinderRepository;
 import ro.zizicu.mservice.order.entities.Customer;
 
-public class CustomerFinderRepositoryImpl implements CustomerFinderRepository {
+public class CustomerRepositoryImpl implements CustomerFinderRepository {
 
 	@PersistenceContext
 	private EntityManager em;
@@ -54,7 +54,5 @@ public class CustomerFinderRepositoryImpl implements CustomerFinderRepository {
 		List<Customer> customers = query.getResultList();
 		return customers;
 	}
-
-	
 	
 }

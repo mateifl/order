@@ -10,7 +10,7 @@ import ro.zizicu.mservice.order.entities.Employee;
 import ro.zizicu.mservice.order.services.EmployeeService;
 
 @RestController
-@RequestMapping(value = "orders")
+@RequestMapping(value = "employees")
 public class EmployeeController {
 
 	private EmployeeService employeeService; 
