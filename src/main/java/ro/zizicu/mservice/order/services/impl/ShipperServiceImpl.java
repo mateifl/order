@@ -4,7 +4,7 @@ import ro.zizicu.mservice.order.data.ShipperRepository;
 import ro.zizicu.mservice.order.entities.Shipper;
 import ro.zizicu.mservice.order.services.ShipperService;
 
-public class ShipperServiceImpl 
+class ShipperServiceImpl 
 		extends SimpleServiceImpl<ShipperRepository, Shipper, Integer> 
 		implements ShipperService 
 {

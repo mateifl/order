@@ -8,13 +8,14 @@ import ro.zizicu.mservice.order.entities.Shipper;
 
 public interface OrderService extends CrudService<Order, Integer>{
 
-    void saveOrder(Order order, 
+    Order saveOrder(Order order, 
     				 List<ProductValueObject> productIds, 
     				 Integer employeeId, 
     				 String customerCode,
 					 Integer shipperId);
 //    void updateOrder(Order order, List<ProductValueObject> productIds);
 	void deleteOrder(Order order);
+	// Shipper specific operations
 	Shipper loadShipper(Integer id);
 	Shipper findShipper(String name);
 	void deleteShipper(Shipper shipper);

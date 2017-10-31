@@ -29,8 +29,7 @@ import ro.zizicu.mservice.order.services.OrderService;
 public class OrderServiceImpl extends SimpleServiceImpl<OrderRepository, Order, Integer> implements OrderService {
 
 	private static Logger logger = LoggerFactory.getLogger(OrderServiceImpl.class);
-	@Autowired
-	private OrderRepository orderRepository;
+
 	@Autowired
 	private ProductRepository productRepository;
 	@Autowired
@@ -42,7 +41,7 @@ public class OrderServiceImpl extends SimpleServiceImpl<OrderRepository, Order, 
 	
 	@Override
 	@Transactional
-	public void saveOrder(Order order, 
+	public Order saveOrder(Order order, 
 						  List<ProductValueObject> productIds, 
 						  Integer employeeId, 
 						  String customerCode,
@@ -76,9 +75,9 @@ public class OrderServiceImpl extends SimpleServiceImpl<OrderRepository, Order, 
 			Shipper shipper = shipperRepository.findOne(shipperId);
 			order.setShipper(shipper);
 		}
-		orderRepository.save(order);
+		order = repository.save(order);
 		if(logger.isInfoEnabled()) logger.info("order created");
-		
+		return order;
 	}
 
 //	@Override
@@ -106,13 +105,15 @@ public class OrderServiceImpl extends SimpleServiceImpl<OrderRepository, Order, 
 	@Transactional
 	public void deleteOrder(Order order) {
 		if(logger.isInfoEnabled()) logger.info("delete order");
-		orderRepository.delete(order);
+		repository.delete(order);
 		if(logger.isInfoEnabled()) logger.info("order updated");
 	}
 
+	private SimpleServiceImpl<ShipperRepository, Shipper, Integer> shipperService
+			= new SimpleServiceImpl<ShipperRepository, Shipper, Integer>();
 	@Override
 	public Shipper loadShipper(Integer id) {
-		return null;
+		return shipperService.load(id);
 	}
 
 	@Override
@@ -123,13 +124,13 @@ public class OrderServiceImpl extends SimpleServiceImpl<OrderRepository, Order, 
 
 	@Override
 	public void deleteShipper(Shipper shipper) {
-		// TODO Auto-generated method stub
+		shipperService.delete(shipper);
 
 	}
 
 	@Override
 	public void updateShipper(Shipper shipper) {
-		// TODO Auto-generated method stub
+		shipperService.save(shipper);
 
 	}
 

@@ -17,12 +17,7 @@ public class SimpleServiceImpl<Repository extends CrudRepository<Entity, ID>,
 {
 	private static Logger logger = LoggerFactory.getLogger(SimpleServiceImpl.class);
 	@Autowired
-	private Repository repository;
-	
-	/** Do I need this? */
-	protected Repository getRepository() {
-		return repository;
-	}
+	protected Repository repository;
 	
 	public void delete(Entity entity) {
 		if(logger.isInfoEnabled()) logger.info("delete: " + entity.getClass().getName() + " id " + entity.getId());
