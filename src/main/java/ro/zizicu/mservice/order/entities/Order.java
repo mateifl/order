@@ -48,15 +48,19 @@ public class Order implements IdentityOwner<Integer> {
 	private String shipCountry;
 	@ManyToOne
 	@JoinColumn(name = "employeeid")
+	@JsonIgnore
 	private Employee employee;
 	@ManyToOne
 	@JoinColumn(name = "customerid")
+	@JsonIgnore
 	private Customer customer;
 	@ManyToOne
 	@JoinColumn(name = "shipvia")
+	@JsonIgnore
 	private Shipper shipper;
 //	@JsonIgnore
 	@OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch=FetchType.LAZY)
+	@JsonIgnore
 	private List<OrderDetail> orderDetails;
 	
 	public Integer getId() {

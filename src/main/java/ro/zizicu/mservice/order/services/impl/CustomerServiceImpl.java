@@ -15,8 +15,8 @@ public class CustomerServiceImpl
 {
 
 	@Override
-	public List<Customer> findWithCriteria() {
-		return null;
+	public List<Customer> findWithCriteria(String customerCode, String region, String city, String country) {
+		return repository.find(customerCode, region, city, country);
 	}
 	
 }

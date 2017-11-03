@@ -1,22 +1,17 @@
 package ro.zizicu.mservice.order.controller;
 
-import java.net.URI;
 import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import ro.zizicu.mservice.order.entities.Customer;
 import ro.zizicu.mservice.order.entities.Order;
 import ro.zizicu.mservice.order.entities.ProductValueObject;
 import ro.zizicu.mservice.order.services.OrderService;
@@ -35,18 +30,17 @@ public class OrderController {
 		basicController = new BasicOperationsController<OrderService, Order, Integer>(this.orderService);
 	}
 	
+	@RequestMapping(value = "/", method=RequestMethod.GET)
+	public ResponseEntity<?> getOrders() {
+		if(logger.isInfoEnabled())  
+			logger.info("Load orders");
+		return basicController.loadAll();
+	}
 	
 	@RequestMapping(value = "/{id}", method=RequestMethod.GET)
 	public ResponseEntity<?> getOrder(@PathVariable Integer id) {
 		return basicController.load(id);
 	}
-	
-//	@RequestMapping(value = "/{id}", method=RequestMethod.GET)
-//	public Order updateOrder(@PathVariable Integer id) {
-//		Order order = orderService.load(id);
-//		return order;
-//	}
-	
 	
 	@RequestMapping(value = "/", method=RequestMethod.POST)
 	public ResponseEntity<?> createOrder(@RequestBody OrderCreateWrapper orderCreateWrapper) {

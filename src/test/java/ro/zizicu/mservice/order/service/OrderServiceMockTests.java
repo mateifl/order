@@ -1,8 +1,12 @@
 package ro.zizicu.mservice.order.service;
 
-import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
+
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -18,6 +22,7 @@ import ro.zizicu.mservice.order.data.OrderRepository;
 import ro.zizicu.mservice.order.data.ProductRepository;
 import ro.zizicu.mservice.order.data.ShipperRepository;
 import ro.zizicu.mservice.order.entities.Order;
+import ro.zizicu.mservice.order.entities.ProductValueObject;
 import ro.zizicu.mservice.order.entities.Shipper;
 import ro.zizicu.mservice.order.services.impl.OrderServiceImpl;
 import ro.zizicu.mservice.order.services.impl.SimpleServiceImpl;
@@ -53,7 +58,7 @@ public class OrderServiceMockTests {
 		order.setId(1);
 		when(repository.findOne(1)).thenReturn(order);
 		Order o = service.load(1);
-		
+		assertTrue(o.getId() == 1);
 	}
 	
 	@Test
@@ -66,4 +71,27 @@ public class OrderServiceMockTests {
 		Shipper s = service.loadShipper(1);
 		assertTrue("not the same object", shipper.getCompanyName().equalsIgnoreCase(s.getCompanyName()));
 	}
+	
+	@Test 
+	public void testSave() {
+		Calendar calendar = Calendar.getInstance();
+		Date today = calendar.getTime();
+		Order order = new Order();
+		
+		order.setFreight(10.0);
+		order.setOrderDate(today);
+		order.setRequiredDate(today);
+		order.setShipAddress("test 12345");
+		order.setShipCity("test city");
+		order.setShipCountry("test country");
+		order.setShipName("ship name");
+		order.setShippedDate(today);
+		order.setShipPostalCode("12212212");
+		order.setShipRegion("test region");
+		List<ProductValueObject> products = new ArrayList<>();
+		service.saveOrder(order, products, 1, "ANTON", 1);
+		
+	}
+
+
 }

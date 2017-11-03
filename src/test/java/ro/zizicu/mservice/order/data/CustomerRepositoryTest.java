@@ -54,6 +54,10 @@ public class CustomerRepositoryTest {
 		assertTrue(customers.size() == 1);
 		customers = repository.find(null, null, null, "Germany");
 		assertTrue(customers.size() == 11);
+		customers = repository.find("AN%", null, null, null);
+		assertTrue(customers.size() == 2);
+		customers = repository.find("A%", null, null, "Germany");
+		assertTrue(customers.size() == 1);
 	}
 	
 //	@After 
