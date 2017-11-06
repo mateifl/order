@@ -14,7 +14,7 @@ import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import ro.zizicu.mservice.order.data.impl.CriteriaFinder;
+import ro.zizicu.mservice.order.data.impl.CriteriaFinderImpl;
 import ro.zizicu.mservice.order.data.impl.QueryParameter;
 import ro.zizicu.mservice.order.entities.Customer;
 
@@ -27,7 +27,7 @@ public class CriteriaFinderTests {
 	
 	@Test
 	public void findCustomers() {
-		CriteriaFinder<Customer> finder = new CriteriaFinder<>(em, Customer.class);
+		CriteriaFinderImpl<Customer> finder = new CriteriaFinderImpl<>(em, Customer.class);
 		List<QueryParameter> parameters = new ArrayList<>();
 		parameters.add(new QueryParameter<>("id", String.class, "AN%"));
 		parameters.add(new QueryParameter<>("country", String.class, "Mex%"));
@@ -38,7 +38,7 @@ public class CriteriaFinderTests {
 	
 	@Test
 	public void findCustomers1parameters() {
-		CriteriaFinder<Customer> finder = new CriteriaFinder<>(em, Customer.class);
+		CriteriaFinderImpl<Customer> finder = new CriteriaFinderImpl<>(em, Customer.class);
 		List<QueryParameter> parameters = new ArrayList<>();
 		parameters.add(new QueryParameter<>("id", String.class, "AN%"));
 		List<Customer> l =  finder.find(parameters);

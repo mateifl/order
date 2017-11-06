@@ -23,50 +23,14 @@ public class CustomerRepositoryImpl implements CustomerFinderRepository {
 	
 	@Override
 	public List<Customer> find(String customerCode, String region, String city, String country) {
-		CriteriaFinder<Customer> finder = new CriteriaFinder<>(em, Customer.class);
+		logger.info("find customer");
+		CriteriaFinderImpl<Customer> finder = new CriteriaFinderImpl<>(em, Customer.class);
 		List<QueryParameter> parameters = new ArrayList<>();
 		parameters.add(new QueryParameter<>("id", String.class, customerCode));
 		parameters.add(new QueryParameter<>("region", String.class, region));
 		parameters.add(new QueryParameter<>("city", String.class, city));
 		parameters.add(new QueryParameter<>("country", String.class, country));
 		return finder.find(parameters);
-//		if((customerCode == null || customerCode.isEmpty()) &&
-//		   (region == null || region.isEmpty()) &&
-//		   (city == null || city.isEmpty()) &&
-//		   (country == null || country.isEmpty()))
-//			return null;
-//
-//		StringBuilder sb = new StringBuilder("from Customer where ");
-//		boolean customerSet = false;
-//		boolean regionSet = false;
-//		boolean citySet = false;
-//		if( customerCode != null && !customerCode.isEmpty() ) {
-//			sb.append("customerid like '" + customerCode + "'");
-//			customerSet = true;
-//		}
-//		if( region != null && !region.isEmpty() )
-//		{
-//			if(customerSet)
-//				sb.append(" and ");
-//			sb.append("region like '" + region + "'");
-//			regionSet = true;
-//		}
-//		if( city != null && !city.isEmpty() )
-//		{
-//			if(customerSet || regionSet)
-//				sb.append(" and ");
-//			sb.append("city like '" + city + "'");
-//			citySet = true;
-//		}
-//		if( country != null && !country.isEmpty() ) {
-//			if(customerSet || regionSet || citySet)
-//				sb.append(" and ");
-//			sb.append(" country like '" + country + "'");
-//		}
-//		logger.info(sb.toString());
-//		TypedQuery<Customer> query = em.createQuery(sb.toString(), Customer.class);
-//		List<Customer> customers = query.getResultList();
-//		return customers;
 	}
 	
 }
