@@ -52,23 +52,17 @@ public class CriteriaFinderImpl<T extends IdentityOwner> {
 	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	protected List<T> setupAndExecuteQuery(List<QueryParameter> parameters) {
-		QueryParameter p = parameters.get(0); 
-		ParameterExpression exp = null;
+		// ParameterExpression exp = null;
 		Predicate predicate = criteriaBuilder.equal(criteriaBuilder.literal(1), 1);
 		for(int i = 0; i < parameters.size(); i++) {
-			p = parameters.get(i);
+			QueryParameter p = parameters.get(i);
 			if(p.value == null)	continue;
 			if(logger.isDebugEnabled()) logger.debug(p.toString());
-			exp = criteriaBuilder.parameter(p.type, p.name);
-			predicate = criteriaBuilder.and(predicate, criteriaBuilder.like(root.get(p.name), exp));
+			Predicate pred = criteriaBuilder.like(root.get(p.name), (String)p.value);
+			predicate = criteriaBuilder.and(predicate, pred);
 		}
 		query.where(predicate);
 		TypedQuery<T> typedQuery = em.createQuery(query);
-		for(QueryParameter p1 : parameters) {
-			if(p1.value == null) continue;
-			if(logger.isDebugEnabled()) logger.debug(p1.toString());
-			typedQuery.setParameter(p1.name, p1.value);
-		}
 		return typedQuery.getResultList();
 	}
 }
