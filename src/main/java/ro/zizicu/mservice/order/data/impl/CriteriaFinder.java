@@ -10,6 +10,7 @@ import javax.persistence.criteria.Root;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ro.zizicu.mservice.order.data.finder.PredicateBuilder;
 import ro.zizicu.mservice.order.entities.IdentityOwner;
 
 public interface CriteriaFinder<T extends IdentityOwner> {

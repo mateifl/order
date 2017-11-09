@@ -26,10 +26,14 @@ public class CustomerRepositoryImpl implements CustomerFinderRepository {
 		logger.info("find customer");
 		CriteriaFinderImpl<Customer> finder = new CriteriaFinderImpl<>(em, Customer.class);
 		List<QueryParameter> parameters = new ArrayList<>();
-		parameters.add(new QueryParameter<>("id", String.class, customerCode));
-		parameters.add(new QueryParameter<>("region", String.class, region));
-		parameters.add(new QueryParameter<>("city", String.class, city));
-		parameters.add(new QueryParameter<>("country", String.class, country));
+		if(customerCode != null)
+			parameters.add(new QueryParameter<String>("id", customerCode));
+		if(region != null)
+			parameters.add(new QueryParameter<String>("region", region));
+		if(city != null)
+			parameters.add(new QueryParameter<String>("city", city));
+		if(country != null)
+			parameters.add(new QueryParameter<String>("country", country));
 		return finder.find(parameters);
 	}
 	

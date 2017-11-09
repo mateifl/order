@@ -10,8 +10,8 @@ public class FinderContext<T> {
 	}
 	
 	public  List<T> find() {
-		finder.setup();
-		finder.execute();
+//		finder.setup();
+//		finder.execute();
 		return finder.getResults();
 	}
 }
