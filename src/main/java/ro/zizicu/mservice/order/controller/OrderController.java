@@ -35,6 +35,12 @@ public class OrderController {
 		basicController = new BasicOperationsController<OrderService, Order, Integer>(this.orderService);
 	}
 	
+	@RequestMapping(value = "/", method=RequestMethod.GET)
+	public ResponseEntity<?> getOrders() {
+		if(logger.isInfoEnabled())  
+			logger.info("Load orders");
+		return basicController.loadAll();
+	}
 	
 	@RequestMapping(value = "/{id}", method=RequestMethod.GET)
 	public ResponseEntity<?> getOrder(@PathVariable Integer id) {
@@ -60,7 +66,7 @@ public class OrderController {
 		Integer employeeId = orderCreateWrapper.getEmployeeId();
 		String customerCode = orderCreateWrapper.getCustomerCode();
 		Integer shipperId = orderCreateWrapper.getShipperId();
-		orderService.save(order, products, employeeId, customerCode, shipperId);
+		orderService.saveOrder(order, products, employeeId, customerCode, shipperId);
 		return BasicOperationsController.createResponseEntity(order.getId());
 	}
 	
@@ -70,7 +76,7 @@ public class OrderController {
 		if(logger.isInfoEnabled()) 
 			logger.info("Update order with id: " + order.getId());
 		List<ProductValueObject> products = orderCreateWrapper.getProductIds();
-		orderService.save(order, products, null, null, null);
+		orderService.saveOrder(order, products, null, null, null);
 		return BasicOperationsController.createResponseEntity(order.getId());
 	}
 	

@@ -43,7 +43,7 @@ public class OrderServiceTest {
 //		products.add(new ProductValueObject(1, 12, 0.5, 10.));
 //		products.add(new ProductValueObject(2, 14, 1.5, 11.));
 //		products.add(new ProductValueObject(3, 16, 2.5, 12.));
-		orderService.save(order, products, 1, "ANTON", 1);
+		orderService.saveOrder(order, products, 1, "ANTON", 1);
 	}
 	
 }

@@ -1,5 +1,6 @@
 package ro.zizicu.mservice.order.data;
 
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.List;
@@ -51,9 +52,14 @@ public class CustomerRepositoryTest {
 	public void testFind() {
 		
 		List<Customer> customers = repository.find("ANATR", null, null, null);
+		assertNotNull("find by", customers);
 		assertTrue(customers.size() == 1);
 		customers = repository.find(null, null, null, "Germany");
 		assertTrue(customers.size() == 11);
+		customers = repository.find("AN%", null, null, null);
+		assertTrue(customers.size() == 2);
+		customers = repository.find("A%", null, null, "Germany");
+		assertTrue(customers.size() == 1);
 	}
 	
 //	@After 
