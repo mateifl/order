@@ -42,7 +42,7 @@ public class OrderServiceImpl extends SimpleServiceImpl<OrderRepository, Order, 
 	
 	@Override
 	@Transactional
-	public void saveOrder(Order order, 
+	public void save(Order order, 
 						  List<ProductValueObject> productIds, 
 						  Integer employeeId, 
 						  String customerCode,

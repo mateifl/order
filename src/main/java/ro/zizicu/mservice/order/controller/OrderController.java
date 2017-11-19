@@ -60,7 +60,7 @@ public class OrderController {
 		Integer employeeId = orderCreateWrapper.getEmployeeId();
 		String customerCode = orderCreateWrapper.getCustomerCode();
 		Integer shipperId = orderCreateWrapper.getShipperId();
-		orderService.saveOrder(order, products, employeeId, customerCode, shipperId);
+		orderService.save(order, products, employeeId, customerCode, shipperId);
 		return BasicOperationsController.createResponseEntity(order.getId());
 	}
 	
@@ -70,7 +70,7 @@ public class OrderController {
 		if(logger.isInfoEnabled()) 
 			logger.info("Update order with id: " + order.getId());
 		List<ProductValueObject> products = orderCreateWrapper.getProductIds();
-		orderService.saveOrder(order, products, null, null, null);
+		orderService.save(order, products, null, null, null);
 		return BasicOperationsController.createResponseEntity(order.getId());
 	}
 	
