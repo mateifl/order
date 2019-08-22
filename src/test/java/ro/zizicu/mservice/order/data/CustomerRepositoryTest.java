@@ -24,7 +24,7 @@ public class CustomerRepositoryTest {
 	
 	@Test
 	public void testLoad() {
-		Customer c = repository.findOne("ANATR");
+		Customer c = repository.findById("ANATR").get();
 		assertTrue(c != null);
 		assertTrue(c.getId().equalsIgnoreCase("ANATR"));
 	}
@@ -45,7 +45,7 @@ public class CustomerRepositoryTest {
 		c.setFax("12121");
 		repository.save(c);
 		assertTrue(c != null);
-		repository.delete("ANAZZ");
+		repository.deleteById("ANAZZ");
 	}
 	
 	@Test
@@ -61,10 +61,4 @@ public class CustomerRepositoryTest {
 		customers = repository.find("A%", null, null, "Germany");
 		assertTrue(customers.size() == 1);
 	}
-	
-//	@After 
-//	public void cleanUp() {
-//		repository.delete("ANATR1");
-//	}
-	
 }

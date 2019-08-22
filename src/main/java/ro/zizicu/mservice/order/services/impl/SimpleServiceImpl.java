@@ -41,11 +41,11 @@ public class SimpleServiceImpl<Repository extends CrudRepository<Entity, ID>,
 	
 	public Entity load(ID id) {
 		if(logger.isInfoEnabled()) logger.info("load entity with id " + id);
-		return repository.findOne(id);
+		return repository.findById(id).get();
 	}
 
 	public void delete(ID id) {
 		if(logger.isInfoEnabled()) logger.info("delete entity with id " + id);
-		repository.delete(id);
+		repository.deleteById(id);
 	}
 }

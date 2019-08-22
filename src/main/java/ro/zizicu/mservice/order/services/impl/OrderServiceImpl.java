@@ -52,7 +52,7 @@ public class OrderServiceImpl extends SimpleServiceImpl<OrderRepository, Order, 
 		if(logger.isDebugEnabled()) logger.debug("number of order details: " + productIds.size());
 		for(ProductValueObject pvo : productIds)
 		{
-			Product p = productRepository.findOne(pvo.getId());
+			Product p = productRepository.findById(pvo.getId()).get();
 			OrderDetail orderDetail = new OrderDetail();
 			orderDetail.setProduct(p);
 			orderDetail.setOrder(order);
@@ -64,15 +64,15 @@ public class OrderServiceImpl extends SimpleServiceImpl<OrderRepository, Order, 
 		
 		order.setOrderDetails(orderDetails);
 		if(customerCode != null && !customerCode.isEmpty()) {
-			Customer customer = customerRepository.findOne(customerCode);
+			Customer customer = customerRepository.findById(customerCode).get();
 			order.setCustomer(customer);
 		}
 		if(employeeId != null) {
-			Employee employee = employeeRepository.findOne(employeeId);
+			Employee employee = employeeRepository.findById(employeeId).get();
 			order.setEmployee(employee);
 		}
 		if(shipperId != null) {
-			Shipper shipper = shipperRepository.findOne(shipperId);
+			Shipper shipper = shipperRepository.findById(shipperId).get();
 			order.setShipper(shipper);
 		}
 		order = repository.save(order);
@@ -87,7 +87,7 @@ public class OrderServiceImpl extends SimpleServiceImpl<OrderRepository, Order, 
 //		List<OrderDetail> orderDetails = new ArrayList<>();
 //		for(ProductValueObject pvo : productIds)
 //		{
-//			Product p = productRepository.findOne(pvo.getId());
+//			Product p = productRepository.findById(pvo.getId());
 //			OrderDetail orderDetail = new OrderDetail();
 //			orderDetail.setProduct(p);
 //			orderDetail.setOrder(order);

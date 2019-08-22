@@ -28,7 +28,7 @@ public class CriteriaFinderTests {
 	@Test
 	public void findCustomers() {
 		CriteriaFinderImpl<Customer> finder = new CriteriaFinderImpl<>(em, Customer.class);
-		List<QueryParameter> parameters = new ArrayList<>();
+		List<QueryParameter<?>> parameters = new ArrayList<>();
 		parameters.add(new QueryParameter<>("id", "AN%"));
 		parameters.add(new QueryParameter<>("country", "Mex%"));
 		List<Customer> l =  finder.find(parameters);
@@ -39,7 +39,7 @@ public class CriteriaFinderTests {
 	@Test
 	public void findCustomers1parameters() {
 		CriteriaFinderImpl<Customer> finder = new CriteriaFinderImpl<>(em, Customer.class);
-		List<QueryParameter> parameters = new ArrayList<>();
+		List<QueryParameter<?>> parameters = new ArrayList<>();
 		parameters.add(new QueryParameter<>("id", "AN%"));
 		List<Customer> l =  finder.find(parameters);
 		assertNotNull("Null result in find customers test ", l);

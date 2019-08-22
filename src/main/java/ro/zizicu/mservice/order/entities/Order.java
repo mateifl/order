@@ -58,7 +58,7 @@ public class Order implements IdentityOwner<Integer> {
 	@JoinColumn(name = "shipvia")
 	@JsonIgnore
 	private Shipper shipper;
-//	@JsonIgnore
+
 	@OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch=FetchType.LAZY)
 	@JsonIgnore
 	private List<OrderDetail> orderDetails;

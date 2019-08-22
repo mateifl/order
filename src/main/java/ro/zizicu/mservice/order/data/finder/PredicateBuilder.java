@@ -9,8 +9,8 @@ import javax.persistence.criteria.Root;
 import ro.zizicu.mservice.order.data.impl.QueryParameter;
 
 public interface PredicateBuilder {
-	Predicate create(List<QueryParameter> parameters, 
-					 Root root, 
+	Predicate create(List<QueryParameter<?>> parameters, 
+					 Root<?> root, 
 					 CriteriaBuilder criteriaBuilder);
 }
 

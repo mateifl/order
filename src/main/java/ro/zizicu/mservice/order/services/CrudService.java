@@ -3,6 +3,8 @@ package ro.zizicu.mservice.order.services;
 import java.io.Serializable;
 import java.util.List;
 
+/** Is this needed ? */
+
 public interface CrudService<Entity, ID extends Serializable> {
 	Entity load(ID id);
 	List<Entity> loadAll();

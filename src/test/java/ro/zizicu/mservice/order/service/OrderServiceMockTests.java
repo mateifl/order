@@ -56,7 +56,7 @@ public class OrderServiceMockTests {
 		logger.info("load order");
 		Order order = new Order();
 		order.setId(1);
-		when(repository.findOne(1)).thenReturn(order);
+		when(repository.findById(1).get()).thenReturn(order);
 		Order o = service.load(1);
 		assertTrue(o.getId() == 1);
 	}

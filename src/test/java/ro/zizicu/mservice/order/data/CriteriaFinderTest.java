@@ -31,7 +31,7 @@ public class CriteriaFinderTest {
 	public void testLikeFinder() {
 		StringLikePredicateBuilder predicateBuilder = new StringLikePredicateBuilder();
 		Finder<Customer> finder = new EntityCriteriaFinder<>(em, Customer.class, predicateBuilder);
-		List<QueryParameter> parameters = new ArrayList<>();
+		List<QueryParameter<?>> parameters = new ArrayList<>();
 		parameters.add(new QueryParameter<>("id", "AN%"));
 		finder.setup(parameters);
 		finder.execute();

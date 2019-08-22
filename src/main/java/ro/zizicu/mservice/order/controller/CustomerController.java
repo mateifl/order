@@ -1,9 +1,12 @@
 package ro.zizicu.mservice.order.controller;
 
 
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -47,9 +50,16 @@ public class CustomerController {
 	}
 	
 	@RequestMapping(value = "/find", method=RequestMethod.GET)
-	public ResponseEntity<?> find(@RequestParam("code") String code) {
-		logger.info("Find with " + code);
-		return BasicOperationsController.createResponseEntity(customerService.findWithCriteria(code, null, null, null));
+	public ResponseEntity<?> find(@RequestParam(value="code", defaultValue="") String code,
+								  @RequestParam(value="city", defaultValue="") String city,
+								  @RequestParam(value="country", defaultValue="") String country) {
+		
+		List<Customer> result = customerService.findWithCriteria(code.isEmpty() ? null : code, 
+																null, 
+																city.isEmpty() ? null : city, 
+																country.isEmpty() ? null : country);
+		logger.debug("Found " + result.size());
+		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 	
 	@RequestMapping(value = "/", method=RequestMethod.PUT)

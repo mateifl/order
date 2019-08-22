@@ -6,7 +6,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.ParameterExpression;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
@@ -29,7 +28,7 @@ public class CriteriaFinderImpl<T extends IdentityOwner> {
 		this.em = em;
 	}
 	
-	public  List<T> find(List<QueryParameter> parameters) {
+	public  List<T> find(List<QueryParameter<?>> parameters) {
 		logger.info("using finder for class " + this.clazz.toString());
 		
 		if(em == null)
@@ -50,9 +49,8 @@ public class CriteriaFinderImpl<T extends IdentityOwner> {
 		return setupAndExecuteQuery(parameters);
 	}
 	
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	protected List<T> setupAndExecuteQuery(List<QueryParameter> parameters) {
-		// ParameterExpression exp = null;
+	@SuppressWarnings({ "rawtypes"})
+	protected List<T> setupAndExecuteQuery(List<QueryParameter<?>> parameters) {
 		Predicate predicate = criteriaBuilder.equal(criteriaBuilder.literal(1), 1);
 		for(int i = 0; i < parameters.size(); i++) {
 			QueryParameter p = parameters.get(i);

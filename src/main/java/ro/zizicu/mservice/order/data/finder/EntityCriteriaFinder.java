@@ -32,7 +32,7 @@ public class EntityCriteriaFinder<T> extends CriteriaFinder<T> {
 	}
 
 	@Override
-	public void setup(List<QueryParameter> parameters) {
+	public void setup(List<QueryParameter<?>> parameters) {
 		Predicate predicate = predicateBuilder.create(parameters, root, criteriaBuilder);
 		query.where(predicate);
 	}
@@ -42,8 +42,4 @@ public class EntityCriteriaFinder<T> extends CriteriaFinder<T> {
 		TypedQuery<T> typedQuery = em.createQuery(query);
 		results = typedQuery.getResultList();
 	}
-
-
-	
-	
 }

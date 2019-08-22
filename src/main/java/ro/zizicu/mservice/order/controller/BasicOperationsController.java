@@ -13,7 +13,9 @@ import ro.zizicu.mservice.order.controller.exceptions.ResourceNotFoundException;
 import ro.zizicu.mservice.order.entities.IdentityOwner;
 import ro.zizicu.mservice.order.services.CrudService;
 
-class BasicOperationsController<Service extends CrudService<Entity, ID>, Entity extends IdentityOwner<ID>, ID extends Serializable> {
+class BasicOperationsController<Service extends CrudService<Entity, ID>, 
+								Entity extends IdentityOwner<ID>, 
+								ID extends Serializable> {
 		
 	BasicOperationsController(Service service) {
 		this.service = service;
