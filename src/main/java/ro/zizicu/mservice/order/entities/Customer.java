@@ -27,6 +27,8 @@ public class Customer implements IdentityOwner<String>{
 	private String phone;
 	private String fax;
 
+	
+	
 	public String getId() {
 		return id;
 	}

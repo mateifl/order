@@ -8,8 +8,7 @@ import ro.zizicu.mservice.order.services.EmployeeService;
 
 @Service
 public class EmployeeServiceImpl 
-			 extends SimpleServiceImpl<EmployeeRepository, Employee, Integer> 
+			 extends CrudServiceImpl<EmployeeRepository, Employee, Integer> 
 			 implements EmployeeService {
-
 
 }

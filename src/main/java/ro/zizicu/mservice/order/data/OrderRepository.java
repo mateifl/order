@@ -4,6 +4,8 @@ import org.springframework.data.repository.CrudRepository;
 
 import ro.zizicu.mservice.order.entities.Order;
 
-public interface OrderRepository extends CrudRepository<Order, Integer> {
+public interface OrderRepository extends CrudRepository<Order, Integer>, OrderFinderRepository {
+
+	
 	
 }

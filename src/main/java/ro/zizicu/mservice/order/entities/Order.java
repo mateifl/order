@@ -47,21 +47,20 @@ public class Order implements IdentityOwner<Integer> {
 	@Column(name="shipcountry")
 	private String shipCountry;
 	@ManyToOne
-	@JoinColumn(name = "employeeid")
+	@JoinColumn(name = "employeeid", nullable=false)
 	@JsonIgnore
 	private Employee employee;
-	@ManyToOne
+	@ManyToOne(cascade = CascadeType.PERSIST, optional = false)
 	@JoinColumn(name = "customerid")
 	@JsonIgnore
 	private Customer customer;
-	@ManyToOne
-	@JoinColumn(name = "shipvia")
+	@ManyToOne(cascade = CascadeType.PERSIST, optional = false)
+	@JoinColumn(name = "shipvia", nullable=false)
 	@JsonIgnore
 	private Shipper shipper;
-
 	@OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch=FetchType.LAZY)
 	@JsonIgnore
-	private List<OrderDetail> orderDetails;
+	private List<OrderDetail> orderDetails = new ArrayList<>();
 	
 	public Integer getId() {
 		return orderId;
@@ -146,9 +145,7 @@ public class Order implements IdentityOwner<Integer> {
 			orderDetails = new ArrayList<>();
 		return orderDetails;
 	}
-	public void setOrderDetails(List<OrderDetail> orderDetails) {
-		this.orderDetails = orderDetails;
-	}
+
 	public Shipper getShipper() {
 		return shipper;
 	}
@@ -167,6 +164,4 @@ public class Order implements IdentityOwner<Integer> {
 	public void resetDetails() {
 		orderDetails = new ArrayList<>();
 	}
-	
-	
 }

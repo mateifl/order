@@ -10,7 +10,7 @@ import ro.zizicu.mservice.order.services.CustomerService;
 
 @Service
 public class CustomerServiceImpl 
-	   extends SimpleServiceImpl<CustomerRepository, Customer, String> 
+	   extends CrudServiceImpl<CustomerRepository, Customer, String> 
 	   implements CustomerService
 {
 

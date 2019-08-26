@@ -1,24 +1,29 @@
 package ro.zizicu.mservice.order.services;
 
+import java.util.Date;
 import java.util.List;
 
+import ro.zizicu.mservice.order.entities.Customer;
+import ro.zizicu.mservice.order.entities.Employee;
 import ro.zizicu.mservice.order.entities.Order;
 import ro.zizicu.mservice.order.entities.ProductValueObject;
 import ro.zizicu.mservice.order.entities.Shipper;
+import ro.zizicu.mservice.order.exceptions.OrderNotFoundException;
+import ro.zizicu.mservice.order.exceptions.ProductNotFoundException;
 
-public interface OrderService extends CrudService<Order, Integer>{
-
-
-    Order saveOrder(Order order, 
-    				 List<ProductValueObject> productIds, 
-    				 Integer employeeId, 
-    				 String customerCode,
-					 Integer shipperId);
-//    void updateOrder(Order order, List<ProductValueObject> productIds);
-	void deleteOrder(Order order);
-	// Shipper specific operations
-	Shipper loadShipper(Integer id);
-	Shipper findShipper(String name);
-	void deleteShipper(Shipper shipper);
-	void updateShipper(Shipper shipper);
+public interface OrderService {
+	
+    Order createOrder(Order order, 
+    				List<ProductValueObject> productIds, 
+    				Employee employee, 
+    				Customer customer,
+					Shipper shipper) throws ProductNotFoundException;
+    void updateOrder(Order order, 
+    				 List<ProductValueObject> productIds) throws ProductNotFoundException;
+	void cancelOrder(Order order);
+	Order loadOrder(Integer id) throws OrderNotFoundException;
+	List<Order> findOrders(Customer customer);
+	List<Order> findOrders(Date start, Date end);
+	List<Order> findOrders(String countryToShip);
+	List<Order> findOrders(Employee createdBy);
 }

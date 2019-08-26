@@ -14,23 +14,22 @@ import ro.zizicu.mservice.order.services.EmployeeService;
 public class EmployeeController {
 
 	private EmployeeService employeeService; 
-	private BasicOperationsController<EmployeeService, Employee, Integer> basicController;
+	
 
 	@Autowired
 	public EmployeeController(EmployeeService employeeService) {
 		this.employeeService = employeeService;
-		basicController = 
-			new BasicOperationsController<EmployeeService, Employee, Integer>(this.employeeService);
+		
 	}
 	
 	@RequestMapping(value = "/", method=RequestMethod.GET)
 	public ResponseEntity<?> loadEmployees() {
-		return basicController.loadAll();
+		return null;
 	}
 
 	@RequestMapping(value = "/{id}", method=RequestMethod.GET)
 	public ResponseEntity<?> loadEmployee(Integer id) {
-		return basicController.load(id);
+		return null;
 	}
 	
 }

@@ -1,42 +1,17 @@
 package ro.zizicu.mservice.order.entities;
 
 public class ProductValueObject {
-	private  Integer quantity;
-	private  Double discount;
-	private  Double unitPrice;
-	private  Integer id;
+	public final  Integer quantity;
+	public final  Double discount;
+	public final  Double unitPrice;
+	public final  Integer productId;
 	
-	public Integer getQuantity() {
-		return quantity;
-	}
-
-	public void setQuantity(Integer quantity) {
+	public ProductValueObject(Integer quantity, Double discount, Double unitPrice, Integer productId) {
+		super();
 		this.quantity = quantity;
-	}
-
-	public Double getDiscount() {
-		return discount;
-	}
-
-	public void setDiscount(Double discount) {
 		this.discount = discount;
-	}
-
-	public Double getUnitPrice() {
-		return unitPrice;
-	}
-
-	public void setUnitPrice(Double unitPrice) {
 		this.unitPrice = unitPrice;
+		this.productId = productId;
 	}
 
-	public Integer getId() {
-		return id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
-	}
-	
-	
 }

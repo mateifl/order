@@ -44,10 +44,8 @@ public class TestJSONSerialization {
 			od1.setDiscount(101.);
 			od1.setQuantity(13);
 			od.setProduct(new Product());
-			List<OrderDetail> ods = new ArrayList<>();
-			ods.add(od);
-			ods.add(od1);
-			order.setOrderDetails(ods);
+			order.getOrderDetails().add(od);
+			order.getOrderDetails().add(od1);
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.writeValue(new PrintWriter(System.out), order);
 		} catch (JsonGenerationException e) {
