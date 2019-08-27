@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import ro.zizicu.mservice.order.data.CustomerRepository;
 import ro.zizicu.mservice.order.data.OrderRepository;
 import ro.zizicu.mservice.order.data.ProductRepository;
 import ro.zizicu.mservice.order.entities.Customer;
@@ -20,6 +21,7 @@ import ro.zizicu.mservice.order.entities.OrderDetail;
 import ro.zizicu.mservice.order.entities.Product;
 import ro.zizicu.mservice.order.entities.ProductValueObject;
 import ro.zizicu.mservice.order.entities.Shipper;
+import ro.zizicu.mservice.order.exceptions.OrderAlreadyShipped;
 import ro.zizicu.mservice.order.exceptions.OrderNotFoundException;
 import ro.zizicu.mservice.order.exceptions.ProductNotFoundException;
 import ro.zizicu.mservice.order.services.OrderService;
@@ -33,6 +35,8 @@ public class OrderServiceImpl implements OrderService {
 	private ProductRepository productRepository;
 	@Autowired
 	private OrderRepository orderRepository;
+	@Autowired
+	private CustomerRepository customerRepository;
 	
 	@Override
 	@Transactional
@@ -60,6 +64,10 @@ public class OrderServiceImpl implements OrderService {
 			order.getOrderDetails().add(orderDetail);
 		}
 		
+		if(customer.getId() != null) {
+			logger.info("Customer already in the database " + customer.getId() );
+			customer = customerRepository.findById(customer.getId()).orElse(customer);
+		}
 		order.setCustomer(customer);
 		order.setEmployee(employee);
 		order.setShipper(shipper);
@@ -131,4 +139,9 @@ public class OrderServiceImpl implements OrderService {
 		return null;
 	}
 
+	public void deleteOrder(Order order) throws OrderAlreadyShipped {
+		if(order.getShippedDate() != null) 
+			throw new OrderAlreadyShipped(order.getId());
+		orderRepository.delete(order);
+	}
 }

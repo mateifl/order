@@ -37,7 +37,21 @@ public class OrderRepositoryImpl implements OrderFinderRepository {
 		{
 			Join<Order, Customer> customerJoin = order.join("customer");
 			ParameterExpression<String> p = criteriaBuilder.parameter(String.class, "customer");
-			criteria.add(criteriaBuilder.equal(customerJoin.get("code"), p));
+			criteria.add(criteriaBuilder.equal(customerJoin.get("id"), p));
+		}
+		
+		if(startDate != null && endDate != null) 
+			criteria.add(criteriaBuilder.between(order.get("orderDate"), startDate, endDate));
+		else if(startDate != null && endDate == null) 
+			criteria.add(criteriaBuilder.greaterThanOrEqualTo(order.get("orderDate"), startDate));
+		else if(startDate == null && endDate != null)
+			criteria.add(criteriaBuilder.lessThanOrEqualTo(order.get("orderDate"), endDate));
+		
+		if( employee != null )
+		{
+			Join<Order, Employee> employeeJoin = order.join("employee");
+			ParameterExpression<String> p = criteriaBuilder.parameter(String.class, "employee");
+			criteria.add(criteriaBuilder.equal(employeeJoin.get("id"), p));
 		}
 		
 		if (criteria.size() == 0) {
@@ -51,6 +65,8 @@ public class OrderRepositoryImpl implements OrderFinderRepository {
 		TypedQuery<Order> query = em.createQuery(orderCriteriaQuery);
 		if(customer != null && customer.getId() != null)
 			query.setParameter("customer", customer.getId());
+		if(employee != null )
+			query.setParameter("employee", employee.getId());
 		return query.getResultList();
 	}
 

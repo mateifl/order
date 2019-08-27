@@ -16,6 +16,8 @@ public class Shipper implements IdentityOwner<Integer> {
 	@Column(name="companyname")
 	private String companyName;
 	private String phone;
+
+	
 	
 	public Integer getId() {
 		return id;

@@ -46,15 +46,15 @@ public class Order implements IdentityOwner<Integer> {
 	private String shipPostalCode;
 	@Column(name="shipcountry")
 	private String shipCountry;
-	@ManyToOne
+	@ManyToOne(optional = false, fetch = FetchType.LAZY)
 	@JoinColumn(name = "employeeid", nullable=false)
 	@JsonIgnore
 	private Employee employee;
-	@ManyToOne(cascade = CascadeType.PERSIST, optional = false)
+	@ManyToOne(cascade = CascadeType.PERSIST, optional = false, fetch = FetchType.LAZY)
 	@JoinColumn(name = "customerid")
 	@JsonIgnore
 	private Customer customer;
-	@ManyToOne(cascade = CascadeType.PERSIST, optional = false)
+	@ManyToOne(cascade = CascadeType.PERSIST, optional = false, fetch = FetchType.LAZY)
 	@JoinColumn(name = "shipvia", nullable=false)
 	@JsonIgnore
 	private Shipper shipper;

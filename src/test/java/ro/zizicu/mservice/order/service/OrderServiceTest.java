@@ -1,6 +1,7 @@
 package ro.zizicu.mservice.order.service;
 
 
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 
 import java.util.ArrayList;
@@ -19,9 +20,11 @@ import ro.zizicu.mservice.order.entities.Employee;
 import ro.zizicu.mservice.order.entities.Order;
 import ro.zizicu.mservice.order.entities.ProductValueObject;
 import ro.zizicu.mservice.order.entities.Shipper;
+import ro.zizicu.mservice.order.exceptions.OrderAlreadyShipped;
 import ro.zizicu.mservice.order.exceptions.ProductNotFoundException;
 import ro.zizicu.mservice.order.services.EmployeeService;
 import ro.zizicu.mservice.order.services.OrderService;
+import ro.zizicu.mservice.order.services.ShipperService;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -32,6 +35,9 @@ public class OrderServiceTest {
 	
 	@Autowired
 	private EmployeeService employeeService;
+	
+	@Autowired
+	private ShipperService shipperService;
 	
 	@Test
 	public void testSaveOrderFullGraph() {
@@ -46,7 +52,7 @@ public class OrderServiceTest {
 			order.setShipCity("test city");
 			order.setShipCountry("test country");
 			order.setShipName("ship name");
-			order.setShippedDate(today);
+//			order.setShippedDate(today);
 			order.setShipPostalCode("12212212");
 			order.setShipRegion("test region");
 			List<ProductValueObject> products = new ArrayList<>();
@@ -68,9 +74,18 @@ public class OrderServiceTest {
 			c.setPostalCode("098828");
 			c.setFax("23123212");
 			c.setRegion("region");
-			orderService.createOrder(order, products, e, c, s);
+			order = orderService.createOrder(order, products, e, c, s);
+			assertNotNull(order.getId());
+			assertNotNull(s.getId());
+			// clean up 
+			orderService.deleteOrder(order);
+			shipperService.delete(s);
+			
 		} catch (ProductNotFoundException e) {
 			e.printStackTrace();
+			fail();
+		} catch (OrderAlreadyShipped e1) {
+			e1.printStackTrace();
 			fail();
 		}
 	}

@@ -8,6 +8,7 @@ import ro.zizicu.mservice.order.entities.Employee;
 import ro.zizicu.mservice.order.entities.Order;
 import ro.zizicu.mservice.order.entities.ProductValueObject;
 import ro.zizicu.mservice.order.entities.Shipper;
+import ro.zizicu.mservice.order.exceptions.OrderAlreadyShipped;
 import ro.zizicu.mservice.order.exceptions.OrderNotFoundException;
 import ro.zizicu.mservice.order.exceptions.ProductNotFoundException;
 
@@ -26,4 +27,5 @@ public interface OrderService {
 	List<Order> findOrders(Date start, Date end);
 	List<Order> findOrders(String countryToShip);
 	List<Order> findOrders(Employee createdBy);
+	void deleteOrder(Order order) throws OrderAlreadyShipped;
 }

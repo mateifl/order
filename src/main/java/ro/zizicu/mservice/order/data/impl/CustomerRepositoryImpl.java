@@ -1,12 +1,10 @@
 package ro.zizicu.mservice.order.data.impl;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.TypedQuery;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
