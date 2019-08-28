@@ -14,7 +14,6 @@ import ro.zizicu.mservice.order.data.impl.QueryParameter;
 
 public class EntityCriteriaFinder<T> extends CriteriaFinder<T> {
 
-	private Class<T> clazz;
 	private CriteriaQuery<T> query;
 	private Root<T> root;
 	private PredicateBuilder predicateBuilder;
@@ -23,7 +22,6 @@ public class EntityCriteriaFinder<T> extends CriteriaFinder<T> {
 								Class<T> clazz, 
 								PredicateBuilder predicateBuilder) {
 		super(em);
-		this.clazz = clazz;
 		this.predicateBuilder = predicateBuilder;
 		criteriaBuilder = em.getCriteriaBuilder();
 		query = criteriaBuilder.createQuery(clazz);

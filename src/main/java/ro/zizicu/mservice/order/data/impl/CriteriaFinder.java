@@ -13,17 +13,13 @@ import org.slf4j.LoggerFactory;
 import ro.zizicu.mservice.order.data.finder.PredicateBuilder;
 import ro.zizicu.mservice.order.entities.IdentityOwner;
 
-public interface CriteriaFinder<T extends IdentityOwner> {
-
+public interface CriteriaFinder<T extends IdentityOwner<?>> {
 	void prepare();
-	
-	void setupWhereClause(List<QueryParameter> parameters, PredicateBuilder predicateBuilder);
-	
+	void setupWhereClause(List<QueryParameter<?>> parameters, PredicateBuilder predicateBuilder);
 	List<T> find();
-	
 }
 
-abstract class AbstractCriteriaFinder<T>  {
+abstract class AbstractCriteriaFinder<T extends IdentityOwner<?>> implements CriteriaFinder<T> {
 	
 	private EntityManager em;
 	private Class<T> clazz;
@@ -47,7 +43,7 @@ abstract class AbstractCriteriaFinder<T>  {
 		query.select(root);
 	}
 
-	public void setupWhereClause(List<QueryParameter> parameters, PredicateBuilder predicateBuilder) {
+	public void setupWhereClause(List<QueryParameter<?>> parameters, PredicateBuilder predicateBuilder) {
 		
 		
 	}

@@ -115,33 +115,14 @@ public class OrderServiceImpl implements OrderService {
 		return o.get();
 	}
 
-	@Override
-	public List<Order> findOrders(Customer customer) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public List<Order> findOrders(Date start, Date end) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public List<Order> findOrders(String countryToShip) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public List<Order> findOrders(Employee createdBy) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 	public void deleteOrder(Order order) throws OrderAlreadyShipped {
 		if(order.getShippedDate() != null) 
 			throw new OrderAlreadyShipped(order.getId());
 		orderRepository.delete(order);
+	}
+
+	@Override
+	public List<Order> findOrders(Customer customer, Date start, Date end, String countryToShip, Employee createdBy) {
+		return orderRepository.findOrders(customer, start, end, createdBy);
 	}
 }

@@ -2,6 +2,7 @@ package ro.zizicu.mservice.order.service;
 
 
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.util.ArrayList;
@@ -21,7 +22,9 @@ import ro.zizicu.mservice.order.entities.Order;
 import ro.zizicu.mservice.order.entities.ProductValueObject;
 import ro.zizicu.mservice.order.entities.Shipper;
 import ro.zizicu.mservice.order.exceptions.OrderAlreadyShipped;
+import ro.zizicu.mservice.order.exceptions.OrderNotFoundException;
 import ro.zizicu.mservice.order.exceptions.ProductNotFoundException;
+import ro.zizicu.mservice.order.services.CustomerService;
 import ro.zizicu.mservice.order.services.EmployeeService;
 import ro.zizicu.mservice.order.services.OrderService;
 import ro.zizicu.mservice.order.services.ShipperService;
@@ -38,6 +41,45 @@ public class OrderServiceTest {
 	
 	@Autowired
 	private ShipperService shipperService;
+	
+	@Autowired
+	private CustomerService customerService;
+	
+	
+	@Test
+	public void testFind() {
+		Customer c = customerService.load("HANAR");
+		List<Order> orders = orderService.findOrders(c, null, null, null, null);
+		assertTrue(orders != null);
+		assertTrue(!orders.isEmpty());
+		
+		
+	}
+	
+	@Test
+	public void testLoad() {
+		try {
+			Order order = orderService.loadOrder(10248);
+			assertNotNull(order);
+			assertTrue(order.getId() == 10248);
+		} catch (OrderNotFoundException e) {
+			e.printStackTrace();
+			fail();
+		}
+		
+	}
+	
+	@Test
+	public void testLoadOrderNotExists() {
+		try {
+			Order order = orderService.loadOrder(1);
+			fail();
+		} catch (OrderNotFoundException e) {
+			e.printStackTrace();
+			assertTrue(true);
+		}
+		
+	}
 	
 	@Test
 	public void testSaveOrderFullGraph() {

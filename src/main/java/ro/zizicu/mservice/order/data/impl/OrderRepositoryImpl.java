@@ -50,7 +50,7 @@ public class OrderRepositoryImpl implements OrderFinderRepository {
 		if( employee != null )
 		{
 			Join<Order, Employee> employeeJoin = order.join("employee");
-			ParameterExpression<String> p = criteriaBuilder.parameter(String.class, "employee");
+			ParameterExpression<Integer> p = criteriaBuilder.parameter(Integer.class, "employee");
 			criteria.add(criteriaBuilder.equal(employeeJoin.get("id"), p));
 		}
 		

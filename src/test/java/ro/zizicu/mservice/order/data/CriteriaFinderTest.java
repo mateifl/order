@@ -40,4 +40,17 @@ public class CriteriaFinderTest {
 		assertTrue(!l.isEmpty());
 	}
 	
+	@Test
+	public void testLikeFinder2() {
+		StringLikePredicateBuilder predicateBuilder = new StringLikePredicateBuilder();
+		Finder<Customer> finder = new EntityCriteriaFinder<>(em, Customer.class, predicateBuilder);
+		List<QueryParameter<?>> parameters = new ArrayList<>();
+		parameters.add(new QueryParameter<>("id", "AN%"));
+		parameters.add(new QueryParameter<>("companyName", "An%"));
+		finder.setup(parameters);
+		finder.execute();
+		List<Customer> l = finder.getResults();
+		assertNotNull("Null result in find customers test ", l);
+		assertTrue(!l.isEmpty());
+	}
 }

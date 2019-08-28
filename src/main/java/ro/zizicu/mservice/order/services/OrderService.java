@@ -23,9 +23,6 @@ public interface OrderService {
     				 List<ProductValueObject> productIds) throws ProductNotFoundException;
 	void cancelOrder(Order order);
 	Order loadOrder(Integer id) throws OrderNotFoundException;
-	List<Order> findOrders(Customer customer);
-	List<Order> findOrders(Date start, Date end);
-	List<Order> findOrders(String countryToShip);
-	List<Order> findOrders(Employee createdBy);
+	List<Order> findOrders(Customer customer, Date start, Date end, String countryToShip, Employee createdBy);
 	void deleteOrder(Order order) throws OrderAlreadyShipped;
 }

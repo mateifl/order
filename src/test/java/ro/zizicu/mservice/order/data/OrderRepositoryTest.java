@@ -84,6 +84,15 @@ public class OrderRepositoryTest {
 		assertEquals(122, orders.size());
 	}
 	
+	@Test
+	public void testFindByEmployee() {
+		logger.info("Test find orders");
+		Employee e = employeeRepository.findById(5).orElse(null);
+		List<Order> orders = orderRepository.findOrders(null, null, null, e);
+		assertNotNull(orders);
+		assertEquals(42, orders.size());
+	}
+	
 	private Order createOrder() {
 		Date today = new Date();
 		Order order = new Order();

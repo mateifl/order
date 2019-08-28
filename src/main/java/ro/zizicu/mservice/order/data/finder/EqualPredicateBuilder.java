@@ -8,6 +8,11 @@ import javax.persistence.criteria.Root;
 
 import ro.zizicu.mservice.order.data.impl.QueryParameter;
 
+/** 
+ * Builds predicates chained with "AND" logical operator 
+ * and == relationship
+ */
+
 class EqualPredicateBuilder implements PredicateBuilder {
 
 	@Override

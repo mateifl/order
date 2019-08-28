@@ -65,6 +65,7 @@ public class OrderController {
 			logger.info("shipper id: "	+ orderCreateWrapper.getShipperId());
 		}
 		try {
+			Customer customer = null;
 			Order order = orderCreateWrapper.getOrder();
 			List<ProductValueObject> products = orderCreateWrapper.getProductIds();
 			Integer employeeId = orderCreateWrapper.getEmployeeId();
@@ -72,11 +73,9 @@ public class OrderController {
 			String customerCode = orderCreateWrapper.getCustomerCode();
 			List<Customer> customers = customerService.findWithCriteria(customerCode, null, null, null);
 			if(customers.isEmpty())
-			{
-				customerService.create(orderCreateWrapper.getCustomer());
-			}
+				customer = customerService.create(orderCreateWrapper.getCustomer());
 			Shipper shipper = shipperService.load(orderCreateWrapper.getShipperId());
-			orderService.createOrder(order, products, employee, customers.get(0), shipper);
+			orderService.createOrder(order, products, employee, customer, shipper);
 			return ResponseEntity.ok(order.getId().toString());
 		} catch (ProductNotFoundException e) {
 			logger.error("", e);

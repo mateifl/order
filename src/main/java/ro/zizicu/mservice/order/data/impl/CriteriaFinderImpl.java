@@ -38,7 +38,7 @@ public class CriteriaFinderImpl<T extends IdentityOwner> {
 		}
 		
 		if(parameters == null || parameters.isEmpty()) {
-			logger.warn("No paramers, returning null");
+			logger.warn("No parameters, returning null");
 			return null;
 		}
 		
