@@ -16,6 +16,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
@@ -27,6 +28,7 @@ public class Order implements IdentityOwner<Integer> {
 	@Column(name="orderid")
 	private Integer orderId;
 	@Column(name="orderdate")
+	@JsonFormat(pattern="yyyy-MM-dd")
 	private Date orderDate;
 	@Column(name="requireddate")
 	private Date requiredDate;

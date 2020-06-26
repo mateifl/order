@@ -25,13 +25,10 @@ public class CustomerController  {
 
 	private static Logger logger = LoggerFactory.getLogger(CustomerController.class);
 	private CustomerService customerService; 
-
-
+	
 	@Autowired
 	public CustomerController(CustomerService customerService) {
 		this.customerService = customerService;
-//		basicController = 
-//			new BasicOperationsController<Customer, String>(new CrudServiceImpl<CustomerRepository, Customer, ID>());
 	}
 	
 	@RequestMapping(value = "/", method=RequestMethod.GET)
@@ -65,13 +62,14 @@ public class CustomerController  {
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 	
-//	@RequestMapping(value = "/", method=RequestMethod.PUT)
-//	public ResponseEntity<?> update(@RequestBody Customer customer) {
-//		if(customer.getId() == null) {
-//			
-//		}
-//		return basicController.save(customer);
-//	}
+	@RequestMapping(value = "/", method=RequestMethod.PUT)
+	public ResponseEntity<?> update(@RequestBody Customer customer) {
+		if(customer.getId() == null) {
+			return ResponseEntity.badRequest().build();
+		}
+		Customer c = customerService.update(customer);
+		return ResponseEntity.ok(c);
+	}
 //	
 //	@RequestMapping(value = "/", method=RequestMethod.DELETE)
 //	public void delete(@PathVariable String id) {

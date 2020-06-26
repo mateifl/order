@@ -14,4 +14,12 @@ public class ProductValueObject {
 		this.productId = productId;
 	}
 
+	@Override
+	public String toString() {
+		return "ProductValueObject [quantity=" + quantity + ", discount=" + discount + ", unitPrice=" + unitPrice
+				+ ", productId=" + productId + "]";
+	}
+	
+	
+
 }

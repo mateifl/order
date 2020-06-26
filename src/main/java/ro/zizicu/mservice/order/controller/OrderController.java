@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -19,6 +20,8 @@ import ro.zizicu.mservice.order.entities.ProductValueObject;
 import ro.zizicu.mservice.order.entities.Shipper;
 import ro.zizicu.mservice.order.exceptions.OrderNotFoundException;
 import ro.zizicu.mservice.order.exceptions.ProductNotFoundException;
+import ro.zizicu.mservice.order.restclient.ProductRestObject;
+import ro.zizicu.mservice.order.restclient.RestClient;
 import ro.zizicu.mservice.order.services.CustomerService;
 import ro.zizicu.mservice.order.services.EmployeeService;
 import ro.zizicu.mservice.order.services.OrderService;
@@ -34,6 +37,8 @@ public class OrderController {
 	private CustomerService customerService;
 	private ShipperService shipperService;
 	
+	@Autowired
+	private RestClient restClient;
 	@Autowired
 	public OrderController(OrderService orderService, 
 							EmployeeService employeeService,
@@ -58,24 +63,25 @@ public class OrderController {
 		}
 	}
 	
-	@RequestMapping(value = "/", method=RequestMethod.POST)
+	@PostMapping(value = "/")
 	public ResponseEntity<String> createOrder(@RequestBody OrderCreateWrapper orderCreateWrapper) {
 		if(logger.isInfoEnabled()) { 
-			logger.info("Creating order for customer: "	+ orderCreateWrapper.getCustomerCode());
+			logger.info("create order for customer: "	+ orderCreateWrapper.getCustomerCode());
 			logger.info("shipper id: "	+ orderCreateWrapper.getShipperId());
 		}
 		try {
-			Customer customer = null;
+			logger.debug("create order: " + orderCreateWrapper);
 			Order order = orderCreateWrapper.getOrder();
 			List<ProductValueObject> products = orderCreateWrapper.getProductIds();
+			for(ProductValueObject product : products) {
+				ProductRestObject productRestObject = restClient.loadAndUpdateProduct(product.productId, product.quantity);
+			}
 			Integer employeeId = orderCreateWrapper.getEmployeeId();
 			Employee employee = employeeService.load(employeeId);
 			String customerCode = orderCreateWrapper.getCustomerCode();
 			List<Customer> customers = customerService.findWithCriteria(customerCode, null, null, null);
-			if(customers.isEmpty())
-				customer = customerService.create(orderCreateWrapper.getCustomer());
 			Shipper shipper = shipperService.load(orderCreateWrapper.getShipperId());
-			orderService.createOrder(order, products, employee, customer, shipper);
+			orderService.createOrder(order, products, employee, customers.get(0), shipper);
 			return ResponseEntity.ok(order.getId().toString());
 		} catch (ProductNotFoundException e) {
 			logger.error("", e);
@@ -107,7 +113,6 @@ class OrderCreateWrapper {
 	private String customerCode; 
 	private Integer employeeId; 
 	private Integer shipperId;
-	private Customer customer;
 	
 	public Integer getShipperId() {
 		return shipperId;
@@ -149,12 +154,12 @@ class OrderCreateWrapper {
 		this.employeeId = employeeId;
 	}
 
-	public Customer getCustomer() {
-		return customer;
-	}
 
-	public void setCustomer(Customer customer) {
-		this.customer = customer;
+	@Override
+	public String toString() {
+		return "OrderCreateWrapper [order=" + order + ", productIds=" + productIds + ", customerCode=" + customerCode
+				+ ", employeeId=" + employeeId + ", shipperId=" + shipperId + "]";
 	} 
+	
 	
 }
