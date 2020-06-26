@@ -22,12 +22,10 @@ import ro.zizicu.mservice.order.data.CustomerRepository;
 import ro.zizicu.mservice.order.data.EmployeeRepository;
 import ro.zizicu.mservice.order.data.OrderRepository;
 import ro.zizicu.mservice.order.data.ProductRepository;
-import ro.zizicu.mservice.order.data.ShipperRepository;
 import ro.zizicu.mservice.order.entities.Customer;
 import ro.zizicu.mservice.order.entities.Employee;
 import ro.zizicu.mservice.order.entities.Order;
 import ro.zizicu.mservice.order.entities.ProductValueObject;
-import ro.zizicu.mservice.order.entities.Shipper;
 import ro.zizicu.mservice.order.exceptions.OrderNotFoundException;
 import ro.zizicu.mservice.order.exceptions.ProductNotFoundException;
 import ro.zizicu.mservice.order.services.impl.OrderServiceImpl;
@@ -43,17 +41,13 @@ public class OrderServiceMockTests {
 	private CustomerRepository customerRepository;
 	@Mock
 	private EmployeeRepository employeeRepository; 
-	@Mock
-	private ShipperRepository shipperRepository;
 	@InjectMocks
 	private OrderServiceImpl service;
 	
 	@Before 
 	public void setUp() {
-
 		service = new OrderServiceImpl();
 		MockitoAnnotations.initMocks(this);
-		when(shipperRepository.findById(1)).thenReturn(Optional.of(new Shipper()));
 		when(employeeRepository.findById(1)).thenReturn(Optional.of(new Employee()));
 	}
 	
@@ -91,10 +85,9 @@ public class OrderServiceMockTests {
 			order.setShipPostalCode("12212212");
 			order.setShipRegion("test region");
 			List<ProductValueObject> products = new ArrayList<>();
-			Shipper s = shipperRepository.findById(1).get();
 			Employee e = employeeRepository.findById(1).get();
 			Customer c = new Customer();
-			service.createOrder(order, products, e, c, s);
+			service.createOrder(order, products, e, c, 2);
 		} catch (ProductNotFoundException e) {
 			e.printStackTrace();
 			fail();

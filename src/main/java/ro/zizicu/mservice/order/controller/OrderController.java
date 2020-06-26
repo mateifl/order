@@ -17,7 +17,6 @@ import ro.zizicu.mservice.order.entities.Customer;
 import ro.zizicu.mservice.order.entities.Employee;
 import ro.zizicu.mservice.order.entities.Order;
 import ro.zizicu.mservice.order.entities.ProductValueObject;
-import ro.zizicu.mservice.order.entities.Shipper;
 import ro.zizicu.mservice.order.exceptions.OrderNotFoundException;
 import ro.zizicu.mservice.order.exceptions.ProductNotFoundException;
 import ro.zizicu.mservice.order.restclient.ProductRestObject;
@@ -25,7 +24,6 @@ import ro.zizicu.mservice.order.restclient.RestClient;
 import ro.zizicu.mservice.order.services.CustomerService;
 import ro.zizicu.mservice.order.services.EmployeeService;
 import ro.zizicu.mservice.order.services.OrderService;
-import ro.zizicu.mservice.order.services.ShipperService;
 
 @RestController
 @RequestMapping(value = "orders")
@@ -35,19 +33,17 @@ public class OrderController {
 	private OrderService orderService;
 	private EmployeeService employeeService;
 	private CustomerService customerService;
-	private ShipperService shipperService;
 	
 	@Autowired
 	private RestClient restClient;
 	@Autowired
 	public OrderController(OrderService orderService, 
 							EmployeeService employeeService,
-							CustomerService customerService,
-							ShipperService shipperService) {
+							CustomerService customerService) {
 		this.orderService = orderService;
 		this.employeeService = employeeService;
 		this.customerService = customerService;
-		this.shipperService = shipperService;
+
 	}
 	
 	@RequestMapping(value = "/{id}", method=RequestMethod.GET)
@@ -80,8 +76,8 @@ public class OrderController {
 			Employee employee = employeeService.load(employeeId);
 			String customerCode = orderCreateWrapper.getCustomerCode();
 			List<Customer> customers = customerService.findWithCriteria(customerCode, null, null, null);
-			Shipper shipper = shipperService.load(orderCreateWrapper.getShipperId());
-			orderService.createOrder(order, products, employee, customers.get(0), shipper);
+
+			orderService.createOrder(order, products, employee, customers.get(0), orderCreateWrapper.getShipperId());
 			return ResponseEntity.ok(order.getId().toString());
 		} catch (ProductNotFoundException e) {
 			logger.error("", e);

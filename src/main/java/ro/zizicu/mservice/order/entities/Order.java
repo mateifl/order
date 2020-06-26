@@ -56,10 +56,8 @@ public class Order implements IdentityOwner<Integer> {
 	@JoinColumn(name = "customerid")
 	@JsonIgnore
 	private Customer customer;
-	@ManyToOne(cascade = CascadeType.PERSIST, optional = false, fetch = FetchType.LAZY)
-	@JoinColumn(name = "shipvia", nullable=false)
-	@JsonIgnore
-	private Shipper shipper;
+	@Column(name = "shipvia", nullable=false)
+	private Integer shipperId;
 	@OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch=FetchType.LAZY)
 	@JsonIgnore
 	private List<OrderDetail> orderDetails = new ArrayList<>();
@@ -148,12 +146,6 @@ public class Order implements IdentityOwner<Integer> {
 		return orderDetails;
 	}
 
-	public Shipper getShipper() {
-		return shipper;
-	}
-	public void setShipper(Shipper shipper) {
-		this.shipper = shipper;
-	}
 	@Override
 	public String toString() {
 		return "Order [orderId=" + orderId + ", orderDate=" + orderDate + ", requiredDate=" + requiredDate

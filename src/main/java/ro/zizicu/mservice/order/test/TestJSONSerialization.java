@@ -2,8 +2,6 @@ package ro.zizicu.mservice.order.test;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.List;
 
 import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -14,7 +12,6 @@ import ro.zizicu.mservice.order.entities.Employee;
 import ro.zizicu.mservice.order.entities.Order;
 import ro.zizicu.mservice.order.entities.OrderDetail;
 import ro.zizicu.mservice.order.entities.Product;
-import ro.zizicu.mservice.order.entities.Shipper;
 
 public class TestJSONSerialization {
 
@@ -33,9 +30,7 @@ public class TestJSONSerialization {
 			e.setCity("test city");
 			e.setAddress("Adress employee");
 			order.setEmployee(e);
-			Shipper s = new Shipper();
-			s.setCompanyName("test shipper");
-			order.setShipper(s);
+
 			OrderDetail od = new OrderDetail();
 			od.setDiscount(100.);
 			od.setQuantity(12);

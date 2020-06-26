@@ -20,14 +20,12 @@ import ro.zizicu.mservice.order.entities.Customer;
 import ro.zizicu.mservice.order.entities.Employee;
 import ro.zizicu.mservice.order.entities.Order;
 import ro.zizicu.mservice.order.entities.ProductValueObject;
-import ro.zizicu.mservice.order.entities.Shipper;
 import ro.zizicu.mservice.order.exceptions.OrderAlreadyShipped;
 import ro.zizicu.mservice.order.exceptions.OrderNotFoundException;
 import ro.zizicu.mservice.order.exceptions.ProductNotFoundException;
 import ro.zizicu.mservice.order.services.CustomerService;
 import ro.zizicu.mservice.order.services.EmployeeService;
 import ro.zizicu.mservice.order.services.OrderService;
-import ro.zizicu.mservice.order.services.ShipperService;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -38,9 +36,6 @@ public class OrderServiceTest {
 	
 	@Autowired
 	private EmployeeService employeeService;
-	
-	@Autowired
-	private ShipperService shipperService;
 	
 	@Autowired
 	private CustomerService customerService;
@@ -100,9 +95,7 @@ public class OrderServiceTest {
 			List<ProductValueObject> products = new ArrayList<>();
 			products.add(new ProductValueObject(4, 1.0, 1.0, 1));
 			products.add(new ProductValueObject(5, 1.5, 3.0, 2));
-			Shipper s = new Shipper();
-			s.setCompanyName("Shipper 1");
-			s.setPhone("12221212");
+
 			Employee e = employeeService.load(5);
 			Customer c = new Customer();
 			c.setId("Test1");
@@ -116,13 +109,10 @@ public class OrderServiceTest {
 			c.setPostalCode("098828");
 			c.setFax("23123212");
 			c.setRegion("region");
-			order = orderService.createOrder(order, products, e, c, s);
+			order = orderService.createOrder(order, products, e, c, 2);
 			assertNotNull(order.getId());
-			assertNotNull(s.getId());
 			// clean up 
 			orderService.deleteOrder(order);
-			shipperService.delete(s);
-			
 		} catch (ProductNotFoundException e) {
 			e.printStackTrace();
 			fail();

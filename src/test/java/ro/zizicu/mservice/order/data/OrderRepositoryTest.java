@@ -15,11 +15,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import ro.zizicu.mservice.order.data.impl.OrderRepositoryImpl;
 import ro.zizicu.mservice.order.entities.Customer;
 import ro.zizicu.mservice.order.entities.Employee;
 import ro.zizicu.mservice.order.entities.Order;
-import ro.zizicu.mservice.order.entities.Shipper;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -30,8 +28,6 @@ public class OrderRepositoryTest {
 	@Autowired
 	private EmployeeRepository employeeRepository; 
 	@Autowired
-	private ShipperRepository shipperRepository; 
-	@Autowired
 	private CustomerRepository customerRepository; 	
 	
 	private static Logger logger = LoggerFactory.getLogger(OrderRepositoryTest.class);
@@ -39,12 +35,6 @@ public class OrderRepositoryTest {
 	@Test
 	public void testOrderSave() {
 		Order order = createOrder();
-
-		Shipper s = new Shipper();
-		s.setCompanyName("Shipper 1");
-		s.setPhone("12221212");
-		order.setShipper(s);
-		
 		Employee e = employeeRepository.findAll().iterator().next();
 		order.setEmployee(e);
 		
@@ -53,11 +43,11 @@ public class OrderRepositoryTest {
 		
 		order = orderRepository.save(order);
 		c = order.getCustomer();
-		s = order.getShipper();
+
 		assertNotNull(order.getId());
-		assertNotNull(s.getId());
+
 		orderRepository.delete(order);
-		shipperRepository.delete(s);
+
 		customerRepository.delete(c);
 	}	
 

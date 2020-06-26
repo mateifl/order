@@ -20,7 +20,6 @@ import ro.zizicu.mservice.order.entities.Order;
 import ro.zizicu.mservice.order.entities.OrderDetail;
 import ro.zizicu.mservice.order.entities.Product;
 import ro.zizicu.mservice.order.entities.ProductValueObject;
-import ro.zizicu.mservice.order.entities.Shipper;
 import ro.zizicu.mservice.order.exceptions.OrderAlreadyShipped;
 import ro.zizicu.mservice.order.exceptions.OrderNotFoundException;
 import ro.zizicu.mservice.order.exceptions.ProductNotFoundException;
@@ -44,9 +43,8 @@ public class OrderServiceImpl implements OrderService {
 						  List<ProductValueObject> productIds, 
 						  Employee employee, 
 						  Customer customer,
-						  Shipper shipper) throws ProductNotFoundException {
+						  Integer shipperId) throws ProductNotFoundException {
 		if(logger.isInfoEnabled()) logger.info("create order");
-		
 		if(logger.isDebugEnabled()) logger.debug("number of order details: " + productIds.size());
 		for(ProductValueObject pvo : productIds)
 		{
@@ -70,7 +68,7 @@ public class OrderServiceImpl implements OrderService {
 		}
 		order.setCustomer(customer);
 		order.setEmployee(employee);
-		order.setShipper(shipper);
+
 		order = orderRepository.save(order);
 		if(logger.isInfoEnabled()) logger.info("order created");
 		return order;
