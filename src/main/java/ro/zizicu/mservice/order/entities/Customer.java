@@ -4,6 +4,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import ro.zizicu.nwbase.entity.IdentityOwner;
 
 @Entity
 @Table(name = "customers")

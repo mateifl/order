@@ -12,6 +12,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import ro.zizicu.nwbase.entity.IdentityOwner;
+
 
 @Entity
 @Table(name = "order_details")

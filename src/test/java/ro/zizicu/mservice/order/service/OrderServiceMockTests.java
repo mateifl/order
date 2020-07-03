@@ -73,7 +73,6 @@ public class OrderServiceMockTests {
 			Calendar calendar = Calendar.getInstance();
 			Date today = calendar.getTime();
 			Order order = new Order();
-			
 			order.setFreight(10.0);
 			order.setOrderDate(today);
 			order.setRequiredDate(today);

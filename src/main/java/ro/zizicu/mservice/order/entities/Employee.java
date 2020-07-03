@@ -5,7 +5,7 @@ import java.util.Date;
 import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-
+import ro.zizicu.nwbase.entity.IdentityOwner;
 
 @Entity
 @Table(name = "employees")

@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import ro.zizicu.mservice.order.data.CustomerRepository;
 import ro.zizicu.mservice.order.entities.Customer;
 import ro.zizicu.mservice.order.services.CustomerService;
+import ro.zizicu.nwbase.impl.CrudServiceImpl;
 
 @Service
 public class CustomerServiceImpl 

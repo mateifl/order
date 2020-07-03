@@ -18,6 +18,7 @@ import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import ro.zizicu.nwbase.entity.IdentityOwner;
 
 @Entity
 @Table(name = "orders")
