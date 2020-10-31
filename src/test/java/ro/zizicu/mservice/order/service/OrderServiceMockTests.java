@@ -59,7 +59,7 @@ public class OrderServiceMockTests {
 			order.setId(1);
 			Optional<Order> o = Optional.of(order);
 			when(repository.findById(1)).thenReturn(o);
-			Order o1 = service.loadOrder(new Integer(1));
+			Order o1 = service.loadOrder(1);
 			assertTrue(o1.getId() == 1);
 		} catch (OrderNotFoundException e) {
 			e.printStackTrace();
