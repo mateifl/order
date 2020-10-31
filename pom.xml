@@ -3,12 +3,12 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>ro.zizicu</groupId>
+	<groupId>ro.zizicu.mservice</groupId>
 	<artifactId>order</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.1</version>
 	<packaging>jar</packaging>
 
-	<name>order service</name>
+	<name>Order service</name>
 
 	<parent>
 		<groupId>org.springframework.boot</groupId>
@@ -20,7 +20,7 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<java.version>1.8</java.version>
+		<java.version>14</java.version>
 	</properties>
 
 	<dependencies>
@@ -70,9 +70,9 @@
             <artifactId>hibernate-core</artifactId>
         </dependency>
         <dependency>
-        	<groupId>ro.zizicu</groupId>
-        	<artifactId>nwbase</artifactId>
-        	<version>0.1</version>
+            <groupId>ro.zizicu</groupId>
+            <artifactId>nwbase</artifactId>
+            <version>0.1</version>
         </dependency>
 	</dependencies>
 

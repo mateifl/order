@@ -4,20 +4,19 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import ro.zizicu.mservice.order.data.CustomerRepository;
 import ro.zizicu.mservice.order.entities.Customer;
 import ro.zizicu.mservice.order.services.CustomerService;
-import ro.zizicu.nwbase.impl.CrudServiceImpl;
+import ro.zizicu.nwbase.service.impl.CrudServiceImpl;
 
 @Service
 public class CustomerServiceImpl 
-	   extends CrudServiceImpl<CustomerRepository, Customer, String> 
+	   extends CrudServiceImpl<Customer, String> 
 	   implements CustomerService
 {
 
 	@Override
 	public List<Customer> findWithCriteria(String customerCode, String region, String city, String country) {
-		return repository.find(customerCode, region, city, country);
+		return null;
 	}
 	
 }
