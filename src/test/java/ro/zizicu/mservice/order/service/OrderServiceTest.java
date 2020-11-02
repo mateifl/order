@@ -26,6 +26,7 @@ import ro.zizicu.mservice.order.exceptions.ProductNotFoundException;
 import ro.zizicu.mservice.order.services.CustomerService;
 import ro.zizicu.mservice.order.services.EmployeeService;
 import ro.zizicu.mservice.order.services.OrderService;
+import ro.zizicu.nwbase.exceptions.EntityNotFoundException;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -54,10 +55,10 @@ public class OrderServiceTest {
 	@Test
 	public void testLoad() {
 		try {
-			Order order = orderService.loadOrder(10248);
+			Order order = orderService.load(10248);
 			assertNotNull(order);
 			assertTrue(order.getId() == 10248);
-		} catch (OrderNotFoundException e) {
+		} catch (EntityNotFoundException e) {
 			e.printStackTrace();
 			fail();
 		}
@@ -67,9 +68,9 @@ public class OrderServiceTest {
 	@Test
 	public void testLoadOrderNotExists() {
 		try {
-			Order order = orderService.loadOrder(1);
+			Order order = orderService.load(1);
 			fail();
-		} catch (OrderNotFoundException e) {
+		} catch (EntityNotFoundException e) {
 			e.printStackTrace();
 			assertTrue(true);
 		}
@@ -112,14 +113,11 @@ public class OrderServiceTest {
 			order = orderService.createOrder(order, products, e, c, 2);
 			assertNotNull(order.getId());
 			// clean up 
-			orderService.deleteOrder(order);
+			orderService.delete(order);
 		} catch (ProductNotFoundException e) {
 			e.printStackTrace();
 			fail();
-		} catch (OrderAlreadyShipped e1) {
-			e1.printStackTrace();
-			fail();
-		}
+		} 
 	}
 	
 }

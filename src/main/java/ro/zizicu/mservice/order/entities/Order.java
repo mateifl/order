@@ -146,6 +146,12 @@ public class Order implements IdentityOwner<Integer> {
 			orderDetails = new ArrayList<>();
 		return orderDetails;
 	}
+	public Integer getShipperId() {
+		return shipperId;
+	}
+	public void setShipperId(Integer shipperId) {
+		this.shipperId = shipperId;
+	}
 
 	@Override
 	public String toString() {

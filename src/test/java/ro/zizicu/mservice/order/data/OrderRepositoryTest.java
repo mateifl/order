@@ -29,6 +29,9 @@ public class OrderRepositoryTest {
 	private EmployeeRepository employeeRepository; 
 	@Autowired
 	private CustomerRepository customerRepository; 	
+	@Autowired
+	private CustomerFinderRepository customerFinderRepository; 	
+
 	
 	private static Logger logger = LoggerFactory.getLogger(OrderRepositoryTest.class);
 	
@@ -54,7 +57,7 @@ public class OrderRepositoryTest {
 	@Test
 	public void testFindByCustomer() {
 		logger.info("Test find orders");
-		List<Customer> customers = customerRepository.find("ALFAA", null, null, null);
+		List<Customer> customers = customerFinderRepository.find("ALFAA", null, null, null);
 		assertEquals(1, customers.size());
 		List<Order> orders = orderRepository.findOrders(customers.get(0), null, null, null);
 		assertEquals(2, orders.size());

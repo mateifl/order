@@ -34,11 +34,11 @@ public class TestJSONSerialization {
 			OrderDetail od = new OrderDetail();
 			od.setDiscount(100.);
 			od.setQuantity(12);
-			od.setProduct(new Product());
+			
 			OrderDetail od1 = new OrderDetail();
 			od1.setDiscount(101.);
 			od1.setQuantity(13);
-			od.setProduct(new Product());
+			
 			order.getOrderDetails().add(od);
 			order.getOrderDetails().add(od1);
 			ObjectMapper mapper = new ObjectMapper();

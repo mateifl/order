@@ -25,9 +25,8 @@ public class OrderDetail implements IdentityOwner<Integer> {
 	@JsonIgnore
 	@JoinColumn(name = "orderid")
 	private Order order;
-	@ManyToOne
-	@JoinColumn(name = "productid")
-	private Product product;
+	@Column(name="productid")
+	private Integer productId;
 	@Column(name="unitprice")
 	private Double unitPrice;
 	private Integer quantity;
@@ -45,11 +44,11 @@ public class OrderDetail implements IdentityOwner<Integer> {
 	public void setOrder(Order order) {
 		this.order = order;
 	}
-	public Product getProduct() {
-		return product;
+	public Integer getProductId() {
+		return productId;
 	}
-	public void setProduct(Product product) {
-		this.product = product;
+	public void setProductId(Integer productId) {
+		this.productId = productId;
 	}
 	public Double getUnitPrice() {
 		return unitPrice;
