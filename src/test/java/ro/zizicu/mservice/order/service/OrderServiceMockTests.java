@@ -25,7 +25,6 @@ import ro.zizicu.mservice.order.entities.Customer;
 import ro.zizicu.mservice.order.entities.Employee;
 import ro.zizicu.mservice.order.entities.Order;
 import ro.zizicu.mservice.order.entities.ProductValueObject;
-import ro.zizicu.mservice.order.exceptions.OrderNotFoundException;
 import ro.zizicu.mservice.order.exceptions.ProductNotFoundException;
 import ro.zizicu.mservice.order.services.impl.OrderServiceImpl;
 import ro.zizicu.nwbase.exceptions.EntityNotFoundException;
@@ -58,6 +57,7 @@ public class OrderServiceMockTests {
 			Optional<Order> o = Optional.of(order);
 			when(repository.findById(1)).thenReturn(o);
 			Order o1 = service.load(new Integer(1));
+
 			assertTrue(o1.getId() == 1);
 		} catch (EntityNotFoundException e) {
 			e.printStackTrace();
