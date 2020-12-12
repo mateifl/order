@@ -3,7 +3,6 @@ package ro.zizicu.mservice.order.services.impl;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,25 +12,27 @@ import org.springframework.transaction.annotation.Transactional;
 
 import ro.zizicu.mservice.order.data.CustomerRepository;
 import ro.zizicu.mservice.order.data.OrderRepository;
-import ro.zizicu.mservice.order.data.ProductRepository;
 import ro.zizicu.mservice.order.entities.Customer;
 import ro.zizicu.mservice.order.entities.Employee;
 import ro.zizicu.mservice.order.entities.Order;
 import ro.zizicu.mservice.order.entities.OrderDetail;
 import ro.zizicu.mservice.order.entities.Product;
 import ro.zizicu.mservice.order.entities.ProductValueObject;
-import ro.zizicu.mservice.order.exceptions.OrderAlreadyShipped;
 import ro.zizicu.mservice.order.exceptions.OrderNotFoundException;
 import ro.zizicu.mservice.order.exceptions.ProductNotFoundException;
+import ro.zizicu.mservice.order.restclient.ProductRestObject;
+import ro.zizicu.mservice.order.restclient.RestClient;
 import ro.zizicu.mservice.order.services.OrderService;
+import ro.zizicu.nwbase.service.impl.CrudServiceImpl;
 
 @Service
-public class OrderServiceImpl implements OrderService {
+public class OrderServiceImpl extends CrudServiceImpl<Order, Integer>
+	implements OrderService {
 	
 	private static Logger logger = LoggerFactory.getLogger(OrderServiceImpl.class);
 
 	@Autowired
-	private ProductRepository productRepository;
+	private RestClient restClient;
 	@Autowired
 	private OrderRepository orderRepository;
 	@Autowired
@@ -48,13 +49,9 @@ public class OrderServiceImpl implements OrderService {
 		if(logger.isDebugEnabled()) logger.debug("number of order details: " + productIds.size());
 		for(ProductValueObject pvo : productIds)
 		{
-			Optional<Product> o = productRepository.findById(pvo.productId);
-			if(!o.isPresent())
-				throw new ProductNotFoundException("product id = " + pvo.productId);
-			
-			Product p = productRepository.findById(pvo.productId).get();
+			ProductRestObject o = restClient.loadAndUpdateProduct(pvo.productId, pvo.quantity);
 			OrderDetail orderDetail = new OrderDetail();
-			orderDetail.setProduct(p);
+			orderDetail.setProductId(pvo.productId);
 			orderDetail.setOrder(order);
 			orderDetail.setQuantity(pvo.quantity);
 			orderDetail.setUnitPrice(pvo.unitPrice);
@@ -68,7 +65,7 @@ public class OrderServiceImpl implements OrderService {
 		}
 		order.setCustomer(customer);
 		order.setEmployee(employee);
-
+		order.setShipperId(shipperId);
 		order = orderRepository.save(order);
 		if(logger.isInfoEnabled()) logger.info("order created");
 		return order;
@@ -76,25 +73,30 @@ public class OrderServiceImpl implements OrderService {
 
 	@Override
 	@Transactional
-	public void updateOrder(Order order, List<ProductValueObject> productIds) throws ProductNotFoundException {
+	public Order update(Order order, List<ProductValueObject> productIds) {
 		if(logger.isInfoEnabled()) logger.info("update order");
-		List<OrderDetail> orderDetails = new ArrayList<>();
+		Order fromDatabase = orderRepository.findById(order.getId()).orElseThrow(OrderNotFoundException::new);
+		fromDatabase.getOrderDetails().clear();
+		
+		if(order.getFreight()!= null)
+			fromDatabase.setFreight(order.getFreight());
+		if(order.getShipAddress()!= null)
+			fromDatabase.setShipAddress(order.getShipAddress());
+		
 		for(ProductValueObject pvo : productIds)
 		{
-			Optional<Product> o = productRepository.findById(pvo.productId);
-			if(!o.isPresent())
-				throw new ProductNotFoundException("product id = " + pvo.productId);
+			ProductRestObject o = restClient.loadAndUpdateProduct(pvo.productId, pvo.quantity);
 			OrderDetail orderDetail = new OrderDetail();
-			orderDetail.setProduct(o.get());
+			orderDetail.setProductId(pvo.productId);
 			orderDetail.setOrder(order);
 			orderDetail.setQuantity(pvo.quantity);
 			orderDetail.setUnitPrice(pvo.unitPrice);
 			orderDetail.setDiscount(pvo.discount);
-			orderDetails.add(orderDetail);
 			order.getOrderDetails().add(orderDetail);
 		}
-		orderRepository.save(order);
+		order = orderRepository.save(fromDatabase);
 		if(logger.isInfoEnabled()) logger.info("order updated");
+		return order;
 	}
 
 	@Override
@@ -103,20 +105,6 @@ public class OrderServiceImpl implements OrderService {
 		if(logger.isInfoEnabled()) logger.info("cancel order " + order.getId());
 		orderRepository.delete(order);
 		if(logger.isInfoEnabled()) logger.info("order cancelled");
-	}
-
-	@Override
-	public Order loadOrder(Integer id) throws OrderNotFoundException {
-		Optional<Order> o = orderRepository.findById(id);
-		if(!o.isPresent())
-			throw new OrderNotFoundException(id.toString());
-		return o.get();
-	}
-
-	public void deleteOrder(Order order) throws OrderAlreadyShipped {
-		if(order.getShippedDate() != null) 
-			throw new OrderAlreadyShipped(order.getId());
-		orderRepository.delete(order);
 	}
 
 	@Override

@@ -18,6 +18,7 @@ import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import ro.zizicu.nwbase.entity.IdentityOwner;
 
 @Entity
 @Table(name = "orders")
@@ -144,6 +145,12 @@ public class Order implements IdentityOwner<Integer> {
 		if(orderDetails == null)
 			orderDetails = new ArrayList<>();
 		return orderDetails;
+	}
+	public Integer getShipperId() {
+		return shipperId;
+	}
+	public void setShipperId(Integer shipperId) {
+		this.shipperId = shipperId;
 	}
 
 	@Override

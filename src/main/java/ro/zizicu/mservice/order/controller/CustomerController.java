@@ -8,7 +8,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -17,39 +18,23 @@ import org.springframework.web.bind.annotation.RestController;
 
 import ro.zizicu.mservice.order.entities.Customer;
 import ro.zizicu.mservice.order.services.CustomerService;
+import ro.zizicu.nwbase.controller.BasicOperationsController;
 
 
 @RestController
 @RequestMapping(value = "/customers")
-public class CustomerController  {
+public class CustomerController extends BasicOperationsController<Customer, String> {
 
 	private static Logger logger = LoggerFactory.getLogger(CustomerController.class);
+	@Autowired
 	private CustomerService customerService; 
 	
-	@Autowired
-	public CustomerController(CustomerService customerService) {
-		this.customerService = customerService;
-	}
-	
-	@RequestMapping(value = "/", method=RequestMethod.GET)
-	public ResponseEntity<?> loadCustomers() {
-		List<Customer> customers = customerService.loadAll();
-		return ResponseEntity.ok(customers);
-	}
-	
-	@RequestMapping(value = "/{id}", method=RequestMethod.GET)
-	public ResponseEntity<?> load(@PathVariable String id) {
-		Customer customer = customerService.load(id);
-		return ResponseEntity.ok(customer);
-	}
-	
-	@RequestMapping(value = "/", method=RequestMethod.POST)
+	@PostMapping(value = "/")
 	public ResponseEntity<?> create(@RequestBody Customer customer) {
-		Customer c = customerService.create(customer);
-		return ResponseEntity.ok(c);
+		return create(customer);
 	}
 	
-	@RequestMapping(value = "/find", method=RequestMethod.GET)
+	@GetMapping(value = "/find")
 	public ResponseEntity<?> find(@RequestParam(value="code", defaultValue="") String code,
 								  @RequestParam(value="city", defaultValue="") String city,
 								  @RequestParam(value="country", defaultValue="") String country) {
@@ -70,9 +55,4 @@ public class CustomerController  {
 		Customer c = customerService.update(customer);
 		return ResponseEntity.ok(c);
 	}
-//	
-//	@RequestMapping(value = "/", method=RequestMethod.DELETE)
-//	public void delete(@PathVariable String id) {
-//		basicController.delete(id);
-//	}
 }

@@ -1,7 +1,11 @@
 package ro.zizicu.mservice.order.exceptions;
 
-public class OrderNotFoundException extends Exception {
+public class OrderNotFoundException extends RuntimeException {
 
+	public OrderNotFoundException() {
+		
+	}
+	
 	public OrderNotFoundException(String string) {
 		super(string);
 	}

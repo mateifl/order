@@ -12,7 +12,7 @@ import javax.persistence.criteria.Root;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ro.zizicu.mservice.order.entities.IdentityOwner;
+import ro.zizicu.nwbase.entity.IdentityOwner;
 
 public class CriteriaFinderImpl<T extends IdentityOwner> {
 

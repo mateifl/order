@@ -1,6 +1,6 @@
 package ro.zizicu.mservice.order.exceptions;
 
-public class ProductNotFoundException extends Exception {
+public class ProductNotFoundException extends RuntimeException {
 
 	public ProductNotFoundException(String string) {
 		super(string);
