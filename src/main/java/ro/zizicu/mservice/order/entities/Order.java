@@ -165,4 +165,8 @@ public class Order implements IdentityOwner<Integer> {
 	public void resetDetails() {
 		orderDetails = new ArrayList<>();
 	}
+	@Override
+	public String getEntityName() {
+		return "Order";
+	}
 }

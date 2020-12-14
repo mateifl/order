@@ -102,4 +102,8 @@ public class Customer implements IdentityOwner<String>{
 				+ ", contactTitle=" + contactTitle + ", address=" + address + ", city=" + city + ", region=" + region
 				+ ", postalCode=" + postalCode + ", country=" + country + ", phone=" + phone + ", fax=" + fax + "]";
 	}
+	@Override
+	public String getEntityName() {
+		return "Customer";
+	}
 }

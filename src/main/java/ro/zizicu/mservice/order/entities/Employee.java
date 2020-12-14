@@ -143,5 +143,14 @@ public class Employee implements IdentityOwner<Integer> {
 	public void setHireDate(Date hireDate) {
 		this.hireDate = hireDate;
 	}
+	@Override
+	public String getEntityName() {
+		return "Employee";
+	}
+	@Override
+	public void setId(Integer id) {
+		this.id = id;
+		
+	}
 
 }

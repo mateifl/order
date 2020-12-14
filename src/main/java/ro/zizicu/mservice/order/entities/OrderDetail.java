@@ -68,4 +68,8 @@ public class OrderDetail implements IdentityOwner<Integer> {
 	public void setDiscount(Double discount) {
 		this.discount = discount;
 	}
+	@Override
+	public String getEntityName() {
+		return "OrderDetail";
+	}
 }

@@ -7,6 +7,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -25,7 +27,7 @@ import ro.zizicu.nwbase.controller.BasicOperationsController;
 
 @RestController
 @RequestMapping(value = "orders")
-public class OrderController extends BasicOperationsController<Order, Integer> {
+public class OrderController {
 
 	private static Logger logger = LoggerFactory.getLogger(OrderController.class);
 	@Autowired
@@ -35,15 +37,7 @@ public class OrderController extends BasicOperationsController<Order, Integer> {
 	@Autowired
 	private CustomerService customerService;
 
-//	@Autowired
-//	public OrderController(OrderService orderService, 
-//							EmployeeService employeeService,
-//							CustomerService customerService) {
-//		this.orderService = orderService;
-//		this.employeeService = employeeService;
-//		this.customerService = customerService;
-//
-//	}
+	private BasicOperationsController<Order, Integer> basicOperationsController = new BasicOperationsController<>();
 	
 	@PostMapping(value = "/")
 	public ResponseEntity<?> create(@RequestBody OrderCreateWrapper orderCreateWrapper) {
@@ -84,6 +78,11 @@ public class OrderController extends BasicOperationsController<Order, Integer> {
 			logger.error("", e);
 			return ResponseEntity.notFound().build();
 		}
+	}
+	
+	@GetMapping(value = "/{id}")
+	public ResponseEntity<?> load(@PathVariable Integer id) {
+		return basicOperationsController.load(id);
 	}
 	
 }
