@@ -1,10 +1,6 @@
 package ro.zizicu.mservice.order.service;
 
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -28,6 +24,8 @@ import ro.zizicu.mservice.order.services.EmployeeService;
 import ro.zizicu.mservice.order.services.OrderService;
 import ro.zizicu.nwbase.exceptions.EntityNotFoundException;
 
+import static org.junit.Assert.*;
+
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class OrderServiceTest {
@@ -46,10 +44,8 @@ public class OrderServiceTest {
 	public void testFind() {
 		Customer c = customerService.load("HANAR");
 		List<Order> orders = orderService.findOrders(c, null, null, null, null);
-		assertTrue(orders != null);
-		assertTrue(!orders.isEmpty());
-		
-		
+		assertNotNull(orders);
+		assertFalse(orders.isEmpty());
 	}
 	
 	@Test
@@ -57,7 +53,7 @@ public class OrderServiceTest {
 		try {
 			Order order = orderService.load(10248);
 			assertNotNull(order);
-			assertTrue(order.getId() == 10248);
+			assertEquals(10248, (int) order.getId());
 		} catch (EntityNotFoundException e) {
 			e.printStackTrace();
 			fail();

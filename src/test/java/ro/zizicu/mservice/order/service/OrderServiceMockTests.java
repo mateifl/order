@@ -1,7 +1,6 @@
 package ro.zizicu.mservice.order.service;
 
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
@@ -43,8 +42,8 @@ public class OrderServiceMockTests {
 	
 	@Before 
 	public void setUp() {
-		service = new OrderServiceImpl();
 		MockitoAnnotations.initMocks(this);
+		service = new OrderServiceImpl(null, repository, customerRepository);
 		when(employeeRepository.findById(1)).thenReturn(Optional.of(new Employee()));
 	}
 	
@@ -56,9 +55,9 @@ public class OrderServiceMockTests {
 			order.setId(1);
 			Optional<Order> o = Optional.of(order);
 			when(repository.findById(1)).thenReturn(o);
-			Order o1 = service.load(new Integer(1));
+			Order o1 = service.load(10248);
 
-			assertTrue(o1.getId() == 1);
+			assertEquals(1, (int) o1.getId());
 		} catch (EntityNotFoundException e) {
 			e.printStackTrace();
 			fail();

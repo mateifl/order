@@ -7,7 +7,7 @@ import javax.persistence.Table;
 import ro.zizicu.nwbase.entity.IdentityOwner;
 
 @Entity
-@Table(name = "customers")
+@Table(name = "Customers")
 public class Customer implements IdentityOwner<String>{
 	
 	@Id

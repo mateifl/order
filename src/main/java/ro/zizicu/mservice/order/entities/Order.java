@@ -21,7 +21,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import ro.zizicu.nwbase.entity.IdentityOwner;
 
 @Entity
-@Table(name = "orders")
+@Table(name = "Orders")
 public class Order implements IdentityOwner<Integer> {
 	
 	@Id

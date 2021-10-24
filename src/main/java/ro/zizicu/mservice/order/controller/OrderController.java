@@ -2,6 +2,7 @@ package ro.zizicu.mservice.order.controller;
 
 import java.util.List;
 
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,15 +28,14 @@ import ro.zizicu.nwbase.controller.BasicOperationsController;
 
 @RestController
 @RequestMapping(value = "orders")
+@RequiredArgsConstructor
 public class OrderController {
 
 	private static Logger logger = LoggerFactory.getLogger(OrderController.class);
-	@Autowired
-	private OrderService orderService;
-	@Autowired
-	private EmployeeService employeeService;
-	@Autowired
-	private CustomerService customerService;
+
+	private final OrderService orderService;
+	private final EmployeeService employeeService;
+	private final CustomerService customerService;
 
 	private BasicOperationsController<Order, Integer> basicOperationsController = new BasicOperationsController<>();
 	

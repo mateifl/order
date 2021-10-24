@@ -8,7 +8,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import ro.zizicu.nwbase.entity.IdentityOwner;
 
 @Entity
-@Table(name = "employees")
+@Table(name = "Employees")
 public class Employee implements IdentityOwner<Integer> {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

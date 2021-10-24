@@ -18,7 +18,7 @@ public class RestClient {
 	private Environment environment; 
 	
 	public ProductRestObject loadAndUpdateProduct(Integer productId, Integer quantity) {
-		logger.debug("Checking product with id " + productId);
+		logger.debug("Checking product with id {}", productId);
 		RestTemplate restTemplate = new RestTemplate();
 		String productUrl = environment.getProperty("product.url");
 		ProductRestObject product = restTemplate.getForObject(productUrl + "/" + productId, ProductRestObject.class);

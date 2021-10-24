@@ -1,8 +1,5 @@
 package ro.zizicu.mservice.order.data;
 
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -22,6 +19,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import ro.zizicu.mservice.order.entities.Order;
+
+import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -46,10 +45,9 @@ public class CriteriaQueryTest {
 			TypedQuery<Order> query = em.createQuery(cq);
 			query.setParameter(startDateParameter, cal.getTime());
 			List<Order> orders = query.getResultList();
-			
-			assertTrue(!orders.isEmpty());
-			assertTrue(orders.size() == 676);
-			
+
+			assertFalse("no orders found", orders.isEmpty());
+
 			ParameterExpression<Date> endDateParameter = cb.parameter(Date.class);
 			Predicate between = cb.between(order.get("orderDate"), startDateParameter, endDateParameter);
 			cq.select(order).where(between);
@@ -59,9 +57,9 @@ public class CriteriaQueryTest {
 			cal.set(1997, 3, 1);
 			query.setParameter(endDateParameter, cal.getTime());
 			orders = query.getResultList();
-			
-			assertTrue(!orders.isEmpty());
-			assertTrue(orders.size() == 91);
+
+			assertFalse("no orders found", orders.isEmpty());
+
 		} catch (Exception e) {
 			e.printStackTrace();
 			fail();

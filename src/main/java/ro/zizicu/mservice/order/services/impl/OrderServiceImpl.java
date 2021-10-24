@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,17 +27,15 @@ import ro.zizicu.mservice.order.services.OrderService;
 import ro.zizicu.nwbase.service.impl.CrudServiceImpl;
 
 @Service
+@RequiredArgsConstructor
 public class OrderServiceImpl extends CrudServiceImpl<Order, Integer>
 	implements OrderService {
 	
 	private static Logger logger = LoggerFactory.getLogger(OrderServiceImpl.class);
 
-	@Autowired
-	private RestClient restClient;
-	@Autowired
-	private OrderRepository orderRepository;
-	@Autowired
-	private CustomerRepository customerRepository;
+	private final RestClient restClient;
+	private final OrderRepository orderRepository;
+	private final CustomerRepository customerRepository;
 	
 	@Override
 	@Transactional
