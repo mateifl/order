@@ -2,10 +2,13 @@ package ro.zizicu.mservice.order.controller;
 
 import java.util.List;
 
-import lombok.RequiredArgsConstructor;
+import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import lombok.RequiredArgsConstructor;
 import ro.zizicu.mservice.order.entities.Customer;
 import ro.zizicu.mservice.order.entities.Employee;
 import ro.zizicu.mservice.order.entities.Order;
@@ -40,7 +44,7 @@ public class OrderController {
 	private BasicOperationsController<Order, Integer> basicOperationsController = new BasicOperationsController<>();
 	
 	@PostMapping(value = "/")
-	public ResponseEntity<?> create(@RequestBody OrderCreateWrapper orderCreateWrapper) {
+	public ResponseEntity<?> create(@Valid @RequestBody OrderCreateWrapper orderCreateWrapper) {
 		if(logger.isInfoEnabled()) { 
 			logger.info("create order for customer: "	+ orderCreateWrapper.getCustomerCode());
 			logger.info("shipper id: "	+ orderCreateWrapper.getShipperId());
@@ -89,10 +93,15 @@ public class OrderController {
 
 class OrderCreateWrapper {
 	
+	@NotNull
 	private Order order;
+	@Size(min=1)
 	private List<ProductValueObject> productIds; 
-	private String customerCode; 
-	private Integer employeeId; 
+	@NotBlank
+	private String customerCode;
+	@NotNull
+	private Integer employeeId;
+	@NotNull
 	private Integer shipperId;
 	
 	public Integer getShipperId() {
