@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import lombok.RequiredArgsConstructor;
 import ro.zizicu.mservice.order.entities.Customer;
 import ro.zizicu.mservice.order.entities.Employee;
 import ro.zizicu.mservice.order.entities.Order;
@@ -32,7 +31,6 @@ import ro.zizicu.nwbase.controller.BasicOperationsController;
 
 @RestController
 @RequestMapping(value = "orders")
-@RequiredArgsConstructor
 public class OrderController {
 
 	private static Logger logger = LoggerFactory.getLogger(OrderController.class);
@@ -40,8 +38,17 @@ public class OrderController {
 	private final OrderService orderService;
 	private final EmployeeService employeeService;
 	private final CustomerService customerService;
+	private BasicOperationsController<Order, Integer> basicOperationsController;
 
-	private BasicOperationsController<Order, Integer> basicOperationsController = new BasicOperationsController<>();
+	public OrderController(	OrderService orderService, 
+							EmployeeService employeeService, 
+							CustomerService customerService) {
+		this.orderService = orderService;
+		this.employeeService = employeeService;
+		this.customerService = customerService;
+		basicOperationsController = new BasicOperationsController<>();
+		basicOperationsController.setCrudService(orderService);
+	}
 	
 	@PostMapping(value = "/")
 	public ResponseEntity<?> create(@Valid @RequestBody OrderCreateWrapper orderCreateWrapper) {
