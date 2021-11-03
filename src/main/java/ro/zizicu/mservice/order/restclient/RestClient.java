@@ -6,9 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
+
+import ro.zizicu.mservice.order.exceptions.NotEnoughQuantity;
 
 @Component
 public class RestClient {
@@ -23,13 +24,13 @@ public class RestClient {
 		String productUrl = environment.getProperty("product.url");
 		ProductRestObject product = restTemplate.getForObject(productUrl + "/" + productId, ProductRestObject.class);
 		if(quantity > product.getUnitsInStock()) {
-			logger.warn("not enough products in stock");
-			return null;
+			logger.error("not enough products in stock, product id {}", productId);
+			throw new NotEnoughQuantity();
 		}
 		logger.debug("Enough stock, updating");
 		ProductRestObject updatedProduct = new ProductRestObject(productId, product.getUnitsInStock() - quantity, product.getUnitsOnOrder() + quantity);
 		HttpEntity<ProductRestObject> updatedEntity = new HttpEntity<ProductRestObject>(updatedProduct);
-		restTemplate.exchange(productUrl + "/" + productId, HttpMethod.PUT, updatedEntity, Void.class);
+		restTemplate.exchange(productUrl + "/" + productId, HttpMethod.PATCH, updatedEntity, Void.class);
 		return product;
 	}
 }

@@ -1,6 +1,6 @@
 package ro.zizicu.mservice.order.data.impl;
 
-public class QueryParameter<T> {
+public class QueryParameter<T extends Object> {
 	public final String name;
 	public final Class<T> type;
 	public final T value;

@@ -1,6 +1,8 @@
 package ro.zizicu.mservice.order.service;
 
-import static org.junit.Assert.*;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
@@ -9,14 +11,15 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import org.springframework.boot.test.context.SpringBootTest;
 import ro.zizicu.mservice.order.data.CustomerRepository;
 import ro.zizicu.mservice.order.data.EmployeeRepository;
 import ro.zizicu.mservice.order.data.OrderRepository;
@@ -28,6 +31,7 @@ import ro.zizicu.mservice.order.exceptions.ProductNotFoundException;
 import ro.zizicu.mservice.order.services.impl.OrderServiceImpl;
 import ro.zizicu.nwbase.exceptions.EntityNotFoundException;
 
+@SpringBootTest
 public class OrderServiceMockTests {
 
 	private static Logger logger = LoggerFactory.getLogger(OrderServiceMockTests.class);
@@ -40,7 +44,7 @@ public class OrderServiceMockTests {
 	@InjectMocks
 	private OrderServiceImpl service;
 	
-	@Before 
+	@BeforeEach
 	public void setUp() {
 		MockitoAnnotations.initMocks(this);
 		service = new OrderServiceImpl(null, repository, customerRepository);
@@ -54,7 +58,7 @@ public class OrderServiceMockTests {
 			Order order = new Order();
 			order.setId(1);
 			Optional<Order> o = Optional.of(order);
-			when(repository.findById(1)).thenReturn(o);
+			when(repository.findById(10248)).thenReturn(o);
 			Order o1 = service.load(10248);
 
 			assertEquals(1, (int) o1.getId());

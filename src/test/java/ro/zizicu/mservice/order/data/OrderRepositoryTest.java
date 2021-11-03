@@ -1,24 +1,24 @@
 package ro.zizicu.mservice.order.data;
 
+
+
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import ro.zizicu.mservice.order.entities.Customer;
 import ro.zizicu.mservice.order.entities.Employee;
 import ro.zizicu.mservice.order.entities.Order;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-@RunWith(SpringRunner.class)
 @SpringBootTest
 public class OrderRepositoryTest {
 
@@ -61,9 +61,9 @@ public class OrderRepositoryTest {
 		List<Order> orders = orderRepository.findOrders(customers.get(0), null, null, null);
 		assertEquals(2, orders.size());
 		Calendar cal = Calendar.getInstance();
-		cal.set(1997, Calendar.FEBRUARY, 1);
+		cal.set(1997, 1, 1);
 		Date startDate = cal.getTime();
-		cal.set(1997, Calendar.JUNE, 1);
+		cal.set(1997, 5, 1);
 		Date endDate = cal.getTime();
 		logger.info("Test find order with start date");
 		orders = orderRepository.findOrders(null, startDate, null, null);

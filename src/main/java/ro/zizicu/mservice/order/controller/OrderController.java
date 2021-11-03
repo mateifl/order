@@ -2,10 +2,13 @@ package ro.zizicu.mservice.order.controller;
 
 import java.util.List;
 
-import lombok.RequiredArgsConstructor;
+import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,7 +31,6 @@ import ro.zizicu.nwbase.controller.BasicOperationsController;
 
 @RestController
 @RequestMapping(value = "orders")
-@RequiredArgsConstructor
 public class OrderController {
 
 	private static Logger logger = LoggerFactory.getLogger(OrderController.class);
@@ -36,11 +38,20 @@ public class OrderController {
 	private final OrderService orderService;
 	private final EmployeeService employeeService;
 	private final CustomerService customerService;
+	private BasicOperationsController<Order, Integer> basicOperationsController;
 
-	private BasicOperationsController<Order, Integer> basicOperationsController = new BasicOperationsController<>();
+	public OrderController(	OrderService orderService, 
+							EmployeeService employeeService, 
+							CustomerService customerService) {
+		this.orderService = orderService;
+		this.employeeService = employeeService;
+		this.customerService = customerService;
+		basicOperationsController = new BasicOperationsController<>();
+		basicOperationsController.setCrudService(orderService);
+	}
 	
 	@PostMapping(value = "/")
-	public ResponseEntity<?> create(@RequestBody OrderCreateWrapper orderCreateWrapper) {
+	public ResponseEntity<?> create(@Valid @RequestBody OrderCreateWrapper orderCreateWrapper) {
 		if(logger.isInfoEnabled()) { 
 			logger.info("create order for customer: "	+ orderCreateWrapper.getCustomerCode());
 			logger.info("shipper id: "	+ orderCreateWrapper.getShipperId());
@@ -89,10 +100,15 @@ public class OrderController {
 
 class OrderCreateWrapper {
 	
+	@NotNull
 	private Order order;
+	@Size(min=1)
 	private List<ProductValueObject> productIds; 
-	private String customerCode; 
-	private Integer employeeId; 
+	@NotBlank
+	private String customerCode;
+	@NotNull
+	private Integer employeeId;
+	@NotNull
 	private Integer shipperId;
 	
 	public Integer getShipperId() {
