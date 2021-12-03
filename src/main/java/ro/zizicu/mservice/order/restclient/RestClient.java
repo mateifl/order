@@ -2,7 +2,6 @@ package ro.zizicu.mservice.order.restclient;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
@@ -15,8 +14,11 @@ import ro.zizicu.mservice.order.exceptions.NotEnoughQuantity;
 public class RestClient {
 	private static Logger logger = LoggerFactory.getLogger(RestClient.class);
 	
-	@Autowired
-	private Environment environment; 
+	private final Environment environment; 
+	
+	public RestClient(Environment environment) {
+		this.environment = environment;
+	}
 	
 	public ProductRestObject loadAndUpdateProduct(Integer productId, Integer quantity) {
 		logger.debug("Checking product with id {}", productId);

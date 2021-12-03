@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import lombok.Data;
 import ro.zizicu.mservice.order.entities.Customer;
 import ro.zizicu.mservice.order.entities.Employee;
 import ro.zizicu.mservice.order.entities.Order;
@@ -98,6 +99,7 @@ public class OrderController {
 	
 }
 
+@Data
 class OrderCreateWrapper {
 	
 	@NotNull
@@ -110,55 +112,5 @@ class OrderCreateWrapper {
 	private Integer employeeId;
 	@NotNull
 	private Integer shipperId;
-	
-	public Integer getShipperId() {
-		return shipperId;
-	}
 
-	public void setShipperId(Integer shipperId) {
-		this.shipperId = shipperId;
-	}
-
-	public Order getOrder() {
-		return order;
-	}
-
-	public void setOrder(Order order) {
-		this.order = order;
-	}
-
-	public List<ProductValueObject> getProductIds() {
-		return productIds;
-	}
-
-	public void setProductIds(List<ProductValueObject> productIds) {
-		this.productIds = productIds;
-	}
-
-	public String getCustomerCode() {
-		return customerCode;
-	}
-
-	public void setCustomerCode(String customerCode) {
-		this.customerCode = customerCode;
-	}
-
-	public Integer getEmployeeId() {
-		return employeeId;
-	}
-
-	public void setEmployeeId(Integer employeeId) {
-		this.employeeId = employeeId;
-	}
-
-	@Override
-	public String toString() {
-		return "OrderCreateWrapper [order=" + order + 
-				", productIds=" + productIds + 
-				", customerCode=" + customerCode + 
-				", employeeId=" + employeeId + 
-				", shipperId=" + shipperId + "]";
-	} 
-	
-	
 }

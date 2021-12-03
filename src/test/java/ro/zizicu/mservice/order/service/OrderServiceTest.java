@@ -16,6 +16,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import lombok.extern.slf4j.Slf4j;
 import ro.zizicu.mservice.order.entities.Customer;
 import ro.zizicu.mservice.order.entities.Employee;
 import ro.zizicu.mservice.order.entities.Order;
@@ -28,6 +29,7 @@ import ro.zizicu.nwbase.exceptions.EntityNotFoundException;
 
 
 @SpringBootTest
+@Slf4j
 public class OrderServiceTest {
 
 	@Autowired
@@ -55,7 +57,7 @@ public class OrderServiceTest {
 			assertNotNull(order);
 			assertEquals(10248, (int) order.getId());
 		} catch (EntityNotFoundException e) {
-			e.printStackTrace();
+			log.error("", e);
 			fail();
 		}
 		
