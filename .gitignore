@@ -9,3 +9,5 @@ order.iml
 *.log
 .sts4-cache
 
+/.factorypath
+/order.log*

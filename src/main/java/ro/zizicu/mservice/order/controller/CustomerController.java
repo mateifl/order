@@ -3,9 +3,7 @@ package ro.zizicu.mservice.order.controller;
 
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,16 +20,20 @@ import ro.zizicu.nwbase.controller.BasicOperationsController;
 
 
 @RestController
+@Slf4j
 @RequestMapping(value = "/customers")
 public class CustomerController extends BasicOperationsController<Customer, String> {
+	private final CustomerService customerService;
 
-	private static Logger logger = LoggerFactory.getLogger(CustomerController.class);
-	@Autowired
-	private CustomerService customerService; 
-	
+	public CustomerController(CustomerService customerService) {
+		super(customerService);
+		this.customerService = customerService;
+	}
+
 	@PostMapping(value = "/")
 	public ResponseEntity<?> create(@RequestBody Customer customer) {
-		return create(customer);
+		Customer c = customerService.create(customer);
+		return ResponseEntity.ok(c);
 	}
 	
 	@GetMapping(value = "/find")
@@ -43,7 +45,7 @@ public class CustomerController extends BasicOperationsController<Customer, Stri
 																null, 
 																city.isEmpty() ? null : city, 
 																country.isEmpty() ? null : country);
-		logger.debug("Found " + result.size());
+		log.debug("Found " + result.size());
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 	
