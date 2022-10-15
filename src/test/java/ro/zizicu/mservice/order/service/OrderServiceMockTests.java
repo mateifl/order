@@ -11,13 +11,11 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import org.springframework.boot.test.context.SpringBootTest;
 import ro.zizicu.mservice.order.data.CustomerRepository;
@@ -28,33 +26,36 @@ import ro.zizicu.mservice.order.entities.Employee;
 import ro.zizicu.mservice.order.entities.Order;
 import ro.zizicu.mservice.order.entities.ProductValueObject;
 import ro.zizicu.mservice.order.exceptions.ProductNotFoundException;
+import ro.zizicu.mservice.order.restclient.RestClientImpl;
 import ro.zizicu.mservice.order.services.impl.OrderServiceImpl;
 import ro.zizicu.nwbase.exceptions.EntityNotFoundException;
 
 @SpringBootTest
+@Slf4j
 public class OrderServiceMockTests {
 
-	private static Logger logger = LoggerFactory.getLogger(OrderServiceMockTests.class);
 	@Mock
 	private OrderRepository repository;
 	@Mock
 	private CustomerRepository customerRepository;
 	@Mock
 	private EmployeeRepository employeeRepository; 
-	@InjectMocks
+	@Mock
+	private RestClientImpl restClientImpl;
+
 	private OrderServiceImpl service;
 	
 	@BeforeEach
 	public void setUp() {
 		MockitoAnnotations.initMocks(this);
-		service = new OrderServiceImpl(null, repository, customerRepository);
+		service = new OrderServiceImpl(repository, customerRepository, restClientImpl);
 		when(employeeRepository.findById(1)).thenReturn(Optional.of(new Employee()));
 	}
 	
 	@Test
 	public void testLoad() {
 		try {
-			logger.info("load order");
+			log.info("load order");
 			Order order = new Order();
 			order.setId(1);
 			Optional<Order> o = Optional.of(order);

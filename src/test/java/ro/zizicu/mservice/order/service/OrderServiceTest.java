@@ -88,16 +88,20 @@ public class OrderServiceTest {
 			order.setShipCity("test city");
 			order.setShipCountry("test country");
 			order.setShipName("ship name");
-//			order.setShippedDate(today);
 			order.setShipPostalCode("12212212");
 			order.setShipRegion("test region");
 			List<ProductValueObject> products = new ArrayList<>();
-			products.add(new ProductValueObject(4, 1.0, 1.0, 1));
-			products.add(new ProductValueObject(5, 1.5, 3.0, 2));
+			ProductValueObject product1 = new ProductValueObject();
+			product1.setId(1);
+			product1.setUnitPrice(1.0);
+			product1.setQuantity(4);
+
+			products.add(product1);
+
 
 			Employee e = employeeService.load(5);
 			Customer c = new Customer();
-			c.setId("Test1");
+			c.setId("Tes5");
 			c.setCity("Brasov");
 			c.setAddress("This is the test address");
 			c.setContactName("Test Contact Name");

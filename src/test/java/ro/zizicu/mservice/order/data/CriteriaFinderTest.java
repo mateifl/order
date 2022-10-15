@@ -1,7 +1,6 @@
 package ro.zizicu.mservice.order.data;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,10 +8,8 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import ro.zizicu.mservice.order.data.finder.EntityCriteriaFinder;
 import ro.zizicu.mservice.order.data.finder.Finder;
@@ -20,7 +17,10 @@ import ro.zizicu.mservice.order.data.finder.StringLikePredicateBuilder;
 import ro.zizicu.mservice.order.data.impl.QueryParameter;
 import ro.zizicu.mservice.order.entities.Customer;
 
-@RunWith(SpringRunner.class)
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.springframework.test.util.AssertionErrors.assertNotNull;
+
+
 @SpringBootTest
 public class CriteriaFinderTest {
 
@@ -37,7 +37,7 @@ public class CriteriaFinderTest {
 		finder.execute();
 		List<Customer> l = finder.getResults();
 		assertNotNull("Null result in find customers test ", l);
-		assertTrue(!l.isEmpty());
+		assertFalse(l.isEmpty());
 	}
 	
 	@Test
@@ -51,6 +51,6 @@ public class CriteriaFinderTest {
 		finder.execute();
 		List<Customer> l = finder.getResults();
 		assertNotNull("Null result in find customers test ", l);
-		assertTrue(!l.isEmpty());
+		assertFalse(l.isEmpty());
 	}
 }

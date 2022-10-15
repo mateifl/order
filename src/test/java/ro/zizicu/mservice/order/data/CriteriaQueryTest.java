@@ -13,16 +13,16 @@ import javax.persistence.criteria.ParameterExpression;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
+
 
 import ro.zizicu.mservice.order.entities.Order;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
+import static org.springframework.test.util.AssertionErrors.assertFalse;
 
-@RunWith(SpringRunner.class)
 @SpringBootTest
 public class CriteriaQueryTest {
 
@@ -40,7 +40,7 @@ public class CriteriaQueryTest {
 			cq.select(order).where(cb.greaterThanOrEqualTo(order.get("orderDate"), startDateParameter));
 			
 			Calendar cal = Calendar.getInstance();
-			cal.set(1997, 0, 1);
+			cal.set(1997, Calendar.JANUARY, 1);
 			
 			TypedQuery<Order> query = em.createQuery(cq);
 			query.setParameter(startDateParameter, cal.getTime());
@@ -54,7 +54,7 @@ public class CriteriaQueryTest {
 			
 			query = em.createQuery(cq);
 			query.setParameter(startDateParameter, cal.getTime());
-			cal.set(1997, 3, 1);
+			cal.set(1997, Calendar.MARCH, 1);
 			query.setParameter(endDateParameter, cal.getTime());
 			orders = query.getResultList();
 
@@ -78,7 +78,7 @@ public class CriteriaQueryTest {
 			ParameterExpression<Date> startDateParameter = cb.parameter(Date.class);
 			
 			Calendar cal = Calendar.getInstance();
-			cal.set(1997, 0, 1);
+			cal.set(1997, Calendar.JANUARY, 1);
 			
 			ParameterExpression<String> shipCountryParameter = cb.parameter(String.class);
 			// create the predicates

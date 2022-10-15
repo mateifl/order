@@ -2,13 +2,12 @@ package ro.zizicu.mservice.order.services.impl;
 
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import lombok.RequiredArgsConstructor;
 import ro.zizicu.mservice.order.data.CustomerRepository;
 import ro.zizicu.mservice.order.data.OrderRepository;
 import ro.zizicu.mservice.order.entities.Customer;
@@ -16,61 +15,53 @@ import ro.zizicu.mservice.order.entities.Employee;
 import ro.zizicu.mservice.order.entities.Order;
 import ro.zizicu.mservice.order.entities.OrderDetail;
 import ro.zizicu.mservice.order.entities.ProductValueObject;
+import ro.zizicu.mservice.order.exceptions.NotEnoughQuantity;
 import ro.zizicu.mservice.order.exceptions.OrderNotFoundException;
 import ro.zizicu.mservice.order.exceptions.ProductNotFoundException;
-import ro.zizicu.mservice.order.restclient.ProductRestObject;
 import ro.zizicu.mservice.order.restclient.RestClient;
 import ro.zizicu.mservice.order.services.OrderService;
 import ro.zizicu.nwbase.service.impl.CrudServiceImpl;
 
 @Service
-@RequiredArgsConstructor
+@Slf4j
 public class OrderServiceImpl extends CrudServiceImpl<Order, Integer>
 	implements OrderService {
-	
-	private static Logger logger = LoggerFactory.getLogger(OrderServiceImpl.class);
 
-	private final RestClient restClient;
+	private final RestClient restClientImpl;
 	private final OrderRepository orderRepository;
 	private final CustomerRepository customerRepository;
-	
+
+
+	public OrderServiceImpl(OrderRepository orderRepository, CustomerRepository customerRepository, RestClient restClientImpl) {
+		this.repository = orderRepository;
+		this.orderRepository = orderRepository;
+		this.customerRepository = customerRepository;
+		this.restClientImpl = restClientImpl;
+	}
+
 	@Override
 	@Transactional
 	public Order createOrder(Order order, 
-						  List<ProductValueObject> productIds, 
+						  List<ProductValueObject> products,
 						  Employee employee, 
 						  Customer customer,
 						  Integer shipperId) throws ProductNotFoundException {
-		if(logger.isInfoEnabled()) logger.info("create order");
-		if(logger.isDebugEnabled()) logger.debug("number of order details: " + productIds.size());
-		for(ProductValueObject pvo : productIds)
-		{
-			ProductRestObject o = restClient.loadAndUpdateProduct(pvo.productId, pvo.quantity);
-			OrderDetail orderDetail = new OrderDetail();
-			orderDetail.setProductId(pvo.productId);
-			orderDetail.setOrder(order);
-			orderDetail.setQuantity(pvo.quantity);
-			orderDetail.setUnitPrice(pvo.unitPrice);
-			orderDetail.setDiscount(pvo.discount);
-			order.getOrderDetails().add(orderDetail);
-		}
-		
-		if(customer.getId() != null) {
-			logger.info("Customer already in the database " + customer.getId() );
-			customer = customerRepository.findById(customer.getId()).orElse(customer);
-		}
+		if(log.isInfoEnabled()) log.info("create order");
+		if(log.isDebugEnabled()) log.debug("number of order details: " + products.size());
+
+		order = addOrderDetails(products, order);
 		order.setCustomer(customer);
 		order.setEmployee(employee);
 		order.setShipperId(shipperId);
 		order = orderRepository.save(order);
-		if(logger.isInfoEnabled()) logger.info("order created");
+		if(log.isInfoEnabled()) log.info("order created");
 		return order;
 	}
 
 	@Override
 	@Transactional
-	public Order update(Order order, List<ProductValueObject> productIds) {
-		if(logger.isInfoEnabled()) logger.info("update order");
+	public Order update(Order order, List<ProductValueObject> products) {
+		if(log.isInfoEnabled()) log.info("update order with id {}", order.getId());
 		Order fromDatabase = orderRepository.findById(order.getId()).orElseThrow(OrderNotFoundException::new);
 		fromDatabase.getOrderDetails().clear();
 		
@@ -78,33 +69,56 @@ public class OrderServiceImpl extends CrudServiceImpl<Order, Integer>
 			fromDatabase.setFreight(order.getFreight());
 		if(order.getShipAddress()!= null)
 			fromDatabase.setShipAddress(order.getShipAddress());
-		
-		for(ProductValueObject pvo : productIds)
-		{
-			ProductRestObject o = restClient.loadAndUpdateProduct(pvo.productId, pvo.quantity);
-			OrderDetail orderDetail = new OrderDetail();
-			orderDetail.setProductId(pvo.productId);
-			orderDetail.setOrder(order);
-			orderDetail.setQuantity(pvo.quantity);
-			orderDetail.setUnitPrice(pvo.unitPrice);
-			orderDetail.setDiscount(pvo.discount);
-			order.getOrderDetails().add(orderDetail);
-		}
+
+		fromDatabase = addOrderDetails(products, fromDatabase);
 		order = orderRepository.save(fromDatabase);
-		if(logger.isInfoEnabled()) logger.info("order updated");
+		if(log.isInfoEnabled()) log.info("order updated");
 		return order;
 	}
 
 	@Override
 	@Transactional
 	public void cancelOrder(Order order) {
-		if(logger.isInfoEnabled()) logger.info("cancel order " + order.getId());
+		if(log.isInfoEnabled()) log.info("cancel order " + order.getId());
 		orderRepository.delete(order);
-		if(logger.isInfoEnabled()) logger.info("order cancelled");
+		if(log.isInfoEnabled()) log.info("order cancelled");
 	}
 
 	@Override
 	public List<Order> findOrders(Customer customer, Date start, Date end, String countryToShip, Employee createdBy) {
 		return orderRepository.findOrders(customer, start, end, createdBy);
 	}
+
+	private List<ProductValueObject> checkStock(List<ProductValueObject> products) {
+		return products.stream()
+				.map( v ->  restClientImpl.checkStock(v.getId(), v.getQuantity()).get())
+				.collect(Collectors.toList());
+	}
+
+	private Order addOrderDetails(List<ProductValueObject> products, Order order) {
+		products = checkStock(products);
+
+		List<ProductValueObject> insufficientStockProducts = products.stream()
+				.filter( v -> !v.getEnoughStock() ).collect(Collectors.toList());
+
+		if(!insufficientStockProducts.isEmpty() )
+		{
+			String errorMessage = insufficientStockProducts.stream().
+					map( v -> "" + v.getId() + " " + v.getUnitsInStock()  ).collect(Collectors.joining(" \n"));
+			throw new NotEnoughQuantity(errorMessage);
+		}
+
+		products.forEach(restClientImpl::updateProductQuantity);
+
+		List<OrderDetail> orderDetails = products.stream().map( v -> OrderDetail.builder().productId(v.getId())
+				.unitPrice(v.getUnitPrice())
+				.quantity(v.getQuantity())
+				.discount(v.getDiscount())
+				.order(order)
+				.build()
+		 ).collect(Collectors.toList());
+		order.setOrderDetails(orderDetails);
+		return order;
+	}
+
 }

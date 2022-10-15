@@ -6,9 +6,9 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -20,6 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest
+@Slf4j
 public class OrderRepositoryTest {
 
 	@Autowired
@@ -31,9 +32,6 @@ public class OrderRepositoryTest {
 	@Autowired
 	private CustomerFinderRepository customerFinderRepository; 	
 
-	
-	private static Logger logger = LoggerFactory.getLogger(OrderRepositoryTest.class);
-	
 	@Test
 	public void testOrderSave() {
 		Order order = createOrder();
@@ -55,30 +53,30 @@ public class OrderRepositoryTest {
 
 	@Test
 	public void testFindByCustomer() {
-		logger.info("Test find orders");
-		List<Customer> customers = customerFinderRepository.find("ALFAA", null, null, null);
+		log.info("Test find orders");
+		List<Customer> customers = customerFinderRepository.find("ALFKI", null, null, null);
 		assertEquals(1, customers.size());
 		List<Order> orders = orderRepository.findOrders(customers.get(0), null, null, null);
-		assertEquals(2, orders.size());
+		assertEquals(6, orders.size());
 		Calendar cal = Calendar.getInstance();
-		cal.set(1997, 1, 1);
+		cal.set(1997, Calendar.JANUARY, 1);
 		Date startDate = cal.getTime();
-		cal.set(1997, 5, 1);
+		cal.set(1997, Calendar.JULY, 1);
 		Date endDate = cal.getTime();
-		logger.info("Test find order with start date");
+		log.info("Test find order with start date");
 		orders = orderRepository.findOrders(null, startDate, null, null);
 		assertEquals(645, orders.size());
-		logger.info("Test find order with end date");
+		log.info("Test find order with end date");
 		orders = orderRepository.findOrders(null, null, endDate, null);
 		assertEquals(307, orders.size());
-		logger.info("Test find order dates between");
+		log.info("Test find order dates between");
 		orders = orderRepository.findOrders(null, startDate, endDate, null);
 		assertEquals(122, orders.size());
 	}
 	
 	@Test
 	public void testFindByEmployee() {
-		logger.info("Test find orders");
+		log.info("Test find orders");
 		Employee e = employeeRepository.findById(5).orElse(null);
 		List<Order> orders = orderRepository.findOrders(null, null, null, e);
 		assertNotNull(orders);

@@ -10,13 +10,22 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import ro.zizicu.nwbase.entity.IdentityOwner;
 
 
 @Entity
 @Table(name = "order_details")
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class OrderDetail implements IdentityOwner<Integer> {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,48 +35,14 @@ public class OrderDetail implements IdentityOwner<Integer> {
 	@JoinColumn(name = "orderid")
 	private Order order;
 	@Column(name="productid")
+	@NotNull
 	private Integer productId;
 	@Column(name="unitprice")
+	@NotNull
 	private Double unitPrice;
+	@NotNull
 	private Integer quantity;
 	private Double discount;
-	
-	public Integer getId() {
-		return id;
-	}
-	public void setId(Integer id) {
-		this.id = id;
-	}
-	public Order getOrder() {
-		return order;
-	}
-	public void setOrder(Order order) {
-		this.order = order;
-	}
-	public Integer getProductId() {
-		return productId;
-	}
-	public void setProductId(Integer productId) {
-		this.productId = productId;
-	}
-	public Double getUnitPrice() {
-		return unitPrice;
-	}
-	public void setUnitPrice(Double unitPrice) {
-		this.unitPrice = unitPrice;
-	}
-	public Integer getQuantity() {
-		return quantity;
-	}
-	public void setQuantity(Integer quantity) {
-		this.quantity = quantity;
-	}
-	public Double getDiscount() {
-		return discount;
-	}
-	public void setDiscount(Double discount) {
-		this.discount = discount;
-	}
 	@Override
 	public String getEntityName() {
 		return "OrderDetail";

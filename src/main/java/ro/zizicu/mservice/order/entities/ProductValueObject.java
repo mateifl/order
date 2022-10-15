@@ -4,18 +4,23 @@ package ro.zizicu.mservice.order.entities;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 
-import lombok.RequiredArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 @ToString
-@RequiredArgsConstructor
+@Data
+@NoArgsConstructor
 public class ProductValueObject {
 	@Min(1)
-	public final  Integer quantity;
-	public final  Double discount;
+	private Integer quantity;
+	private Double discount;
 	@NotEmpty
-	public final  Double unitPrice;
+	private Double unitPrice;
 	@NotEmpty
-	public final  Integer productId;
+	private Integer id;
+
+	private Integer unitsInStock;
+	@NotEmpty
+	private Integer unitsOnOrder;
+	private Boolean enoughStock = Boolean.TRUE;
 
 }

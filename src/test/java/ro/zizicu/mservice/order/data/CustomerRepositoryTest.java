@@ -1,19 +1,15 @@
 package ro.zizicu.mservice.order.data;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-
 import java.util.List;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import ro.zizicu.mservice.order.entities.Customer;
 
-@RunWith(SpringRunner.class)
+import static org.junit.jupiter.api.Assertions.*;
+
 @SpringBootTest
 public class CustomerRepositoryTest {
 	
@@ -25,7 +21,7 @@ public class CustomerRepositoryTest {
 	@Test
 	public void testLoad() {
 		Customer c = repository.findById("ANATR").get();
-		assertTrue(c != null);
+		assertNotNull(c);
 		assertTrue(c.getId().equalsIgnoreCase("ANATR"));
 	}
 	
@@ -44,7 +40,7 @@ public class CustomerRepositoryTest {
 		c.setRegion("regioan1");
 		c.setFax("12121");
 		repository.save(c);
-		assertTrue(c != null);
+		assertNotNull(c);
 		repository.deleteById("ANAZZ");
 	}
 	
@@ -52,13 +48,13 @@ public class CustomerRepositoryTest {
 	public void testFind() {
 		
 		List<Customer> customers = finderRepository.find("ANATR", null, null, null);
-		assertNotNull("find by", customers);
-		assertTrue(customers.size() == 1);
+		assertNotNull(customers);
+		assertEquals(1, customers.size());
 		customers = finderRepository.find(null, null, null, "Germany");
-		assertTrue(customers.size() == 11);
+		assertEquals(11, customers.size());
 		customers = finderRepository.find("AN%", null, null, null);
-		assertTrue(customers.size() == 2);
+		assertEquals(2, customers.size());
 		customers = finderRepository.find("A%", null, null, "Germany");
-		assertTrue(customers.size() == 1);
+		assertEquals(1, customers.size());
 	}
 }

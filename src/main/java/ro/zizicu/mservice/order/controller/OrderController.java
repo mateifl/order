@@ -10,13 +10,7 @@ import javax.validation.constraints.Size;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import lombok.Data;
 import ro.zizicu.mservice.order.entities.Customer;
@@ -73,13 +67,14 @@ public class OrderController {
 			return ResponseEntity.notFound().build();
 		}
 	}
-	
-	@PutMapping(value = "/")
-	public ResponseEntity<String> updateOrder(@RequestBody OrderCreateWrapper orderCreateWrapper) {
+
+	@PatchMapping(value = "/{id}")
+	public ResponseEntity<String> updateOrder(@RequestBody OrderCreateWrapper orderCreateWrapper, @PathVariable Integer id) {
 		if(log.isInfoEnabled())
-			log.info("Update order with id: " + orderCreateWrapper.getOrder().getId());
+			log.info("Update order with id: {}", id);
 		try {
 			Order order = orderCreateWrapper.getOrder();
+			order.setId(id);
 			List<ProductValueObject> products = orderCreateWrapper.getProductIds();
 			order = orderService.update(order, products);
 			return ResponseEntity.ok(order.getId().toString());
