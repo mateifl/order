@@ -5,16 +5,15 @@ import java.util.Map;
 
 import org.apache.kafka.clients.admin.AdminClientConfig;
 import org.apache.kafka.clients.admin.NewTopic;
+import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.producer.ProducerConfig;
+import org.apache.kafka.common.serialization.StringDeserializer;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 import org.springframework.kafka.config.TopicBuilder;
-import org.springframework.kafka.core.DefaultKafkaProducerFactory;
-import org.springframework.kafka.core.KafkaAdmin;
-import org.springframework.kafka.core.KafkaTemplate;
-import org.springframework.kafka.core.ProducerFactory;
+import org.springframework.kafka.core.*;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -39,8 +38,6 @@ public class OrderKafkaConfiguration {
 	@Bean
 	public NewTopic stockUpdateTopic() {
 	    return TopicBuilder.name("stockUpdateTopic")
-	            .partitions(2)
-	            .compact()
 	            .build();
 	}
 
@@ -59,8 +56,25 @@ public class OrderKafkaConfiguration {
 	}
 
 	@Bean
-	public KafkaTemplate<Integer, String> kafkaTemplate() {
+	public KafkaTemplate<Integer, String> kafkaTemplate()
+	{
 	    return new KafkaTemplate<Integer, String>(producerFactory());
 	}
+
+	@Bean
+	public ConsumerFactory<String, String> consumerFactory() {
+		Map<String, Object> props = new HashMap<>();
+		props.put(
+				ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG,
+				environment.getProperty("kafka.url"));
+		props.put(
+				ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG,
+				StringDeserializer.class);
+		props.put(
+				ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG,
+				StringDeserializer.class);
+		return new DefaultKafkaConsumerFactory<>(props);
+	}
+
 
 }

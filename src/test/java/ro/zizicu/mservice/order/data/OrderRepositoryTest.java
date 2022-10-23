@@ -49,7 +49,9 @@ public class OrderRepositoryTest {
 		orderRepository.delete(order);
 
 		customerRepository.delete(c);
-	}	
+	}
+
+
 
 	@Test
 	public void testFindByCustomer() {
@@ -98,7 +100,23 @@ public class OrderRepositoryTest {
 		order.setShipRegion("test region");
 		return order;
 	}
-	
+
+	private Order createOrderNoDates() {
+
+		Order order = new Order();
+		order.setFreight(10.0);
+
+
+		order.setShipAddress("test 12345");
+		order.setShipCity("test city");
+		order.setShipCountry("test country");
+		order.setShipName("ship name");
+
+		order.setShipPostalCode("12212212");
+		order.setShipRegion("test region");
+		return order;
+	}
+
 	private Customer createCustomer(String id) {
 		Customer c = new Customer();
 		c.setId(id);

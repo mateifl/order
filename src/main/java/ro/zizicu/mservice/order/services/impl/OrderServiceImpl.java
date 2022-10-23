@@ -50,6 +50,7 @@ public class OrderServiceImpl extends CrudServiceImpl<Order, Integer>
 		if(log.isDebugEnabled()) log.debug("number of order details: " + products.size());
 
 		order = addOrderDetails(products, order);
+		order.setOrderDate(new Date());
 		order.setCustomer(customer);
 		order.setEmployee(employee);
 		order.setShipperId(shipperId);
