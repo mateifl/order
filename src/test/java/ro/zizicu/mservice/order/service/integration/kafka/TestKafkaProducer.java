@@ -28,8 +28,6 @@ public class TestKafkaProducer {
 		} catch (InterruptedException | ExecutionException e) {
 			throw new RuntimeException(e);
 		}
-
-
 	}
 	
 }
