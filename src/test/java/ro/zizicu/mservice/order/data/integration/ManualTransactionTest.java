@@ -9,6 +9,8 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
+import ro.zizicu.mservice.order.data.CustomerRepository;
+import ro.zizicu.mservice.order.data.EmployeeRepository;
 import ro.zizicu.mservice.order.entities.Customer;
 
 
@@ -17,6 +19,7 @@ import javax.persistence.PersistenceContext;
 
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 @SpringBootTest
 public class ManualTransactionTest {
@@ -26,6 +29,9 @@ public class ManualTransactionTest {
 
     @PersistenceContext
     private EntityManager entityManager;
+
+    @Autowired
+    private CustomerRepository customerRepository;
 
     @BeforeEach
     public void setup() {
@@ -57,7 +63,6 @@ public class ManualTransactionTest {
     @Test
     public void testRollback() {
         DefaultTransactionDefinition definition = new DefaultTransactionDefinition();
-
         definition.setIsolationLevel(TransactionDefinition.ISOLATION_REPEATABLE_READ);
         definition.setTimeout(3);
         TransactionStatus status  = transactionManager.getTransaction(definition);
@@ -81,4 +86,32 @@ public class ManualTransactionTest {
 
     }
 
+    @Test
+    public void testWithRepository() {
+        DefaultTransactionDefinition definition = new DefaultTransactionDefinition();
+        definition.setIsolationLevel(TransactionDefinition.ISOLATION_REPEATABLE_READ);
+        definition.setTimeout(3);
+        TransactionStatus status  = transactionManager.getTransaction(definition);
+        String customerName = "test124";
+        Customer customer = new Customer();
+        customer.setId("Test");
+        customer.setCompanyName(customerName);
+        customer.setCity("Buhus");
+        customer.setCountry("Romania");
+
+        customerRepository.save(customer);
+        transactionManager.commit(status);
+        assertEquals( customerRepository.findByCompanyName(customerName).getCompanyName(), customerName);
+
+        status = transactionManager.getTransaction(definition);
+        customerRepository.delete(customer);
+        transactionManager.rollback(status);
+        assertEquals( customerRepository.findByCompanyName(customerName).getCompanyName(), customerName);
+
+        status = transactionManager.getTransaction(definition);
+        customerRepository.delete(customer);
+        transactionManager.commit(status);
+        assertNull(customerRepository.findByCompanyName(customerName));
+
+    }
 }

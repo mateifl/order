@@ -4,7 +4,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,40 +23,48 @@ import ro.zizicu.mservice.order.exceptions.ProductNotFoundException;
 import ro.zizicu.mservice.order.restclient.RestClient;
 import ro.zizicu.mservice.order.services.OrderService;
 import ro.zizicu.nwbase.service.impl.CrudServiceImpl;
+import ro.zizicu.nwbase.transaction.TransactionMessage;
 
 @Service
 @Slf4j
 public class OrderServiceImpl extends CrudServiceImpl<Order, Integer>
 	implements OrderService {
 
-	private final RestClient restClientImpl;
+	private final RestClient restClient;
 	private final OrderRepository orderRepository;
 	private final CustomerRepository customerRepository;
+	private final KafkaTemplate<String, TransactionMessage> kafkaTemplate;
 
+	public OrderServiceImpl(OrderRepository orderRepository,
+							CustomerRepository customerRepository,
+							RestClient restClient,
+							KafkaTemplate<String, TransactionMessage> kafkaTemplate) {
 
-	public OrderServiceImpl(OrderRepository orderRepository, CustomerRepository customerRepository, RestClient restClientImpl) {
 		this.repository = orderRepository;
 		this.orderRepository = orderRepository;
 		this.customerRepository = customerRepository;
-		this.restClientImpl = restClientImpl;
+		this.restClient = restClient;
+		this.kafkaTemplate = kafkaTemplate;
 	}
 
 	@Override
-	@Transactional
-	public Order createOrder(Order order, 
+	public Order createOrder(Order order,
 						  List<ProductValueObject> products,
 						  Employee employee, 
 						  Customer customer,
 						  Integer shipperId) throws ProductNotFoundException {
 		if(log.isInfoEnabled()) log.info("create order");
 		if(log.isDebugEnabled()) log.debug("number of order details: " + products.size());
+		Long transactionId = orderRepository.getTransactionId();
+		log.debug("start distributed transaction {}", transactionId);
 
-		order = addOrderDetails(products, order);
+		order = addOrderDetails(products, order, transactionId);
 		order.setOrderDate(new Date());
 		order.setCustomer(customer);
 		order.setEmployee(employee);
 		order.setShipperId(shipperId);
 		order = orderRepository.save(order);
+		kafkaTemplate.send("", TransactionMessage.builder().serviceName("Order").transactionId(transactionId).build());
 		if(log.isInfoEnabled()) log.info("order created");
 		return order;
 	}
@@ -71,7 +81,10 @@ public class OrderServiceImpl extends CrudServiceImpl<Order, Integer>
 		if(order.getShipAddress()!= null)
 			fromDatabase.setShipAddress(order.getShipAddress());
 
-		fromDatabase = addOrderDetails(products, fromDatabase);
+		Long transactionId = orderRepository.getTransactionId();
+		log.debug("start distributed transaction {}", transactionId);
+
+		fromDatabase = addOrderDetails(products, fromDatabase, transactionId);
 		order = orderRepository.save(fromDatabase);
 		if(log.isInfoEnabled()) log.info("order updated");
 		return order;
@@ -92,11 +105,11 @@ public class OrderServiceImpl extends CrudServiceImpl<Order, Integer>
 
 	private List<ProductValueObject> checkStock(List<ProductValueObject> products) {
 		return products.stream()
-				.map( v ->  restClientImpl.checkStock(v.getId(), v.getQuantity()).get())
+				.map( v ->  restClient.checkStock(v.getId(), v.getQuantity()).get())
 				.collect(Collectors.toList());
 	}
 
-	private Order addOrderDetails(List<ProductValueObject> products, Order order) {
+	private Order addOrderDetails(List<ProductValueObject> products, Order order, final Long transactionId) {
 		products = checkStock(products);
 
 		List<ProductValueObject> insufficientStockProducts = products.stream()
@@ -104,12 +117,13 @@ public class OrderServiceImpl extends CrudServiceImpl<Order, Integer>
 
 		if(!insufficientStockProducts.isEmpty() )
 		{
+			log.error("not enough stock ");
 			String errorMessage = insufficientStockProducts.stream().
 					map( v -> "" + v.getId() + " " + v.getUnitsInStock()  ).collect(Collectors.joining(" \n"));
 			throw new NotEnoughQuantity(errorMessage);
 		}
 
-		products.forEach(restClientImpl::updateProductQuantity);
+		products.forEach(p -> restClient.updateProductQuantity(p, transactionId));
 
 		List<OrderDetail> orderDetails = products.stream().map( v -> OrderDetail.builder().productId(v.getId())
 				.unitPrice(v.getUnitPrice())

@@ -16,6 +16,8 @@ import org.springframework.kafka.config.TopicBuilder;
 import org.springframework.kafka.core.*;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.kafka.support.serializer.JsonSerializer;
+import ro.zizicu.nwbase.transaction.TransactionMessage;
 
 
 @Configuration
@@ -36,45 +38,25 @@ public class OrderKafkaConfiguration {
 	}
 
 	@Bean
-	public NewTopic stockUpdateTopic() {
-	    return TopicBuilder.name("stockUpdateTopic")
-	            .build();
-	}
-
-	@Bean
-	public ProducerFactory<Integer, String> producerFactory() {
-	    return new DefaultKafkaProducerFactory<>(producerConfigs());
+	public ProducerFactory<String, TransactionMessage> producerFactory() {
+		return new DefaultKafkaProducerFactory<>(producerConfigs());
 	}
 
 	@Bean
 	public Map<String, Object> producerConfigs() {
-	    Map<String, Object> props = new HashMap<>();
-	    props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, environment.getProperty("kafka.url"));
-	    props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
-	    props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
-	    return props;
-	}
-
-	@Bean
-	public KafkaTemplate<Integer, String> kafkaTemplate()
-	{
-	    return new KafkaTemplate<Integer, String>(producerFactory());
-	}
-
-	@Bean
-	public ConsumerFactory<String, String> consumerFactory() {
 		Map<String, Object> props = new HashMap<>();
-		props.put(
-				ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG,
-				environment.getProperty("kafka.url"));
-		props.put(
-				ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG,
-				StringDeserializer.class);
-		props.put(
-				ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG,
-				StringDeserializer.class);
-		return new DefaultKafkaConsumerFactory<>(props);
+		props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, environment.getProperty("kafka.url"));
+		props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
+		props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
+		return props;
 	}
+
+	@Bean
+	public KafkaTemplate<String, TransactionMessage> kafkaTemplate()
+	{
+		return new KafkaTemplate<String, TransactionMessage>(producerFactory());
+	}
+
 
 
 }

@@ -6,6 +6,7 @@ import ro.zizicu.mservice.order.entities.Customer;
 
 /** */
 public interface CustomerRepository extends CrudRepository<Customer, String> {
-		
+
+    Customer findByCompanyName(String companyName);
 
 }

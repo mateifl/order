@@ -26,6 +26,11 @@ public class RestClientImpl implements RestClient {
 										updatedEntity, ProductValueObject.class);
 	}
 
+	@Override
+	public void updateProductQuantity(ProductValueObject product, Long transactionId) {
+
+	}
+
 	public Optional<ProductValueObject> checkStock(Integer productId, Integer quantity) {
 		log.debug("Checking product with id: {}", productId);
 		String productUrl = environment.getProperty("product.url");
