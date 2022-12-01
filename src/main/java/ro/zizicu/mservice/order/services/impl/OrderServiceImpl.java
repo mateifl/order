@@ -48,6 +48,7 @@ public class OrderServiceImpl extends CrudServiceImpl<Order, Integer>
 	}
 
 	@Override
+	@Transactional
 	public Order createOrder(Order order,
 						  List<ProductValueObject> products,
 						  Employee employee, 
@@ -64,7 +65,7 @@ public class OrderServiceImpl extends CrudServiceImpl<Order, Integer>
 		order.setEmployee(employee);
 		order.setShipperId(shipperId);
 		order = orderRepository.save(order);
-		kafkaTemplate.send("", TransactionMessage.builder().serviceName("Order").transactionId(transactionId).build());
+//		kafkaTemplate.send("", TransactionMessage.builder().serviceName("Order").transactionId(transactionId).build());
 		if(log.isInfoEnabled()) log.info("order created");
 		return order;
 	}

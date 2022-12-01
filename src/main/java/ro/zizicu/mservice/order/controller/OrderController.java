@@ -93,7 +93,6 @@ public class OrderController {
 
 @Data
 class OrderCreateWrapper {
-	
 	@NotNull
 	private Order order;
 	@Size(min=1)
@@ -104,5 +103,4 @@ class OrderCreateWrapper {
 	private Integer employeeId;
 	@NotNull
 	private Integer shipperId;
-
 }
