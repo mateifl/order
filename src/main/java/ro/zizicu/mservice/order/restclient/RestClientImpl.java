@@ -1,15 +1,15 @@
 package ro.zizicu.mservice.order.restclient;
 
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import java.util.Optional;
+
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import ro.zizicu.mservice.order.entities.ProductValueObject;
-
-import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
@@ -28,7 +28,11 @@ public class RestClientImpl implements RestClient {
 
 	@Override
 	public void updateProductQuantity(ProductValueObject product, Long transactionId) {
-
+		String productUrl = environment.getProperty("product.url");
+		HttpEntity<ProductValueObject> updatedEntity = new HttpEntity<ProductValueObject>(product);
+		String productUpdateStockUrl = productUrl + "/update-stock/" + transactionId;
+		log.debug("product stock update url: {}", productUpdateStockUrl);
+		restTemplate.patchForObject(productUpdateStockUrl, updatedEntity, ProductValueObject.class);
 	}
 
 	public Optional<ProductValueObject> checkStock(Integer productId, Integer quantity) {
@@ -44,6 +48,5 @@ public class RestClientImpl implements RestClient {
 		}
 		return Optional.of(product);
 	}
-
 
 }

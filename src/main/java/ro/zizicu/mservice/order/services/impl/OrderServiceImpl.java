@@ -22,6 +22,8 @@ import ro.zizicu.mservice.order.exceptions.OrderNotFoundException;
 import ro.zizicu.mservice.order.exceptions.ProductNotFoundException;
 import ro.zizicu.mservice.order.restclient.RestClient;
 import ro.zizicu.mservice.order.services.OrderService;
+import ro.zizicu.mservice.order.services.distributed.transaction.AddOrder;
+import ro.zizicu.nwbase.service.DistributedTransactionService;
 import ro.zizicu.nwbase.service.impl.CrudServiceImpl;
 import ro.zizicu.nwbase.transaction.TransactionMessage;
 
@@ -32,23 +34,22 @@ public class OrderServiceImpl extends CrudServiceImpl<Order, Integer>
 
 	private final RestClient restClient;
 	private final OrderRepository orderRepository;
-	private final CustomerRepository customerRepository;
-	private final KafkaTemplate<String, TransactionMessage> kafkaTemplate;
-
+	private final DistributedTransactionService distributedTransactionService;
+	private AddOrder addOrder;
+	
 	public OrderServiceImpl(OrderRepository orderRepository,
 							CustomerRepository customerRepository,
-							RestClient restClient,
-							KafkaTemplate<String, TransactionMessage> kafkaTemplate) {
-
+							DistributedTransactionService distributedTransactionService,
+							AddOrder addOrder,
+							RestClient restClient) {
+		this.addOrder = addOrder;
 		this.repository = orderRepository;
 		this.orderRepository = orderRepository;
-		this.customerRepository = customerRepository;
+		this.distributedTransactionService = distributedTransactionService;
 		this.restClient = restClient;
-		this.kafkaTemplate = kafkaTemplate;
 	}
 
 	@Override
-	@Transactional
 	public Order createOrder(Order order,
 						  List<ProductValueObject> products,
 						  Employee employee, 
@@ -64,27 +65,25 @@ public class OrderServiceImpl extends CrudServiceImpl<Order, Integer>
 		order.setCustomer(customer);
 		order.setEmployee(employee);
 		order.setShipperId(shipperId);
-		order = orderRepository.save(order);
-//		kafkaTemplate.send("", TransactionMessage.builder().serviceName("Order").transactionId(transactionId).build());
+		addOrder.setOrder(order);
+		distributedTransactionService.executeTransactionStep(addOrder, transactionId);
 		if(log.isInfoEnabled()) log.info("order created");
 		return order;
 	}
 
 	@Override
-	@Transactional
 	public Order update(Order order, List<ProductValueObject> products) {
 		if(log.isInfoEnabled()) log.info("update order with id {}", order.getId());
 		Order fromDatabase = orderRepository.findById(order.getId()).orElseThrow(OrderNotFoundException::new);
 		fromDatabase.getOrderDetails().clear();
-		
+		Long transactionId = orderRepository.getTransactionId();
+		log.debug("start distributed transaction {}", transactionId);
+
 		if(order.getFreight()!= null)
 			fromDatabase.setFreight(order.getFreight());
 		if(order.getShipAddress()!= null)
 			fromDatabase.setShipAddress(order.getShipAddress());
-
-		Long transactionId = orderRepository.getTransactionId();
-		log.debug("start distributed transaction {}", transactionId);
-
+		
 		fromDatabase = addOrderDetails(products, fromDatabase, transactionId);
 		order = orderRepository.save(fromDatabase);
 		if(log.isInfoEnabled()) log.info("order updated");
@@ -110,7 +109,8 @@ public class OrderServiceImpl extends CrudServiceImpl<Order, Integer>
 				.collect(Collectors.toList());
 	}
 
-	private Order addOrderDetails(List<ProductValueObject> products, Order order, final Long transactionId) {
+	private Order addOrderDetails(List<ProductValueObject> products, Order order, Long transactionId ) {
+
 		products = checkStock(products);
 
 		List<ProductValueObject> insufficientStockProducts = products.stream()

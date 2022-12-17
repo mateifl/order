@@ -18,6 +18,4 @@ public class RestTemplateConfig {
         restTemplate.setRequestFactory(requestFactory);
         return restTemplate;
     }
-
-
 }

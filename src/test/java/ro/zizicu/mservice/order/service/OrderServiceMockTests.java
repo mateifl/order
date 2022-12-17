@@ -48,7 +48,7 @@ public class OrderServiceMockTests {
 	@BeforeEach
 	public void setUp() {
 		MockitoAnnotations.initMocks(this);
-		service = new OrderServiceImpl(repository, customerRepository, restClientImpl, null);
+//		service = new OrderServiceImpl(repository, customerRepository, restClientImpl, null);
 		when(employeeRepository.findById(1)).thenReturn(Optional.of(new Employee()));
 	}
 	
