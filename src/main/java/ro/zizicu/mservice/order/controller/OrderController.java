@@ -45,20 +45,17 @@ public class OrderController {
 	@PostMapping(value = "/")
 	public ResponseEntity<?> create(@Valid @RequestBody OrderCreateWrapper orderCreateWrapper) {
 		if(log.isInfoEnabled()) {
-			log.info("create order for customer: "	+ orderCreateWrapper.getCustomerCode());
-			log.info("shipper id: "	+ orderCreateWrapper.getShipperId());
+			log.info("create order for customer {}", orderCreateWrapper.getCustomerCode());
+			log.info("shipper id  {}", orderCreateWrapper.getShipperId());
 		}
 		try {
 			log.debug("create order: " + orderCreateWrapper);
 			Order order = orderCreateWrapper.getOrder();
 			List<ProductValueObject> products = orderCreateWrapper.getProductIds();
-
 			Integer employeeId = orderCreateWrapper.getEmployeeId();
-			Employee employee = employeeService.load(employeeId);
+			Integer shipperId = orderCreateWrapper.getShipperId();
 			String customerCode = orderCreateWrapper.getCustomerCode();
-			List<Customer> customers = customerService.findWithCriteria(customerCode, null, null, null);
-
-			order = orderService.createOrder(order, products, employee, customers.get(0), orderCreateWrapper.getShipperId());
+			order = orderService.createOrder(order, products, employeeId, customerCode, shipperId);
 			HttpHeaders responseHeaders = new HttpHeaders();
 			responseHeaders.add("Location", "orders/" + order.getId());
 			return ResponseEntity.ok().headers(responseHeaders).body(order);
@@ -76,7 +73,7 @@ public class OrderController {
 			Order order = orderCreateWrapper.getOrder();
 			order.setId(id);
 			List<ProductValueObject> products = orderCreateWrapper.getProductIds();
-			order = orderService.update(order, products);
+			order = orderService.updateOrder(order, products);
 			return ResponseEntity.ok(order.getId().toString());
 		} catch (ProductNotFoundException e) {
 			log.error("", e);

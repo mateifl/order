@@ -2,22 +2,21 @@ package ro.zizicu.mservice.order.data;
 
 
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import lombok.extern.slf4j.Slf4j;
 import ro.zizicu.mservice.order.entities.Customer;
 import ro.zizicu.mservice.order.entities.Employee;
 import ro.zizicu.mservice.order.entities.Order;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest
 @Slf4j
@@ -101,21 +100,21 @@ public class OrderRepositoryTest {
 		return order;
 	}
 
-	private Order createOrderNoDates() {
-
-		Order order = new Order();
-		order.setFreight(10.0);
-
-
-		order.setShipAddress("test 12345");
-		order.setShipCity("test city");
-		order.setShipCountry("test country");
-		order.setShipName("ship name");
-
-		order.setShipPostalCode("12212212");
-		order.setShipRegion("test region");
-		return order;
-	}
+//	private Order createOrderNoDates() {
+//
+//		Order order = new Order();
+//		order.setFreight(10.0);
+//
+//
+//		order.setShipAddress("test 12345");
+//		order.setShipCity("test city");
+//		order.setShipCountry("test country");
+//		order.setShipName("ship name");
+//
+//		order.setShipPostalCode("12212212");
+//		order.setShipRegion("test region");
+//		return order;
+//	}
 
 	private Customer createCustomer(String id) {
 		Customer c = new Customer();

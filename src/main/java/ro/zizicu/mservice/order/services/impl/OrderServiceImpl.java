@@ -4,12 +4,11 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import ro.zizicu.mservice.order.data.CustomerRepository;
 import ro.zizicu.mservice.order.data.OrderRepository;
 import ro.zizicu.mservice.order.entities.Customer;
@@ -22,27 +21,24 @@ import ro.zizicu.mservice.order.exceptions.OrderNotFoundException;
 import ro.zizicu.mservice.order.exceptions.ProductNotFoundException;
 import ro.zizicu.mservice.order.restclient.RestClient;
 import ro.zizicu.mservice.order.services.OrderService;
-import ro.zizicu.mservice.order.services.distributed.transaction.AddOrder;
+import ro.zizicu.mservice.order.services.distributed.transaction.SaveOrder;
 import ro.zizicu.nwbase.service.DistributedTransactionService;
 import ro.zizicu.nwbase.service.impl.CrudServiceImpl;
-import ro.zizicu.nwbase.transaction.TransactionMessage;
 
 @Service
 @Slf4j
+@Setter
 public class OrderServiceImpl extends CrudServiceImpl<Order, Integer>
 	implements OrderService {
 
 	private final RestClient restClient;
 	private final OrderRepository orderRepository;
 	private final DistributedTransactionService distributedTransactionService;
-	private AddOrder addOrder;
 	
 	public OrderServiceImpl(OrderRepository orderRepository,
 							CustomerRepository customerRepository,
 							DistributedTransactionService distributedTransactionService,
-							AddOrder addOrder,
 							RestClient restClient) {
-		this.addOrder = addOrder;
 		this.repository = orderRepository;
 		this.orderRepository = orderRepository;
 		this.distributedTransactionService = distributedTransactionService;
@@ -52,8 +48,8 @@ public class OrderServiceImpl extends CrudServiceImpl<Order, Integer>
 	@Override
 	public Order createOrder(Order order,
 						  List<ProductValueObject> products,
-						  Employee employee, 
-						  Customer customer,
+						  Integer employeeId,
+						  String customerCode,
 						  Integer shipperId) throws ProductNotFoundException {
 		if(log.isInfoEnabled()) log.info("create order");
 		if(log.isDebugEnabled()) log.debug("number of order details: " + products.size());
@@ -62,17 +58,16 @@ public class OrderServiceImpl extends CrudServiceImpl<Order, Integer>
 
 		order = addOrderDetails(products, order, transactionId);
 		order.setOrderDate(new Date());
-		order.setCustomer(customer);
-		order.setEmployee(employee);
 		order.setShipperId(shipperId);
-		addOrder.setOrder(order);
-		distributedTransactionService.executeTransactionStep(addOrder, transactionId);
+		SaveOrder saveOrder = new SaveOrder(order, employeeId, customerCode);
+
+		distributedTransactionService.executeTransactionStep(saveOrder, transactionId);
 		if(log.isInfoEnabled()) log.info("order created");
 		return order;
 	}
 
 	@Override
-	public Order update(Order order, List<ProductValueObject> products) {
+	public Order updateOrder(Order order, List<ProductValueObject> products) {
 		if(log.isInfoEnabled()) log.info("update order with id {}", order.getId());
 		Order fromDatabase = orderRepository.findById(order.getId()).orElseThrow(OrderNotFoundException::new);
 		fromDatabase.getOrderDetails().clear();
@@ -110,7 +105,7 @@ public class OrderServiceImpl extends CrudServiceImpl<Order, Integer>
 	}
 
 	private Order addOrderDetails(List<ProductValueObject> products, Order order, Long transactionId ) {
-
+		log.debug("adding order details");
 		products = checkStock(products);
 
 		List<ProductValueObject> insufficientStockProducts = products.stream()
@@ -124,6 +119,7 @@ public class OrderServiceImpl extends CrudServiceImpl<Order, Integer>
 			throw new NotEnoughQuantity(errorMessage);
 		}
 
+		log.debug("update product stock");
 		products.forEach(p -> restClient.updateProductQuantity(p, transactionId));
 
 		List<OrderDetail> orderDetails = products.stream().map( v -> OrderDetail.builder().productId(v.getId())

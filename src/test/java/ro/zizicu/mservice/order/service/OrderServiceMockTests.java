@@ -5,26 +5,22 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.Mockito.when;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 import java.util.Optional;
 
-import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-
 import org.springframework.boot.test.context.SpringBootTest;
+
+import lombok.extern.slf4j.Slf4j;
 import ro.zizicu.mservice.order.data.CustomerRepository;
 import ro.zizicu.mservice.order.data.EmployeeRepository;
 import ro.zizicu.mservice.order.data.OrderRepository;
-import ro.zizicu.mservice.order.entities.Customer;
 import ro.zizicu.mservice.order.entities.Employee;
 import ro.zizicu.mservice.order.entities.Order;
-import ro.zizicu.mservice.order.entities.ProductValueObject;
 import ro.zizicu.mservice.order.exceptions.ProductNotFoundException;
 import ro.zizicu.mservice.order.restclient.RestClientImpl;
 import ro.zizicu.mservice.order.services.impl.OrderServiceImpl;
@@ -85,10 +81,10 @@ public class OrderServiceMockTests {
 			order.setShippedDate(today);
 			order.setShipPostalCode("12212212");
 			order.setShipRegion("test region");
-			List<ProductValueObject> products = new ArrayList<>();
-			Employee e = employeeRepository.findById(1).get();
-			Customer c = new Customer();
-			service.createOrder(order, products, e, c, 2);
+//			List<ProductValueObject> products = new ArrayList<>();
+//			Employee e = employeeRepository.findById(1).get();
+//			Customer c = new Customer();
+//			service.createOrder(order, products, e, c, 2);
 		} catch (ProductNotFoundException e) {
 			e.printStackTrace();
 			fail();

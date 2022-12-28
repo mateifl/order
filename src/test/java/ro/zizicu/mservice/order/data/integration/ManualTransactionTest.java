@@ -1,6 +1,12 @@
 package ro.zizicu.mservice.order.data.integration;
 
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,17 +15,9 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
+
 import ro.zizicu.mservice.order.data.CustomerRepository;
-import ro.zizicu.mservice.order.data.EmployeeRepository;
 import ro.zizicu.mservice.order.entities.Customer;
-
-
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
 
 @SpringBootTest
 public class ManualTransactionTest {
