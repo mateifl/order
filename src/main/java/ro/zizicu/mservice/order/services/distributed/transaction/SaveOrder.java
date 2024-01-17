@@ -26,6 +26,5 @@ public class SaveOrder extends AbstractTransactionStep {
 		order.setEmployee(e);
 		entityManager.persist(order);
 		log.debug("order saved");
-
 	}
 }
