@@ -5,9 +5,9 @@ package ro.zizicu.mservice.order.data.finder;
 
 import java.util.List;
 
-import javax.persistence.EntityManager;
-import javax.persistence.Query;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.Query;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

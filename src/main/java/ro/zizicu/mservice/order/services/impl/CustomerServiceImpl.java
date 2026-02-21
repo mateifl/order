@@ -23,5 +23,10 @@ public class CustomerServiceImpl
 	public List<Customer> findWithCriteria(String customerCode, String region, String city, String country) {
 		return finderRepository.find(customerCode, region, city, country);
 	}
-	
+
+	@Override
+	public Customer update(Customer customer) {
+		return null;
+	}
+
 }

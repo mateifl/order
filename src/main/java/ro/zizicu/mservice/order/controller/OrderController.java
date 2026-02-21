@@ -2,11 +2,11 @@ package ro.zizicu.mservice.order.controller;
 
 import java.util.List;
 
-import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +21,6 @@ import ro.zizicu.mservice.order.exceptions.ProductNotFoundException;
 import ro.zizicu.mservice.order.services.CustomerService;
 import ro.zizicu.mservice.order.services.EmployeeService;
 import ro.zizicu.mservice.order.services.OrderService;
-import ro.zizicu.nwbase.controller.BasicOperationsController;
 
 @RestController
 @RequestMapping(value = "orders")
@@ -31,7 +30,6 @@ public class OrderController {
 	private final OrderService orderService;
 	private final EmployeeService employeeService;
 	private final CustomerService customerService;
-	private final BasicOperationsController<Order, Integer> basicOperationsController;
 
 	public OrderController(	OrderService orderService, 
 							EmployeeService employeeService, 
@@ -39,7 +37,6 @@ public class OrderController {
 		this.orderService = orderService;
 		this.employeeService = employeeService;
 		this.customerService = customerService;
-		basicOperationsController = new BasicOperationsController<>(orderService);
 	}
 	
 	@PostMapping(value = "/")
@@ -83,12 +80,7 @@ public class OrderController {
 			return ResponseEntity.notFound().build();
 		}
 	}
-	
-	@GetMapping(value = "/{id}")
-	public ResponseEntity<?> load(@PathVariable Integer id) {
-		return basicOperationsController.load(id);
-	}
-	
+
 }
 
 @Data

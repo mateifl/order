@@ -2,10 +2,10 @@ package ro.zizicu.mservice.order.data.finder;
 
 import java.util.List;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
 
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
 import ro.zizicu.mservice.order.data.impl.QueryParameter;
 
 /** 
@@ -18,8 +18,8 @@ import ro.zizicu.mservice.order.data.impl.QueryParameter;
 public class StringLikePredicateBuilder implements PredicateBuilder {
 
 	@Override
-	public Predicate create(List<QueryParameter<?>> parameters, 
-							Root<?> root, 
+	public Predicate create(List<QueryParameter<?>> parameters,
+							Root<?> root,
 							CriteriaBuilder criteriaBuilder) {
 		Predicate predicate = criteriaBuilder.equal(criteriaBuilder.literal(1), 1);
 		for(int i = 0; i < parameters.size(); i++) {

@@ -2,11 +2,12 @@ package ro.zizicu.mservice.order.data.impl;
 
 import java.util.List;
 
-import javax.persistence.EntityManager;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Root;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,6 +20,7 @@ public interface CriteriaFinder<T extends IdentityOwner<?>> {
 	List<T> find();
 }
 
+@Slf4j
 abstract class AbstractCriteriaFinder<T extends IdentityOwner<?>> implements CriteriaFinder<T> {
 	
 	private EntityManager em;
@@ -26,14 +28,13 @@ abstract class AbstractCriteriaFinder<T extends IdentityOwner<?>> implements Cri
 	protected CriteriaQuery<T> query;
 	protected Root<T> root;
 	protected CriteriaBuilder criteriaBuilder;
-	private static Logger logger = LoggerFactory.getLogger(CriteriaFinder.class);
 
 	public void prepare() {
-		logger.info("using finder for class " + this.clazz.toString());
+		log.info("using finder for class " + this.clazz.toString());
 		
 		if(em == null)
 		{
-			logger.error("Entity manager is null in finder");
+			log.error("Entity manager is null in finder");
 			return;
 		}
 		

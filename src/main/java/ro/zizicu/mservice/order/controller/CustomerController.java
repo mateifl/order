@@ -16,17 +16,15 @@ import org.springframework.web.bind.annotation.RestController;
 
 import ro.zizicu.mservice.order.entities.Customer;
 import ro.zizicu.mservice.order.services.CustomerService;
-import ro.zizicu.nwbase.controller.BasicOperationsController;
 
 
 @RestController
 @Slf4j
 @RequestMapping(value = "/customers")
-public class CustomerController extends BasicOperationsController<Customer, String> {
+public class CustomerController {
 	private final CustomerService customerService;
 
 	public CustomerController(CustomerService customerService) {
-		super(customerService);
 		this.customerService = customerService;
 	}
 

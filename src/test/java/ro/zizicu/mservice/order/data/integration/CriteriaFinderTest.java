@@ -1,16 +1,15 @@
 package ro.zizicu.mservice.order.data.integration;
 
-
-
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import ro.zizicu.mservice.order.BaseIntegrationTest;
 import ro.zizicu.mservice.order.data.finder.EntityCriteriaFinder;
 import ro.zizicu.mservice.order.data.finder.Finder;
 import ro.zizicu.mservice.order.data.finder.StringLikePredicateBuilder;
@@ -21,8 +20,8 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.springframework.test.util.AssertionErrors.assertNotNull;
 
 
-@SpringBootTest
-public class CriteriaFinderTest {
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+public class CriteriaFinderTest extends BaseIntegrationTest {
 
 	@PersistenceContext
 	private EntityManager em;

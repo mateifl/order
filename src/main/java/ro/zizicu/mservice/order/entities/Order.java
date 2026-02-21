@@ -4,17 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import jakarta.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -28,38 +18,38 @@ public class Order implements IdentityOwner<Integer> {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name="orderid")
+	@Column(name="order_id")
 	private Integer id;
-	@Column(name="orderdate")
+	@Column(name="order_date")
 	@JsonFormat(pattern="yyyy-MM-dd")
 	private Date orderDate;
-	@Column(name="requireddate")
+	@Column(name="required_date")
 	private Date requiredDate;
-	@Column(name="shippeddate")
+	@Column(name="shipped_date")
 	private Date shippedDate;
 	@Column(name="freight")
 	private Double freight;
-	@Column(name="shipname")
+	@Column(name="ship_name")
 	private String shipName;
-	@Column(name="shipaddress")
+	@Column(name="ship_address")
 	private String shipAddress;
-	@Column(name="shipcity")
+	@Column(name="ship_city")
 	private String shipCity;
-	@Column(name="shipregion")
+	@Column(name="ship_region")
 	private String shipRegion;
-	@Column(name="shippostalcode")
+	@Column(name="ship_postal_code")
 	private String shipPostalCode;
-	@Column(name="shipcountry")
+	@Column(name="ship_country")
 	private String shipCountry;
 	@ManyToOne(optional = false, fetch = FetchType.LAZY)
-	@JoinColumn(name = "employeeid", nullable=false)
+	@JoinColumn(name = "employee_id", nullable=false)
 	@JsonIgnore
 	private Employee employee;
 	@ManyToOne(cascade = CascadeType.PERSIST, optional = false, fetch = FetchType.LAZY)
-	@JoinColumn(name = "customerid")
+	@JoinColumn(name = "customer_id")
 	@JsonIgnore
 	private Customer customer;
-	@Column(name = "shipvia", nullable=false)
+	@Column(name = "ship_via", nullable=false)
 	private Integer shipperId;
 	@OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch=FetchType.LAZY)
 	@JsonIgnore

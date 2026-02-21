@@ -3,21 +3,22 @@ package ro.zizicu.mservice.order.data.integration;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import ro.zizicu.mservice.order.BaseIntegrationTest;
 import ro.zizicu.mservice.order.data.impl.CriteriaFinderImpl;
 import ro.zizicu.mservice.order.data.impl.QueryParameter;
 import ro.zizicu.mservice.order.entities.Customer;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.util.AssertionErrors.assertNotNull;
 
-@SpringBootTest
-public class CriteriaFinderTests {
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+public class CriteriaFinderTests extends BaseIntegrationTest {
 
 	@PersistenceContext
 	private EntityManager em;
@@ -40,6 +41,6 @@ public class CriteriaFinderTests {
 		parameters.add(new QueryParameter<>("id", "AN%"));
 		List<Customer> l =  finder.find(parameters);
 		assertNotNull("Null result in find customers test ", l);
-		assertTrue(!l.isEmpty());
+        assertFalse(l.isEmpty());
 	}
 }

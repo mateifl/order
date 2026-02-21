@@ -4,9 +4,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,7 +21,6 @@ import ro.zizicu.mservice.order.exceptions.ProductNotFoundException;
 import ro.zizicu.mservice.order.restclient.RestClient;
 import ro.zizicu.mservice.order.services.OrderService;
 import ro.zizicu.nwbase.service.impl.CrudServiceImpl;
-import ro.zizicu.nwbase.transaction.TransactionMessage;
 
 @Service
 @Slf4j
@@ -33,18 +30,16 @@ public class OrderServiceImpl extends CrudServiceImpl<Order, Integer>
 	private final RestClient restClient;
 	private final OrderRepository orderRepository;
 	private final CustomerRepository customerRepository;
-	private final KafkaTemplate<String, TransactionMessage> kafkaTemplate;
 
 	public OrderServiceImpl(OrderRepository orderRepository,
 							CustomerRepository customerRepository,
-							RestClient restClient,
-							KafkaTemplate<String, TransactionMessage> kafkaTemplate) {
+							RestClient restClient
+							) {
 
 		this.repository = orderRepository;
 		this.orderRepository = orderRepository;
 		this.customerRepository = customerRepository;
 		this.restClient = restClient;
-		this.kafkaTemplate = kafkaTemplate;
 	}
 
 	@Override
@@ -65,7 +60,6 @@ public class OrderServiceImpl extends CrudServiceImpl<Order, Integer>
 		order.setEmployee(employee);
 		order.setShipperId(shipperId);
 		order = orderRepository.save(order);
-//		kafkaTemplate.send("", TransactionMessage.builder().serviceName("Order").transactionId(transactionId).build());
 		if(log.isInfoEnabled()) log.info("order created");
 		return order;
 	}

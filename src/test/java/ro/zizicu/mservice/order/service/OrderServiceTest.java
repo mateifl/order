@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import lombok.extern.slf4j.Slf4j;
+import ro.zizicu.mservice.order.BaseIntegrationTest;
 import ro.zizicu.mservice.order.entities.Customer;
 import ro.zizicu.mservice.order.entities.Employee;
 import ro.zizicu.mservice.order.entities.Order;
@@ -28,9 +29,9 @@ import ro.zizicu.mservice.order.services.OrderService;
 import ro.zizicu.nwbase.exceptions.EntityNotFoundException;
 
 
-@SpringBootTest
+@SpringBootTest()
 @Slf4j
-public class OrderServiceTest {
+public class OrderServiceTest extends BaseIntegrationTest {
 
 	@Autowired
 	private OrderService orderService;
@@ -69,7 +70,7 @@ public class OrderServiceTest {
 			Order order = orderService.load(1);
 			fail();
 		} catch (EntityNotFoundException e) {
-			e.printStackTrace();
+			log.error(e.getMessage());
 			assertTrue(true);
 		}
 		

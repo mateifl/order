@@ -2,24 +2,24 @@ package ro.zizicu.mservice.order.data.finder;
 
 import java.util.List;
 
-import javax.persistence.EntityManager;
-import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.TypedQuery;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
 import ro.zizicu.mservice.order.data.impl.QueryParameter;
 
 /** This class will find entities according to the Predicate builder passed */
 
 public class EntityCriteriaFinder<T> extends CriteriaFinder<T> {
 
-	private CriteriaQuery<T> query;
-	private Root<T> root;
-	private PredicateBuilder predicateBuilder;
+	private final CriteriaQuery<T> query;
+	private final Root<T> root;
+	private final PredicateBuilder predicateBuilder;
 	
-	public EntityCriteriaFinder(EntityManager em, 
-								Class<T> clazz, 
+	public EntityCriteriaFinder(EntityManager em,
+								Class<T> clazz,
 								PredicateBuilder predicateBuilder) {
 		super(em);
 		this.predicateBuilder = predicateBuilder;

@@ -1,9 +1,11 @@
 package ro.zizicu.mservice.order.data.finder;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.criteria.CriteriaBuilder;
+
 import java.util.List;
 
-import javax.persistence.EntityManager;
-import javax.persistence.criteria.CriteriaBuilder;
+
 
 public abstract class CriteriaFinder<T> implements Finder<T> {
 	

@@ -6,12 +6,13 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import ro.zizicu.mservice.order.BaseIntegrationTest;
 import ro.zizicu.mservice.order.entities.Customer;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@SpringBootTest
-public class CustomerRepositoryTest {
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+public class CustomerRepositoryTest extends BaseIntegrationTest {
 	
 	@Autowired
 	private CustomerRepository repository;
@@ -20,7 +21,7 @@ public class CustomerRepositoryTest {
 	
 	@Test
 	public void testLoad() {
-		Customer c = repository.findById("ANATR").get();
+		Customer c = repository.findById("ANATR").orElseGet(null);
 		assertNotNull(c);
 		assertTrue(c.getId().equalsIgnoreCase("ANATR"));
 	}

@@ -5,13 +5,18 @@ import org.springframework.web.bind.annotation.RestController;
 
 import ro.zizicu.mservice.order.entities.Employee;
 import ro.zizicu.mservice.order.services.EmployeeService;
-import ro.zizicu.nwbase.controller.BasicOperationsController;
+
+import ro.zizicu.nwbase.controller.CrudOperationsController;
 
 @RestController
 @RequestMapping(value = "employees")
-public class EmployeeController extends BasicOperationsController<Employee, Integer>{
+public class EmployeeController extends CrudOperationsController<Employee, Integer>{
 	public EmployeeController(EmployeeService service) {
 		super(service);
 	}
 
+	@Override
+	protected String getLocation() {
+		return "";
+	}
 }
