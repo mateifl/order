@@ -20,15 +20,10 @@ public class RestClientImpl implements RestClient {
 
 	public void updateProductQuantity(ProductValueObject product) {
 		String productUrl = environment.getProperty("product.url");
-		HttpEntity<ProductValueObject> updatedEntity = new HttpEntity<ProductValueObject>(product);
+		HttpEntity<ProductValueObject> updatedEntity = new HttpEntity<>(product);
 		log.debug("product stock update url: {}", productUrl + "/" + product.getId());
 		restTemplate.patchForObject(productUrl + "/" + product.getId(),
 										updatedEntity, ProductValueObject.class);
-	}
-
-	@Override
-	public void updateProductQuantity(ProductValueObject product, Long transactionId) {
-
 	}
 
 	public Optional<ProductValueObject> checkStock(Integer productId, Integer quantity) {

@@ -6,7 +6,7 @@ import java.util.Optional;
 
 public interface RestClient {
 
-    void updateProductQuantity(ProductValueObject product, Long transactionId);
+    void updateProductQuantity(ProductValueObject product);
     Optional<ProductValueObject> checkStock(Integer productId, Integer quantity);
 
 }

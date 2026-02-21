@@ -18,7 +18,6 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import org.springframework.boot.test.context.SpringBootTest;
-import ro.zizicu.mservice.order.data.CustomerRepository;
 import ro.zizicu.mservice.order.data.EmployeeRepository;
 import ro.zizicu.mservice.order.data.OrderRepository;
 import ro.zizicu.mservice.order.entities.Customer;
@@ -37,8 +36,6 @@ public class OrderServiceMockTests {
 	@Mock
 	private OrderRepository repository;
 	@Mock
-	private CustomerRepository customerRepository;
-	@Mock
 	private EmployeeRepository employeeRepository; 
 	@Mock
 	private RestClientImpl restClientImpl;
@@ -48,7 +45,7 @@ public class OrderServiceMockTests {
 	@BeforeEach
 	public void setUp() {
 		MockitoAnnotations.openMocks(this);
-		service = new OrderServiceImpl(repository, customerRepository, restClientImpl);
+		service = new OrderServiceImpl(repository, restClientImpl);
 		when(employeeRepository.findById(1)).thenReturn(Optional.of(new Employee()));
 	}
 	
@@ -64,7 +61,7 @@ public class OrderServiceMockTests {
 
 			assertEquals(1, (int) o1.getId());
 		} catch (EntityNotFoundException e) {
-			e.printStackTrace();
+			log.error("", e);
 			fail();
 		}
 	}
@@ -90,7 +87,7 @@ public class OrderServiceMockTests {
 			Customer c = new Customer();
 			service.createOrder(order, products, e, c, 2);
 		} catch (ProductNotFoundException e) {
-			e.printStackTrace();
+			log.error("", e);
 			fail();
 		}
 		
