@@ -1,5 +1,6 @@
 package ro.zizicu.mservice.order.controller;
 
+import java.net.URI;
 import java.util.List;
 
 
@@ -7,19 +8,16 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import lombok.Data;
-import ro.zizicu.mservice.order.entities.Customer;
-import ro.zizicu.mservice.order.entities.Employee;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ro.zizicu.mservice.order.entities.Order;
 import ro.zizicu.mservice.order.entities.ProductValueObject;
 import ro.zizicu.mservice.order.exceptions.ProductNotFoundException;
-import ro.zizicu.mservice.order.services.CustomerService;
-import ro.zizicu.mservice.order.services.EmployeeService;
 import ro.zizicu.mservice.order.services.OrderService;
 
 @RestController
@@ -28,69 +26,61 @@ import ro.zizicu.mservice.order.services.OrderService;
 public class OrderController {
 
 	private final OrderService orderService;
-	private final EmployeeService employeeService;
-	private final CustomerService customerService;
 
-	public OrderController(	OrderService orderService, 
-							EmployeeService employeeService, 
-							CustomerService customerService) {
+	public OrderController(OrderService orderService) {
 		this.orderService = orderService;
-		this.employeeService = employeeService;
-		this.customerService = customerService;
 	}
 	
 	@PostMapping(value = "/")
-	public ResponseEntity<?> create(@Valid @RequestBody OrderCreateWrapper orderCreateWrapper) {
+	public ResponseEntity<?> create(@Valid @RequestBody CreateOrderWrapper createOrderWrapper) {
 		if(log.isInfoEnabled()) {
-			log.info("create order for customer: "	+ orderCreateWrapper.getCustomerCode());
-			log.info("shipper id: "	+ orderCreateWrapper.getShipperId());
+            log.info("create order for customer: {}", createOrderWrapper.getCustomerId());
+            log.info("shipper id: {}", createOrderWrapper.getShipperId());
 		}
 		try {
-			log.debug("create order: " + orderCreateWrapper);
-			Order order = orderCreateWrapper.getOrder();
-			List<ProductValueObject> products = orderCreateWrapper.getProductIds();
+            log.debug("create order: {}", createOrderWrapper);
+			Order order = orderService.createOrder(createOrderWrapper.getOrder(),
+											createOrderWrapper.getProductIds(),
+											createOrderWrapper.getEmployeeId(),
+											createOrderWrapper.getCustomerId(),
+											createOrderWrapper.getShipperId());
 
-			Integer employeeId = orderCreateWrapper.getEmployeeId();
-			Employee employee = employeeService.load(employeeId);
-			String customerCode = orderCreateWrapper.getCustomerCode();
-			List<Customer> customers = customerService.findWithCriteria(customerCode, null, null, null);
-
-			order = orderService.createOrder(order, products, employee, customers.get(0), orderCreateWrapper.getShipperId());
-			HttpHeaders responseHeaders = new HttpHeaders();
-			responseHeaders.add("Location", "orders/" + order.getId());
-			return ResponseEntity.ok().headers(responseHeaders).body(order);
+			URI location = ServletUriComponentsBuilder.fromCurrentRequest()
+					.path("/{id}").buildAndExpand(order.getId()).toUri();
+			return ResponseEntity.created(location).body(order);
 		} catch (ProductNotFoundException e) {
 			log.error("", e);
 			return ResponseEntity.notFound().build();
 		}
 	}
 
-	@PatchMapping(value = "/{id}")
-	public ResponseEntity<String> updateOrder(@RequestBody OrderCreateWrapper orderCreateWrapper, @PathVariable Integer id) {
-		if(log.isInfoEnabled())
-			log.info("Update order with id: {}", id);
-		try {
-			Order order = orderCreateWrapper.getOrder();
-			order.setId(id);
-			List<ProductValueObject> products = orderCreateWrapper.getProductIds();
-			order = orderService.update(order, products);
-			return ResponseEntity.ok(order.getId().toString());
-		} catch (ProductNotFoundException e) {
-			log.error("", e);
-			return ResponseEntity.notFound().build();
-		}
-	}
+//	@PatchMapping(value = "/{id}")
+//	public ResponseEntity<String> updateOrder(@RequestBody CreateOrderWrapper createOrderWrapper, @PathVariable Integer id) {
+//		if(log.isInfoEnabled())
+//			log.info("Update order with id: {}", id);
+//		try {
+//			Order order = createOrderWrapper.getOrder();
+//			order.setId(id);
+//			List<Integer> products = createOrderWrapper.getProductIds();
+//			order = orderService.update(order, products);
+//			return ResponseEntity.ok(order.getId().toString());
+//		} catch (ProductNotFoundException e) {
+//			log.error("", e);
+//			return ResponseEntity.notFound().build();
+//		}
+//	}
 
 }
 
-@Data
-class OrderCreateWrapper {
+@Getter
+@Setter
+class CreateOrderWrapper {
 	@NotNull
 	private Order order;
 	@Size(min=1)
-	private List<ProductValueObject> productIds; 
+	private List<ProductValueObject> productIds;
 	@NotBlank
-	private String customerCode;
+	private String customerId;
 	@NotNull
 	private Integer employeeId;
 	@NotNull

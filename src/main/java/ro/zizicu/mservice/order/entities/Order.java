@@ -9,11 +9,13 @@ import jakarta.persistence.*;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
+import lombok.ToString;
 import ro.zizicu.nwbase.entity.IdentityOwner;
 
 @Entity
 @Table(name = "Orders")
 @Data
+@ToString
 public class Order implements IdentityOwner<Integer> {
 	
 	@Id
@@ -61,15 +63,6 @@ public class Order implements IdentityOwner<Integer> {
 		return orderDetails;
 	}
 
-	@Override
-	public String toString() {
-		return "Order [orderId=" + id + ", orderDate=" + orderDate + ", requiredDate=" + requiredDate
-				+ ", shippedDate=" + shippedDate +  ", freight=" + freight + ", shipName="
-				+ shipName + ", shipAddress=" + shipAddress + ", shipCity=" + shipCity + ", shipRegion=" + shipRegion
-				+ ", shipPostalCode=" + shipPostalCode + ", shipCountry=" + shipCountry + ", employee=" + employee
-				+ ", customer=" + customer + ", orderDetails=" + orderDetails + "]";
-	}
-	
 	public void resetDetails() {
 		orderDetails = new ArrayList<>();
 	}

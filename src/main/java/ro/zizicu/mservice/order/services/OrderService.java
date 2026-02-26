@@ -13,12 +13,12 @@ import ro.zizicu.nwbase.service.CrudService;
 public interface OrderService extends CrudService<Order, Integer> {
 	
     Order createOrder(Order order, 
-    				List<ProductValueObject> productIds, 
-    				Employee employee, 
-    				Customer customer,
+    				List<ProductValueObject> productIds,
+    				Integer employeeId,
+    				String customerId,
 					Integer shipperId) throws ProductNotFoundException;
     Order update(Order order, 
     				 List<ProductValueObject> productIds) throws ProductNotFoundException;
 	void cancelOrder(Order order);
-	List<Order> findOrders(Customer customer, Date start, Date end, String countryToShip, Employee createdBy);
+//	List<Order> findOrders(Customer customer, Date start, Date end, String countryToShip, Employee createdBy);
 }

@@ -10,13 +10,9 @@ import ro.zizicu.nwbase.controller.CrudOperationsController;
 
 @RestController
 @RequestMapping(value = "employees")
-public class EmployeeController extends CrudOperationsController<Employee, Integer>{
+public class EmployeeController extends CrudOperationsController<Employee, EmployeeService, Integer>{
 	public EmployeeController(EmployeeService service) {
 		super(service);
 	}
 
-	@Override
-	protected String getLocation() {
-		return "";
-	}
 }
