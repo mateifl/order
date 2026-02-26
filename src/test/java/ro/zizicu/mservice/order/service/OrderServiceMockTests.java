@@ -26,7 +26,6 @@ import ro.zizicu.mservice.order.entities.Employee;
 import ro.zizicu.mservice.order.entities.Order;
 import ro.zizicu.mservice.order.entities.ProductValueObject;
 import ro.zizicu.mservice.order.exceptions.ProductNotFoundException;
-import ro.zizicu.mservice.order.restclient.RestClientImpl;
 import ro.zizicu.mservice.order.services.impl.OrderServiceImpl;
 import ro.zizicu.nwbase.exceptions.EntityNotFoundException;
 
