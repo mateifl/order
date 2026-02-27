@@ -162,7 +162,7 @@ CREATE TABLE orders (
     ship_country character varying(15)
 );
 
-
+create sequence sq_orders start with 15000;
 --
 -- Name: products; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --

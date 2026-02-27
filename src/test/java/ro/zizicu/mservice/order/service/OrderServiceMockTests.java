@@ -21,11 +21,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import ro.zizicu.mservice.order.data.CustomerRepository;
 import ro.zizicu.mservice.order.data.EmployeeRepository;
 import ro.zizicu.mservice.order.data.OrderRepository;
-import ro.zizicu.mservice.order.entities.Customer;
 import ro.zizicu.mservice.order.entities.Employee;
 import ro.zizicu.mservice.order.entities.Order;
 import ro.zizicu.mservice.order.entities.ProductValueObject;
 import ro.zizicu.mservice.order.exceptions.ProductNotFoundException;
+import ro.zizicu.mservice.order.restclient.ProductServiceClient;
 import ro.zizicu.mservice.order.services.impl.OrderServiceImpl;
 import ro.zizicu.nwbase.exceptions.EntityNotFoundException;
 
@@ -39,13 +39,14 @@ public class OrderServiceMockTests {
 	private EmployeeRepository employeeRepository;
 	@Mock
 	private CustomerRepository customerRepository;
-
+	@Mock
+	private ProductServiceClient productServiceClient;
 	private OrderServiceImpl service;
 	
 	@BeforeEach
 	public void setUp() {
 		MockitoAnnotations.openMocks(this);
-		service = new OrderServiceImpl(repository, employeeRepository, customerRepository);
+		service = new OrderServiceImpl(repository, employeeRepository, customerRepository, productServiceClient);
 		when(employeeRepository.findById(1)).thenReturn(Optional.of(new Employee()));
 	}
 	
@@ -83,8 +84,6 @@ public class OrderServiceMockTests {
 			order.setShipPostalCode("12212212");
 			order.setShipRegion("test region");
 			List<ProductValueObject> products = new ArrayList<>();
-			Employee e = employeeRepository.findById(1).get();
-			Customer c = new Customer();
 			service.createOrder(order, products, 1, "sss", 2);
 		} catch (ProductNotFoundException e) {
 			log.error("", e);

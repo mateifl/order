@@ -2,13 +2,11 @@ package ro.zizicu.mservice.order.entities;
 
 import jakarta.persistence.*;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import ro.zizicu.nwbase.entity.IdentityOwner;
 
 
 @Entity
@@ -17,25 +15,21 @@ import ro.zizicu.nwbase.entity.IdentityOwner;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class OrderDetail implements IdentityOwner<Integer> {
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer id;
-	@ManyToOne(fetch=FetchType.LAZY, cascade = CascadeType.PERSIST)
-	@JsonIgnore
-	@JoinColumn(name = "orderid")
+public class OrderDetail {
+	@EmbeddedId
+	private OrderDetailId id;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@MapsId("orderId")
+	@JoinColumn(name = "order_id")
 	private Order order;
-	@Column(name="productid")
-	@NotNull
-	private Integer productId;
-	@Column(name="unitprice")
+
+	@Column(name="unit_price")
 	@NotNull
 	private Double unitPrice;
 	@NotNull
 	private Integer quantity;
 	private Double discount;
-	@Override
-	public String getEntityName() {
-		return "OrderDetail";
-	}
+
+
 }

@@ -19,7 +19,12 @@ import ro.zizicu.nwbase.entity.IdentityOwner;
 public class Order implements IdentityOwner<Integer> {
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "order_seq")
+	@SequenceGenerator(
+			name = "order_seq",
+			sequenceName = "sq_orders",
+			allocationSize = 1
+	)
 	@Column(name="order_id")
 	private Integer id;
 	@Column(name="order_date")
@@ -53,6 +58,7 @@ public class Order implements IdentityOwner<Integer> {
 	private Customer customer;
 	@Column(name = "ship_via", nullable=false)
 	private Integer shipperId;
+
 	@OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch=FetchType.LAZY)
 	@JsonIgnore
 	private List<OrderDetail> orderDetails = new ArrayList<>();

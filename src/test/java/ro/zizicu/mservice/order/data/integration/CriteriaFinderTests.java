@@ -14,10 +14,9 @@ import ro.zizicu.mservice.order.data.impl.QueryParameter;
 import ro.zizicu.mservice.order.entities.Customer;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.util.AssertionErrors.assertNotNull;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, properties = "spring.main.allow-bean-definition-overriding=true")
 public class CriteriaFinderTests extends BaseIntegrationTest {
 
 	@PersistenceContext
@@ -31,7 +30,7 @@ public class CriteriaFinderTests extends BaseIntegrationTest {
 		parameters.add(new QueryParameter<>("country", "Mex%"));
 		List<Customer> l =  finder.find(parameters);
 		assertNotNull("Null result in find customers test ", l);
-		assertTrue(!l.isEmpty());
+        assertFalse(l.isEmpty());
 	}
 	
 	@Test

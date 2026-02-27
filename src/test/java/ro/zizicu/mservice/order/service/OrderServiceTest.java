@@ -1,12 +1,6 @@
 package ro.zizicu.mservice.order.service;
 
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
-
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -18,15 +12,13 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import lombok.extern.slf4j.Slf4j;
 import ro.zizicu.mservice.order.BaseIntegrationTest;
-import ro.zizicu.mservice.order.entities.Customer;
-import ro.zizicu.mservice.order.entities.Employee;
 import ro.zizicu.mservice.order.entities.Order;
 import ro.zizicu.mservice.order.entities.ProductValueObject;
 import ro.zizicu.mservice.order.exceptions.ProductNotFoundException;
-import ro.zizicu.mservice.order.services.CustomerService;
-import ro.zizicu.mservice.order.services.EmployeeService;
 import ro.zizicu.mservice.order.services.OrderService;
 import ro.zizicu.nwbase.exceptions.EntityNotFoundException;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 
 @SpringBootTest()
@@ -35,21 +27,13 @@ public class OrderServiceTest extends BaseIntegrationTest {
 
 	@Autowired
 	private OrderService orderService;
-	
-	@Autowired
-	private EmployeeService employeeService;
-	
-	@Autowired
-	private CustomerService customerService;
-	
-	
-//	@Test
-//	public void testFind() {
-//		Customer c = customerService.load("HANAR");
-//		List<Order> orders = orderService.findOrders(c, null, null, null, null);
-//		assertNotNull(orders);
-//		assertFalse(orders.isEmpty());
-//	}
+
+	@Test
+	public void testFind() {
+		List<Order> orders = orderService.findOrders("VINET", null, null, null, null);
+		assertNotNull(orders);
+		assertFalse(orders.isEmpty());
+	}
 	
 	@Test
 	public void testLoad() {
@@ -93,24 +77,11 @@ public class OrderServiceTest extends BaseIntegrationTest {
 			order.setShipRegion("test region");
 			List<ProductValueObject> products = new ArrayList<>();
 			ProductValueObject product1 = new ProductValueObject();
-			product1.setId(1);
+			product1.setId(6);
+			product1.setUnitsOnOrder(2);
 			products.add(product1);
 
-
-			Employee e = employeeService.load(5);
-			Customer c = new Customer();
-			c.setId("Tes5");
-			c.setCity("Brasov");
-			c.setAddress("This is the test address");
-			c.setContactName("Test Contact Name");
-			c.setContactTitle("Mr");
-			c.setCompanyName("Company name");
-			c.setCountry("Romania");
-			c.setPhone("12134234");
-			c.setPostalCode("098828");
-			c.setFax("23123212");
-			c.setRegion("region");
-			order = orderService.createOrder(order, products, 1, "sss", 2);
+			order = orderService.createOrder(order, products, 1, "VINET", 2);
 			assertNotNull(order.getId());
 			// clean up 
 			orderService.delete(order.getId());

@@ -5,20 +5,19 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import ro.zizicu.mservice.order.data.CustomerRepository;
 import ro.zizicu.mservice.order.data.EmployeeRepository;
 import ro.zizicu.mservice.order.data.OrderRepository;
-import ro.zizicu.mservice.order.entities.Customer;
-import ro.zizicu.mservice.order.entities.Employee;
-import ro.zizicu.mservice.order.entities.Order;
-import ro.zizicu.mservice.order.entities.OrderDetail;
-import ro.zizicu.mservice.order.entities.ProductValueObject;
+import ro.zizicu.mservice.order.entities.*;
 import ro.zizicu.mservice.order.exceptions.OrderNotFoundException;
 import ro.zizicu.mservice.order.exceptions.ProductNotFoundException;
+import ro.zizicu.mservice.order.restclient.ProductServiceClient;
 import ro.zizicu.mservice.order.services.OrderService;
+import ro.zizicu.nwbase.controller.request.UpdateStockRequest;
 import ro.zizicu.nwbase.service.impl.CrudServiceImpl;
 
 @Service
@@ -26,17 +25,20 @@ import ro.zizicu.nwbase.service.impl.CrudServiceImpl;
 public class OrderServiceImpl extends CrudServiceImpl<Order, Integer>
 	implements OrderService {
 
+	private final ProductServiceClient productServiceClient;
 	private final EmployeeRepository employeeRepository;
 	private final CustomerRepository customerRepository;
 
 	public OrderServiceImpl(OrderRepository orderRepository,
 							EmployeeRepository employeeRepository,
-							CustomerRepository customerRepository
+							CustomerRepository customerRepository,
+							ProductServiceClient productServiceClient
 							) {
 
 		super(orderRepository);
 		this.employeeRepository = employeeRepository;
 		this.customerRepository = customerRepository;
+		this.productServiceClient = productServiceClient;
 	}
 
 	@Override
@@ -86,24 +88,46 @@ public class OrderServiceImpl extends CrudServiceImpl<Order, Integer>
 		if(log.isInfoEnabled()) log.info("order cancelled");
 	}
 
-//	@Override
-//	public List<Order> findOrders(Customer customer, Date start, Date end, String countryToShip, Employee createdBy) {
-//		return orderRepository.findOrders(customer, start, end, createdBy);
-//	}
+	@Override
+	public List<Order> findOrders(String customerId, Date start, Date end, String countryToShip, Integer employeeId) {
+		Customer customer = customerId == null ? null : customerRepository.findById(customerId).orElse(null);
+		Employee employee = employeeId == null ? null : employeeRepository.findById(employeeId).orElse(null);
+		return ((OrderRepository)getRepository()).findOrders(customer, start, end, employee);
+	}
 
-	private List<ProductValueObject> checkStock(List<ProductValueObject> products) {
-		return List.of();
+	private List<ProductValueObject> checkAndUpdateStock(List<ProductValueObject> products) {
+
+		for(ProductValueObject productValueObject : products) {
+			Product product = productServiceClient.getProductById(productValueObject.getId());
+			if(product.getUnitsInStock() < productValueObject.getUnitsOnOrder())
+				productValueObject.setEnoughStock(Boolean.FALSE);
+			else {
+				//  update stock
+				UpdateStockRequest updateStockRequest = new UpdateStockRequest();
+				updateStockRequest.setId(productValueObject.getId());
+				updateStockRequest.setUnitsOnOrder(productValueObject.getUnitsOnOrder());
+				productServiceClient.updateProductStock(updateStockRequest);
+			}
+		}
+
+		return products;
 	}
 
 	private Order addOrderDetails(List<ProductValueObject> products, Order order) {
-		products = checkStock(products);
+		products = checkAndUpdateStock(products);
 
 		List<ProductValueObject> insufficientStockProducts = products.stream()
 				.filter( v -> !v.getEnoughStock() ).toList();
 
-		List<OrderDetail> orderDetails = products.stream().map( v -> OrderDetail.builder().productId(v.getId())
-				.order(order)
-				.build()
+		List<OrderDetail> orderDetails = products.stream().map(
+				v -> {
+				OrderDetail orderDetail = new OrderDetail();
+				orderDetail.setId( new OrderDetailId(order.getId(), v.getId()) );
+				orderDetail.setQuantity(v.getUnitsOnOrder());
+				orderDetail.setDiscount(0.0);
+				orderDetail.setOrder(order);
+				return orderDetail;
+				}
 		 ).collect(Collectors.toList());
 		order.setOrderDetails(orderDetails);
 		return order;
@@ -111,6 +135,8 @@ public class OrderServiceImpl extends CrudServiceImpl<Order, Integer>
 
 	@Override
 	protected Order transform(Order e) {
-		return null;
+		Order order = new Order();
+		BeanUtils.copyProperties(e, order, "shipperId", "customerId", "orderDetails");
+		return order;
 	}
 }

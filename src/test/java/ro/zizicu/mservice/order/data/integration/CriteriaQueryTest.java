@@ -9,6 +9,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.*;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -16,8 +17,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import ro.zizicu.mservice.order.BaseIntegrationTest;
 import ro.zizicu.mservice.order.entities.Order;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.util.AssertionErrors.assertFalse;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -88,9 +88,9 @@ public class CriteriaQueryTest extends BaseIntegrationTest {
 			query.setParameter(startDateParameter, cal.getTime());
 			query.setParameter(shipCountryParameter, "Canada");
 			List<Order> orders = query.getResultList();
-			
-			assertTrue(!orders.isEmpty());
-			assertTrue(orders.size() == 26);
+
+            Assertions.assertFalse(orders.isEmpty());
+            assertEquals(26, orders.size());
 		} catch (Exception e) {
 			e.printStackTrace();
 			fail();
