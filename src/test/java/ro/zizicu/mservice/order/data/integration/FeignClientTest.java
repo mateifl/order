@@ -20,7 +20,5 @@ public class FeignClientTest {
         updateStockRequest.setId(6);
         updateStockRequest.setUnitsOnOrder(2);
         productServiceClient.updateProductStock(updateStockRequest);
-
-
     }
 }

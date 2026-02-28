@@ -124,7 +124,8 @@ public class OrderServiceImpl extends CrudServiceImpl<Order, Integer>
 				OrderDetail orderDetail = new OrderDetail();
 				orderDetail.setId( new OrderDetailId(order.getId(), v.getId()) );
 				orderDetail.setQuantity(v.getUnitsOnOrder());
-				orderDetail.setDiscount(0.0);
+				orderDetail.setDiscount(v.getDiscount());
+				orderDetail.setUnitPrice(v.getUnitPrice());
 				orderDetail.setOrder(order);
 				return orderDetail;
 				}

@@ -78,6 +78,8 @@ public class OrderServiceTest extends BaseIntegrationTest {
 			List<ProductValueObject> products = new ArrayList<>();
 			ProductValueObject product1 = new ProductValueObject();
 			product1.setId(6);
+			product1.setUnitPrice(1.1);
+			product1.setDiscount(0.0);
 			product1.setUnitsOnOrder(2);
 			products.add(product1);
 
