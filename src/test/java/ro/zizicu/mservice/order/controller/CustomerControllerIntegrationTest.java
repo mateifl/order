@@ -12,6 +12,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import ro.zizicu.mservice.order.BaseIntegrationTest;
 import ro.zizicu.mservice.order.entities.Customer;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -36,16 +37,27 @@ public class CustomerControllerIntegrationTest extends BaseIntegrationTest {
         customer.setCity("Rome");
         customer.setContactName("Matei Florescu");
         customer.setContactTitle("Mr.");
+        customer.setPostalCode("1223312");
         String jsonRequest = objectMapper.writeValueAsString(customer);
 
-        MvcResult result  =  mockMvc.perform(post("/contacts").contentType(MediaType.APPLICATION_JSON)
+        MvcResult result  =  mockMvc.perform(post("/customers").contentType(MediaType.APPLICATION_JSON)
                         .content(jsonRequest))
                 .andDo(print())
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.name").value("Fruits"))
+                .andExpect(jsonPath("$.id").value("TEST1"))
                 .andReturn();
 
     }
 
 
+    @Test
+    void testLoadCustomerById() throws Exception {
+
+        MvcResult result  =  mockMvc.perform(get("/customers/{id}", "ANTON"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value("ANTON"))
+                .andReturn();
+
+    }
 }

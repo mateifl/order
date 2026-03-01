@@ -37,24 +37,29 @@ public abstract class BaseIntegrationTest {
                     .withFileFromPath("app.jar", Path.of("../product/target/product-0.0.1.jar"))
     )
             .withNetwork(network)
-            .withExposedPorts(8080)
+            .withExposedPorts(8081)
             .withEnv("SPRING_DATASOURCE_URL", "jdbc:postgresql://postgres:5432/test") // uses network alias
             .withEnv("SPRING_DATASOURCE_USERNAME", postgres.getUsername())
             .withEnv("SPRING_DATASOURCE_PASSWORD", postgres.getPassword())
-            .waitingFor(Wait.forHttp("/actuator/health").forStatusCode(200))
+            .waitingFor(Wait.forHttp("/actuator/health")
+                    .forPort(8081)
+                    .forStatusCode(200))
             .dependsOn(postgres);
 
     static {
         postgres.start();
         productService.start();
+        System.out.println(productService.getLogs());
     }
 
     @DynamicPropertySource
     static void configureProperties(DynamicPropertyRegistry registry) {
-        // This dynamically maps the random port assigned by Docker to Spring
         registry.add("spring.datasource.url", postgres::getJdbcUrl);
         registry.add("spring.datasource.username", postgres::getUsername);
         registry.add("spring.datasource.password", postgres::getPassword);
+        registry.add("product.service.url", () ->
+                "http://" + productService.getHost() + ":" + productService.getMappedPort(8081)
+        );
     }
 
 }

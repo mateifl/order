@@ -24,29 +24,36 @@ public class CustomerController {
 		this.customerService = customerService;
 	}
 
-	@PostMapping(value = "/")
+	@GetMapping(value = "/{id}")
+	public ResponseEntity<Customer> getCustomer(@PathVariable String id) {
+ 		return ResponseEntity.ok(customerService.load(id));
+	}
+
+	@PostMapping
 	public ResponseEntity<Customer> create(@Valid @RequestBody Customer customer) {
 		log.debug("create customer");
-
 		Customer c = customerService.create(customer);
 		URI location = ServletUriComponentsBuilder.fromCurrentRequest()
 				.path("/{id}")
 				.buildAndExpand(c.getId())
 				.toUri();
-
 		return ResponseEntity.created(location).body(c);
 	}
-	
-	@GetMapping(value = "/find")
-	public ResponseEntity<?> find(@RequestParam(value="code", defaultValue="") String code,
-								  @RequestParam(value="city", defaultValue="") String city,
-								  @RequestParam(value="country", defaultValue="") String country) {
+
+
+	@GetMapping("/find")
+	public ResponseEntity<List<Customer>> find(
+			@RequestParam(required = false) String code,
+			@RequestParam(required = false) String region,
+			@RequestParam(required = false) String city,
+			@RequestParam(required = false) String country) {
+
 		
-		List<Customer> result = customerService.findWithCriteria(code.isEmpty() ? null : code, 
-																null, 
-																city.isEmpty() ? null : city, 
-																country.isEmpty() ? null : country);
-		log.debug("Found " + result.size());
+		List<Customer> result = customerService.findWithCriteria(code,
+																region,
+																city,
+																country);
+        log.debug("Found {}", result.size());
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 	
