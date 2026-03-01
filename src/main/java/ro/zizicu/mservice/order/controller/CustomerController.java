@@ -1,21 +1,17 @@
 package ro.zizicu.mservice.order.controller;
 
 
-import java.util.List;
-
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ro.zizicu.mservice.order.entities.Customer;
 import ro.zizicu.mservice.order.services.CustomerService;
+
+import java.net.URI;
+import java.util.List;
 
 
 @RestController
@@ -29,9 +25,16 @@ public class CustomerController {
 	}
 
 	@PostMapping(value = "/")
-	public ResponseEntity<?> create(@RequestBody Customer customer) {
+	public ResponseEntity<Customer> create(@Valid @RequestBody Customer customer) {
+		log.debug("create customer");
+
 		Customer c = customerService.create(customer);
-		return ResponseEntity.ok(c);
+		URI location = ServletUriComponentsBuilder.fromCurrentRequest()
+				.path("/{id}")
+				.buildAndExpand(c.getId())
+				.toUri();
+
+		return ResponseEntity.created(location).body(c);
 	}
 	
 	@GetMapping(value = "/find")

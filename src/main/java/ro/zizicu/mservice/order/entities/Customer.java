@@ -5,6 +5,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.Getter;
 import lombok.Setter;
 import ro.zizicu.nwbase.entity.IdentityOwner;
@@ -18,6 +19,7 @@ public class Customer implements IdentityOwner<String>{
 	@Id
 	@Column(name="customer_id")
 	private String id;
+	@NotEmpty
 	@Column(name="company_name", nullable=false)
 	private String companyName;
 	@Column(name="contact_name", nullable=false)

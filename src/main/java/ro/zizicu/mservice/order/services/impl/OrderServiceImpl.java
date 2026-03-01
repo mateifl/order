@@ -1,14 +1,9 @@
 package ro.zizicu.mservice.order.services.impl;
 
-import java.util.Date;
-import java.util.List;
-import java.util.stream.Collectors;
-
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import ro.zizicu.mservice.order.data.CustomerRepository;
 import ro.zizicu.mservice.order.data.EmployeeRepository;
 import ro.zizicu.mservice.order.data.OrderRepository;
@@ -19,6 +14,10 @@ import ro.zizicu.mservice.order.restclient.ProductServiceClient;
 import ro.zizicu.mservice.order.services.OrderService;
 import ro.zizicu.nwbase.controller.request.UpdateStockRequest;
 import ro.zizicu.nwbase.service.impl.CrudServiceImpl;
+
+import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -34,7 +33,6 @@ public class OrderServiceImpl extends CrudServiceImpl<Order, Integer>
 							CustomerRepository customerRepository,
 							ProductServiceClient productServiceClient
 							) {
-
 		super(orderRepository);
 		this.employeeRepository = employeeRepository;
 		this.customerRepository = customerRepository;

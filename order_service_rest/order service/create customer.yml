@@ -1,0 +1,25 @@
+info:
+  name: create customer
+  type: http
+  seq: 1
+
+http:
+  method: POST
+  url: http://localhost:8080/customers/
+  body:
+    type: json
+    data: |-
+      {
+        "id": "TtAPI",
+        "companyName": "emag",
+        "contactName": "MateiFl",
+        "contactTitle": "Boo",
+        "postalCode": "09921"
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
