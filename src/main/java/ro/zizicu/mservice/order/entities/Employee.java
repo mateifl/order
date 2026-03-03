@@ -15,7 +15,12 @@ import ro.zizicu.nwbase.entity.IdentityOwner;
 @Setter
 public class Employee implements IdentityOwner<Integer> {
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "employee_seq")
+	@SequenceGenerator(
+			name = "employee_seq",
+			sequenceName = "sq_employees",
+			allocationSize = 1
+	)
 	@Column(name="employee_id")
 	private Integer id; 
 	@Column(name="birth_date")
@@ -38,7 +43,8 @@ public class Employee implements IdentityOwner<Integer> {
 	@Column(name="home_phone")
 	private String homePhone;
 	private String extension;
-	private String photo;
+	@Column(name="photo_path")
+	private String photoPath;
 	private String notes;
 	@ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="reports_to")

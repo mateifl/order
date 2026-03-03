@@ -12,8 +12,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import ro.zizicu.mservice.order.BaseIntegrationTest;
 import ro.zizicu.mservice.order.entities.Customer;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -46,18 +45,24 @@ public class CustomerControllerIntegrationTest extends BaseIntegrationTest {
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.id").value("TEST1"))
                 .andReturn();
-
     }
-
 
     @Test
     void testLoadCustomerById() throws Exception {
 
         MvcResult result  =  mockMvc.perform(get("/customers/{id}", "ANTON"))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value("ANTON"))
-                .andReturn();
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.id").value("ANTON"))
+            .andReturn();
 
+    }
+
+    @Test
+    void testDeleteCustomer() throws Exception {
+        MvcResult result  =  mockMvc.perform(delete("/customers/{id}", "ANTON"))
+            .andDo(print())
+            .andExpect(status().isNoContent())
+            .andReturn();
     }
 }

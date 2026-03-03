@@ -1,0 +1,23 @@
+info:
+  name: create employee
+  type: http
+  seq: 5
+
+http:
+  method: POST
+  url: http://localhost:8080/employees
+  body:
+    type: json
+    data: |-
+      {
+        "firstName": "Matei",
+        "lastName": "Florescu",
+        "title": "Manager"
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

@@ -5,7 +5,11 @@ info:
 
 http:
   method: GET
-  url: http://localhost:8080/customers/find/
+  url: http://localhost:8080/customers/find?country=Mexico
+  params:
+    - name: country
+      value: Mexico
+      type: query
   auth: inherit
 
 settings:
