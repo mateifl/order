@@ -60,7 +60,24 @@ public class CustomerControllerIntegrationTest extends BaseIntegrationTest {
 
     @Test
     void testDeleteCustomer() throws Exception {
-        MvcResult result  =  mockMvc.perform(delete("/customers/{id}", "ANTON"))
+        Customer customer = new Customer();
+        customer.setId("TEST1");
+        customer.setCompanyName("Emag");
+        customer.setCity("Rome");
+        customer.setContactName("Matei Florescu");
+        customer.setContactTitle("Mr.");
+        customer.setPostalCode("1223312");
+        String jsonRequest = objectMapper.writeValueAsString(customer);
+
+        mockMvc.perform(post("/customers").contentType(MediaType.APPLICATION_JSON)
+                        .content(jsonRequest))
+                .andDo(print())
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.id").value("TEST1"))
+                .andReturn();
+
+
+        MvcResult result  =  mockMvc.perform(delete("/customers/{id}", "TEST1"))
             .andDo(print())
             .andExpect(status().isNoContent())
             .andReturn();

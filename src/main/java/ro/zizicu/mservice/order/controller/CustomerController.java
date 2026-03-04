@@ -16,7 +16,7 @@ import java.util.List;
 
 @RestController
 @Slf4j
-@RequestMapping(value = "/customers")
+@RequestMapping(value = "customers")
 public class CustomerController {
 	private final CustomerService customerService;
 
@@ -57,12 +57,18 @@ public class CustomerController {
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 	
-	@RequestMapping(value = "/", method=RequestMethod.PUT)
+	@PutMapping(value = "/")
 	public ResponseEntity<?> update(@RequestBody Customer customer) {
 		if(customer.getId() == null) {
 			return ResponseEntity.badRequest().build();
 		}
 		Customer c = customerService.update(customer);
 		return ResponseEntity.ok(c);
+	}
+
+	@DeleteMapping("/{id}")
+	public ResponseEntity<Void> delete(@PathVariable String id) {
+		customerService.delete(id);
+		return ResponseEntity.noContent().build();
 	}
 }
