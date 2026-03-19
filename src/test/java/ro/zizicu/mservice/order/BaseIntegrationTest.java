@@ -11,6 +11,7 @@ import org.testcontainers.images.builder.ImageFromDockerfile;
 import org.testcontainers.junit.jupiter.Container;
 
 import java.nio.file.Path;
+import java.time.Duration;
 
 public abstract class BaseIntegrationTest {
 
@@ -22,7 +23,8 @@ public abstract class BaseIntegrationTest {
             new PostgreSQLContainer<>("postgres:16")
                     .withInitScript("schema.sql")
                     .withNetwork(network)
-                    .withNetworkAliases("postgres");
+                    .withNetworkAliases("postgres")
+                    .waitingFor(Wait.forListeningPort().withStartupTimeout(Duration.ofMinutes(3)));
 
 
     @Container
@@ -41,9 +43,11 @@ public abstract class BaseIntegrationTest {
             .withEnv("SPRING_DATASOURCE_URL", "jdbc:postgresql://postgres:5432/test") // uses network alias
             .withEnv("SPRING_DATASOURCE_USERNAME", postgres.getUsername())
             .withEnv("SPRING_DATASOURCE_PASSWORD", postgres.getPassword())
+            .withEnv("MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE", "health,info")
             .waitingFor(Wait.forHttp("/actuator/health")
                     .forPort(8081)
-                    .forStatusCode(200))
+                    .forStatusCode(200)
+                    .withStartupTimeout(Duration.ofMinutes(3)))
             .dependsOn(postgres);
 
     static {

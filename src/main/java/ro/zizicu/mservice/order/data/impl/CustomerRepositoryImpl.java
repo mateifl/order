@@ -6,32 +6,30 @@ import java.util.List;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import ro.zizicu.mservice.order.data.CustomerFinderRepository;
 import ro.zizicu.mservice.order.entities.Customer;
 
+@Slf4j
 public class CustomerRepositoryImpl implements CustomerFinderRepository {
 
-	private static Logger logger = LoggerFactory.getLogger(CustomerRepositoryImpl.class);
-	
 	@PersistenceContext
 	private EntityManager em;
 	
 	@Override
 	public List<Customer> find(String customerCode, String region, String city, String country) {
-		logger.info("find customer");
+		log.info("find customer");
 		CriteriaFinderImpl<Customer> finder = new CriteriaFinderImpl<>(em, Customer.class);
 		List<QueryParameter<?>> parameters = new ArrayList<>();
 		if(customerCode != null)
-			parameters.add(new QueryParameter<String>("id", customerCode));
+			parameters.add(new QueryParameter<>("id", customerCode));
 		if(region != null)
-			parameters.add(new QueryParameter<String>("region", region));
+			parameters.add(new QueryParameter<>("region", region));
 		if(city != null)
-			parameters.add(new QueryParameter<String>("city", city));
+			parameters.add(new QueryParameter<>("city", city));
 		if(country != null)
-			parameters.add(new QueryParameter<String>("country", country));
+			parameters.add(new QueryParameter<>("country", country));
 		return finder.find(parameters);
 	}
 	
